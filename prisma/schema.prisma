@@ -1,0 +1,354 @@
+// Prisma Schema for AllCollegeEvent AI Backend (HackGURU 2026)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  ADMIN
+}
+
+enum ActionType {
+  VIEW
+  SAVE
+  SHARE
+  REGISTER
+  DISMISS
+  SEARCH
+  CALENDAR_ADD
+}
+
+enum NotificationType {
+  DEADLINE
+  RECOMMENDATION
+  SYSTEM
+}
+
+enum Difficulty {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  ALL_LEVELS
+}
+
+enum EventType {
+  HACKATHON
+  WORKSHOP
+  INTERNSHIP
+  SEMINAR
+  COMPETITION
+  PROJECT_COLLAB
+  OTHER
+}
+
+model User {
+  id           String          @id @default(uuid())
+  email        String          @unique
+  passwordHash String
+  role         Role            @default(STUDENT)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  student      StudentProfile?
+
+  @@map("users")
+}
+
+model StudentProfile {
+  id                      String                   @id @default(uuid())
+  userId                  String                   @unique
+  user                    User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName                String
+  collegeName             String
+  branch                  String
+  yearOfStudy             Int
+  degree                  String
+  location                String
+  careerGoal              String
+  bio                     String?
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  interests               StudentInterest[]
+  skills                  StudentSkill[]
+  hackathons              HackathonParticipation[]
+  internships             Internship[]
+  projects                Project[]
+  interactions            Interaction[]
+  recommendations         Recommendation[]
+  calendarEvents          CalendarEvent[]
+  notifications           Notification[]
+  notificationPreferences NotificationPreference?
+
+  @@map("student_profiles")
+}
+
+model Interest {
+  id        String            @id @default(uuid())
+  name      String            @unique
+  category  String
+  students  StudentInterest[]
+  createdAt DateTime          @default(now())
+
+  @@map("interests")
+}
+
+model StudentInterest {
+  id        String         @id @default(uuid())
+  studentId String
+  student   StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  interestId String
+  interest  Interest       @relation(fields: [interestId], references: [id], onDelete: Cascade)
+  createdAt DateTime       @default(now())
+
+  @@unique([studentId, interestId])
+  @@map("student_interests")
+}
+
+model Skill {
+  id        String         @id @default(uuid())
+  name      String         @unique
+  category  String
+  students  StudentSkill[]
+  projects  ProjectSkill[]
+  createdAt DateTime       @default(now())
+
+  @@map("skills")
+}
+
+model StudentSkill {
+  id               String         @id @default(uuid())
+  studentId        String
+  student          StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  skillId          String
+  skill            Skill          @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  proficiencyLevel String         @default("INTERMEDIATE") // BEGINNER, INTERMEDIATE, ADVANCED, EXPERT
+  createdAt        DateTime       @default(now())
+
+  @@unique([studentId, skillId])
+  @@map("student_skills")
+}
+
+model Event {
+  id                   String             @id @default(uuid())
+  title                String
+  description          String
+  category             String
+  eligibility          String
+  requiredSkills       String[]
+  location             String
+  duration             String
+  startDate            DateTime
+  endDate              DateTime?
+  registrationDeadline DateTime
+  organizer            String
+  externalUrl          String?
+  imageUrl             String?
+  isRaw                Boolean            @default(true)
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  intelligence         EventIntelligence?
+  interactions         Interaction[]
+  recommendations      Recommendation[]
+  calendarEvents       CalendarEvent[]
+  notifications        Notification[]
+
+  @@map("events")
+}
+
+model EventIntelligence {
+  id               String     @id @default(uuid())
+  eventId          String     @unique
+  event            Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  domains          String[]
+  skills           String[]
+  targetAudience   String[]
+  difficulty       Difficulty @default(ALL_LEVELS)
+  careerPaths      String[]
+  prerequisites    String[]
+  learningOutcomes String[]
+  eventType        EventType  @default(OTHER)
+  contentHash      String
+  analyzedAt       DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  @@map("event_intelligence")
+}
+
+model Project {
+  id          String         @id @default(uuid())
+  studentId   String
+  student     StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  title       String
+  description String
+  githubUrl   String?
+  demoUrl     String?
+  skills      ProjectSkill[]
+  createdAt   DateTime       @default(now())
+
+  @@map("projects")
+}
+
+model ProjectSkill {
+  id        String   @id @default(uuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  skillId   String
+  skill     Skill    @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([projectId, skillId])
+  @@map("project_skills")
+}
+
+model Hackathon {
+  id             String                   @id @default(uuid())
+  title          String
+  organizer      String
+  date           DateTime
+  location       String
+  participations HackathonParticipation[]
+  createdAt      DateTime                 @default(now())
+
+  @@map("hackathons")
+}
+
+model HackathonParticipation {
+  id          String         @id @default(uuid())
+  studentId   String
+  student     StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  hackathonId String
+  hackathon   Hackathon      @relation(fields: [hackathonId], references: [id], onDelete: Cascade)
+  projectTitle String?
+  achievement  String?       // Participant, Finalist, Winner, 1st Runner Up, etc.
+  createdAt   DateTime       @default(now())
+
+  @@unique([studentId, hackathonId])
+  @@map("hackathon_participations")
+}
+
+model Internship {
+  id          String         @id @default(uuid())
+  studentId   String
+  student     StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  company     String
+  role        String
+  description String?
+  startDate   DateTime
+  endDate     DateTime?
+  isCurrent   Boolean        @default(false)
+  createdAt   DateTime       @default(now())
+
+  @@map("internships")
+}
+
+model Interaction {
+  id        String         @id @default(uuid())
+  studentId String
+  student   StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  eventId   String
+  event     Event          @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  action    ActionType
+  metadata  Json?
+  createdAt DateTime       @default(now())
+
+  @@map("interactions")
+}
+
+model Recommendation {
+  id            String         @id @default(uuid())
+  studentId     String
+  student       StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  eventId       String
+  event         Event          @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  score         Float
+  reason        String
+  explanation   String
+  agentRefined  Boolean        @default(false)
+  status        String         @default("ACTIVE") // ACTIVE, DISMISSED, SAVED
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@unique([studentId, eventId])
+  @@map("recommendations")
+}
+
+model CalendarEvent {
+  id                   String         @id @default(uuid())
+  studentId            String
+  student              StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  eventId              String
+  event                Event          @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  startDate            DateTime
+  registrationDeadline DateTime
+  reminderTime         DateTime
+  reminderType         String         @default("REGISTRATION_DEADLINE") // REGISTRATION_DEADLINE, EVENT_START, CUSTOM
+  status               String         @default("UPCOMING") // UPCOMING, COMPLETED, CANCELLED
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+
+  @@map("calendar_events")
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  studentId String
+  student   StudentProfile   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  eventId   String?
+  event     Event?           @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  type      NotificationType
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  @@map("notifications")
+}
+
+model NotificationPreference {
+  id                          String         @id @default(uuid())
+  studentId                   String         @unique
+  student                     StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  enableDeadlineAlerts        Boolean        @default(true)
+  enableRecommendationAlerts  Boolean        @default(true)
+  emailNotifications          Boolean        @default(true)
+  pushNotifications           Boolean        @default(true)
+  createdAt                   DateTime       @default(now())
+  updatedAt                   DateTime       @updatedAt
+
+  @@map("notification_preferences")
+}
+
+model AIRequestLog {
+  id           String   @id @default(uuid())
+  provider     String   // GEMINI, HUGGINGFACE, MOCK
+  model        String
+  requestType  String   // EVENT_INTELLIGENCE, RECOMMENDATION_REFINEMENT
+  inputPrompt  String
+  rawResponse  String
+  durationMs   Int
+  success      Boolean
+  errorMessage String?
+  createdAt    DateTime @default(now())
+
+  @@map("ai_request_logs")
+}
+
+model AIUsage {
+  id            String   @id @default(uuid())
+  provider      String   // GEMINI, HUGGINGFACE, MOCK
+  model         String
+  requestType   String
+  inputTokens   Int?
+  outputTokens  Int?
+  totalTokens   Int?
+  estimatedCost Float?
+  success       Boolean
+  timestamp     DateTime @default(now())
+
+  @@map("ai_usage")
+}
