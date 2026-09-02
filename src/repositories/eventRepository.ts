@@ -13,11 +13,11 @@ export class EventRepository {
     limit?: number;
     skip?: number;
   }): Promise<any[]> {
-    return this.adapter.findAllEvents(params);
+    return this.adapter.listEvents(params);
   }
 
-  public async findById(id: string): Promise<any | null> {
-    return this.adapter.findEventById(id);
+  public async findById(id: string | bigint): Promise<any | null> {
+    return this.adapter.getEventById(id);
   }
 
   public async createEvent(data: any): Promise<any> {
@@ -25,13 +25,13 @@ export class EventRepository {
   }
 
   public async upsertIntelligence(
-    eventId: string,
+    eventId: string | bigint,
     data: any
   ): Promise<any> {
-    return this.adapter.upsertEventIntelligence(eventId, data);
+    return this.adapter.upsertEventAiAnalysis(eventId, data);
   }
 
   public async getCandidateEventsForStudent(limit: number = 500): Promise<any[]> {
-    return this.adapter.getCandidateEventsForStudent(limit);
+    return this.adapter.listEvents({ limit });
   }
 }

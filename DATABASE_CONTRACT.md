@@ -1,108 +1,66 @@
-# Database Contract Specification (Shared PostgreSQL DB)
+# AllCollegeEvent PostgreSQL Database Contract (`allcollegeevent.sql`)
 
-This document defines the explicit data contract between the **AllCollegeEvent AI Backend** and the **Shared PostgreSQL Database** owned by the Database/Backend Team.
-
-> [!IMPORTANT]
-> **Database Ownership Rule:**
-> The AI Backend service does **NOT** own, alter, create, or run migrations (`npx prisma db push` / `prisma migrate`) against the PostgreSQL database.
-> The AI backend consumes shared read tables and writes only to specific intelligence/recommendation tables via a clean **Database Adapter Layer** (`IDatabaseAdapter`).
+This document defines the decoupled read/write database adapter contract mapping our Node.js/TypeScript AI backend (`e:\HackGuru`) to the external PostgreSQL database schema (`allcollegeevent.sql`).
 
 ---
 
-## 📖 1. READ CONTRACT (Tables & Fields Expected from Shared DB)
+## PostgreSQL Database Schema & 21-Requirement Matrix
 
-The AI Backend requires read access to the following shared database entities:
+The `allcollegeevent.sql` schema consists of **18 PostgreSQL tables and views**:
 
-### 1.1 `users`
-| Field Name | Type | Description |
-| :--- | :--- | :--- |
-| `id` | String (UUID/Text) | Primary Key |
-| `email` | String | Unique email address |
-| `passwordHash` | String | Encrypted password string |
-| `role` | String / Enum (`STUDENT`, `ADMIN`) | User role |
-
-### 1.2 `student_profiles`
-| Field Name | Type | Description |
-| :--- | :--- | :--- |
-| `id` | String (UUID/Text) | Primary Key |
-| `userId` | String | Foreign Key referencing `users(id)` |
-| `fullName` | String | Full name of the student |
-| `collegeName` | String | Name of college / institute |
-| `branch` | String | Academic branch (e.g. `Computer Science`) |
-| `yearOfStudy` | Integer (1-5) | Current year of study |
-| `degree` | String | Degree (e.g. `B.Tech`, `M.Tech`, `B.Sc`) |
-| `location` | String | City / State / Region |
-| `careerGoal` | String | Career objective (e.g. `AI Research Scientist`) |
-| `bio` | String (Optional) | Short biography |
-
-### 1.3 `interests` & `student_interests`
-- `interests`: `id`, `name` (unique), `category`
-- `student_interests`: `id`, `studentId`, `interestId`
-
-### 1.4 `skills` & `student_skills`
-- `skills`: `id`, `name` (unique), `category`
-- `student_skills`: `id`, `studentId`, `skillId`, `proficiencyLevel` (`BEGINNER`, `INTERMEDIATE`, `ADVANCED`, `EXPERT`)
-
-### 1.5 `events`
-| Field Name | Type | Description |
-| :--- | :--- | :--- |
-| `id` | String (UUID/Text) | Primary Key |
-| `title` | String | Title of event |
-| `description` | Text | Full event description |
-| `category` | String | Category (e.g. `AI & ML`, `Web Development`) |
-| `eligibility` | String | Eligibility criteria |
-| `requiredSkills` | Array of Strings / Text | Required technical skills |
-| `location` | String | Venue or `Online` / `Remote` |
-| `duration` | String | Event duration (e.g. `48 Hours`) |
-| `startDate` | DateTime | Event start timestamp |
-| `endDate` | DateTime (Optional) | Event end timestamp |
-| `registrationDeadline` | DateTime | Deadline timestamp for registration |
-| `organizer` | String | Organizer / Company name |
-| `externalUrl` | String (Optional) | Link to external registration page |
-| `imageUrl` | String (Optional) | Event banner URL |
-
-### 1.6 `projects`, `hackathons`, `hackathon_participations`, `internships`
-- `projects`: `id`, `studentId`, `title`, `description`, `githubUrl`, `demoUrl`
-- `hackathons`: `id`, `title`, `organizer`, `date`, `location`
-- `hackathon_participations`: `id`, `studentId`, `hackathonId`, `projectTitle`, `achievement`
-- `internships`: `id`, `studentId`, `company`, `role`, `startDate`, `endDate`, `isCurrent`
-
-### 1.7 `interactions`
-| Field Name | Type | Description |
-| :--- | :--- | :--- |
-| `id` | String (UUID/Text) | Primary Key |
-| `studentId` | String | Foreign Key referencing `student_profiles(id)` |
-| `eventId` | String | Foreign Key referencing `events(id)` |
-| `action` | Enum/String (`VIEW`, `SAVE`, `SHARE`, `REGISTER`, `DISMISS`, `SEARCH`, `CALENDAR_ADD`) | Interaction action |
-| `metadata` | JSON (Optional) | Platform telemetry metadata |
+| # | Requirement | PostgreSQL Table/View | Key Columns | Implementation |
+| :-: | :--- | :--- | :--- | :--- |
+| 1 | **Student registration** | `users` | `user_id`, `full_name`, `email`, `department`, `college` | `authService.register` / `createUser` |
+| 2 | **Student profiles** | `users`, `student_ai_summary` | `career_goal`, `location`, `skills`, `interests` | `studentService.getProfileByUserId` |
+| 3 | **Interests** | `users.interests`, `student_ai_summary` | `interests text[]` | `studentController.updateMyInterests` |
+| 4 | **Events** | `events` | `event_id`, `title`, `description`, `event_type`, `deadline` | `eventRepository.findAll` / `createEvent` |
+| 5 | **Hackathons** | `hackathon_details` | `event_id`, `team_size_min`, `prize_pool`, `judging_criteria` | `adapter.getHackathonDetails` |
+| 6 | **Internships** | `internship_details` | `event_id`, `company_name`, `stipend_amount`, `duration_months` | `adapter.getInternshipDetails` |
+| 7 | **Projects** | `project_details` | `event_id`, `tech_stack`, `project_type`, `difficulty_level` | `adapter.getProjectDetails` |
+| 8 | **Workshops** | `workshop_details` | `event_id`, `instructor_name`, `hands_on`, `prerequisites` | `adapter.getWorkshopDetails` |
+| 9 | **User interactions** | `user_interactions` | `interaction_id`, `user_id`, `event_id`, `interaction_type` | `interactionRepository.logInteraction` |
+| 10 | **Event AI analysis** | `event_ai_analysis` | `analysis_id`, `event_id`, `extracted_skills`, `target_audience` | `EventIntelligenceAgent` / `upsertEventAiAnalysis` |
+| 11 | **Event analytics** | `event_analytics` | `analytics_id`, `event_id`, `views`, `clicks`, `saves`, `registrations` | `adapter.updateEventAnalytics` |
+| 12 | **Recommendations** | `recommendations` | `recommendation_id`, `user_id`, `event_id`, `match_score`, `reason` | `RecommendationAgent` / `saveRecommendations` |
+| 13 | **GitHub connections** | `github_connections` | `connection_id`, `user_id`, `github_username`, `top_languages`, `total_stars` | `studentController.connectGithub` |
+| 14 | **Student activities** | `student_activities` | `activity_id`, `user_id`, `title`, `activity_type`, `skills_gained` | `studentController.addActivity` |
+| 15 | **Student AI summary** | `student_ai_summary` | `summary_id`, `user_id`, `profile_summary`, `strongest_skills` | `StudentIntelligenceService` |
+| 16 | **Dedicated student skills** | `student_skills` | `student_skill_id`, `user_id`, `skill_name`, `proficiency_score` | `adapter.updateStudentSkill` |
+| 17 | **Skill evolution** | `skill_evolution` | `evolution_id`, `user_id`, `skill_name`, `previous_proficiency`, `new_proficiency` | `SkillEvolutionService.recordEventParticipation...` |
+| 18 | **Event participation** | `event_participation` | `participation_id`, `user_id`, `event_id`, `participation_status` | `studentController.participateInEvent` |
+| 19 | **Student intelligence** | `student_intelligence_profile` (View) | SQL View joining user, AI summary, skills, activities, GitHub data | `StudentIntelligenceService.generateStudentIntelligenceProfile` |
+| 20 | **Integrity validation** | Foreign Key Constraints | `FOREIGN KEY (user_id)`, `FOREIGN KEY (event_id)` | Prisma & PostgreSQL FK validations |
+| 21 | **Sample test data** | SQL Seed Statements | Pre-seeded SQL records in `allcollegeevent.sql` | `InMemoryDatabaseAdapter` & PostgreSQL seeds |
 
 ---
 
-## ✍️ 2. WRITE CONTRACT (Entities Updated/Created by AI Backend)
+## Complete Feedback Loop Architecture Flow
 
-The AI backend persists data into the following tables:
-
-### 2.1 `event_intelligence` (Agent 2 Output)
-- `id`, `eventId`, `domains[]`, `skills[]`, `targetAudience[]`, `difficulty`, `careerPaths[]`, `prerequisites[]`, `learningOutcomes[]`, `eventType`, `contentHash`, `analyzedAt`
-
-### 2.2 `recommendations` (Agent 1 Feed Output)
-- `id`, `studentId`, `eventId`, `score` (Float 0.0-1.0), `reason`, `explanation`, `agentRefined` (Boolean), `status` (`ACTIVE`, `DISMISSED`)
-
-### 2.3 `calendar_events`
-- `id`, `studentId`, `eventId`, `startDate`, `registrationDeadline`, `reminderTime`, `reminderType`, `status`
-
-### 2.4 `notifications` & `notification_preferences`
-- `notifications`: `id`, `studentId`, `eventId`, `title`, `message`, `type` (`DEADLINE`, `RECOMMENDATION`), `isRead`
-- `notification_preferences`: `studentId`, `enableDeadlineAlerts`, `enableRecommendationAlerts`, `emailNotifications`, `pushNotifications`
-
-### 2.5 `ai_usage` & `ai_request_logs`
-- `ai_usage`: `provider`, `model`, `requestType`, `inputTokens`, `outputTokens`, `totalTokens`, `estimatedCost`, `success`, `timestamp`
-- `ai_request_logs`: `provider`, `model`, `requestType`, `inputPrompt`, `rawResponse`, `durationMs`, `success`, `errorMessage`
-
----
-
-## 🔌 3. DATABASE ADAPTER ABSTRACTION (`IDatabaseAdapter`)
-
-To prevent direct tight-coupling to PostgreSQL schema migrations:
-- `PrismaDatabaseAdapter`: Production adapter connecting via Prisma ORM to shared PostgreSQL.
-- `InMemoryDatabaseAdapter`: High-performance local adapter with pre-populated contract data for zero-dependency development and automated Jest testing.
+```text
+STUDENT ──> REGISTER ──> CREATE PROFILE ──> (Interests, Activities, GitHub)
+                                                    │
+                                                    ▼
+                                           AI STUDENT PROFILER
+                                                    │
+                                      ┌─────────────┴─────────────┐
+                                      ▼                           ▼
+                            Student AI Summary            Skill Extraction
+                                      │                           │
+                                      └─────────────┬─────────────┘
+                                                    ▼
+                                       STUDENT INTELLIGENCE PROFILE
+                                                    │
+EVENT DATA ──> AI EVENT ANALYSIS ───────────────────┼──> RECOMMENDATION ENGINE
+                                                    │           │
+                                                    │           ▼
+                                                    │   RECOMMENDED EVENTS
+                                                    │           │
+                                                    │           ▼
+                                                    │      PARTICIPATES
+                                                    │           │
+                                                    │           ▼
+                                                    │      NEW ACTIVITY
+                                                    │           │
+                                                    │           ▼
+                                                    └── UPDATE SKILL EVOLUTION
+```

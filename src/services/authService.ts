@@ -2,7 +2,7 @@ import { UserRepository } from '../repositories/userRepository';
 import { StudentRepository } from '../repositories/studentRepository';
 import { PasswordUtil } from '../utils/password';
 import { JwtUtil } from '../utils/jwt';
-import { Role } from '@prisma/client';
+import { Role } from '../types/enums';
 
 export class AuthService {
   private getUserRepository(): UserRepository {
@@ -41,7 +41,7 @@ export class AuthService {
     });
 
     const studentProfile = await studentRepo.createProfile({
-      userId: user.id,
+      userId: user.id || user.userId,
       fullName: data.fullName,
       collegeName: data.collegeName,
       branch: data.branch,
@@ -53,18 +53,18 @@ export class AuthService {
     });
 
     const token = JwtUtil.generateToken({
-      id: user.id,
-      userId: user.id,
+      id: user.id || user.userId,
+      userId: user.id || user.userId,
       email: user.email,
-      role: user.role,
-      studentId: studentProfile.id,
+      role: user.role || Role.STUDENT,
+      studentId: studentProfile.id || studentProfile.userId || user.id || user.userId,
     });
 
     return {
       user: {
-        id: user.id,
+        id: user.id || user.userId,
         email: user.email,
-        role: user.role,
+        role: user.role || Role.STUDENT,
         studentProfile,
       },
       token,
@@ -86,20 +86,21 @@ export class AuthService {
       throw new Error('Invalid email or password credentials.');
     }
 
+    const userId = user.id || user.userId;
     const token = JwtUtil.generateToken({
-      id: user.id,
-      userId: user.id,
+      id: userId,
+      userId,
       email: user.email,
-      role: user.role,
-      studentId: (user as any).student?.id,
+      role: user.role || Role.STUDENT,
+      studentId: (user as any).student?.id || userId,
     });
 
     return {
       user: {
-        id: user.id,
+        id: userId,
         email: user.email,
-        role: user.role,
-        studentProfile: (user as any).student,
+        role: user.role || Role.STUDENT,
+        studentProfile: (user as any).student || user,
       },
       token,
     };

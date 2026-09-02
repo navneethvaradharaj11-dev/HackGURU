@@ -3,7 +3,7 @@ import { StudentRepository } from '../repositories/studentRepository';
 import { EventRepository } from '../repositories/eventRepository';
 import { CalendarRepository } from '../repositories/calendarRepository';
 import { ScoringEngine } from '../recommendation/scoringEngine';
-import { NotificationType } from '@prisma/client';
+import { NotificationType } from '../types/enums';
 import { logger } from '../utils/logger';
 
 export class NotificationService {

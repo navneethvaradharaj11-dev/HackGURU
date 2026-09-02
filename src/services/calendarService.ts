@@ -1,7 +1,7 @@
 import { CalendarRepository } from '../repositories/calendarRepository';
 import { EventRepository } from '../repositories/eventRepository';
 import { InteractionRepository } from '../repositories/interactionRepository';
-import { ActionType } from '@prisma/client';
+import { ActionType } from '../types/enums';
 
 export class CalendarService {
   private calendarRepository: CalendarRepository;

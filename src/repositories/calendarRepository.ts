@@ -23,6 +23,6 @@ export class CalendarRepository {
   }
 
   public async removeCalendarEvent(id: string, studentId: string): Promise<boolean> {
-    return this.adapter.removeCalendarEvent(id, studentId);
+    return this.adapter.removeCalendarEvent(id);
   }
 }

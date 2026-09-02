@@ -1,80 +1,94 @@
-import { ActionType, NotificationType, Role } from '@prisma/client';
+import { AIUsageMetrics } from '../types/ai.types';
 
 export interface IDatabaseAdapter {
-  // User Operations
-  findUserByEmail(email: string): Promise<any | null>;
-  findUserById(id: string): Promise<any | null>;
-  createUser(data: { email: string; passwordHash: string; role?: Role }): Promise<any>;
-
-  // Student Operations
-  findStudentByUserId(userId: string): Promise<any | null>;
-  findStudentById(id: string): Promise<any | null>;
-  createStudentProfile(data: {
-    userId: string;
-    fullName: string;
-    collegeName: string;
-    branch: string;
-    yearOfStudy: number;
-    degree: string;
-    location: string;
-    careerGoal: string;
-    bio?: string;
-  }): Promise<any>;
-  updateStudentProfile(studentId: string, data: any): Promise<any>;
-  updateStudentInterests(studentId: string, interestIds: string[]): Promise<void>;
-  updateStudentSkills(studentId: string, skills: { skillId: string; proficiencyLevel?: string }[]): Promise<void>;
+  // Users & Profiles
+  findUserById(id: string | bigint): Promise<any>;
+  findUserByEmail(email: string): Promise<any>;
+  createUser(data: any): Promise<any>;
+  updateUser(id: string | bigint, data: any): Promise<any>;
+  findStudentByUserId(userId: string | bigint): Promise<any>;
+  findStudentById(id: string | bigint): Promise<any>;
+  createStudentProfile(data: any): Promise<any>;
+  updateStudentProfile(id: string | bigint, data: any): Promise<any>;
+  updateStudentInterests(studentId: string | bigint, interests: any[]): Promise<any>;
+  updateStudentSkills(studentId: string | bigint, skills: any[]): Promise<any>;
   getAllInterests(): Promise<any[]>;
   getAllSkills(): Promise<any[]>;
 
-  // Event & Intelligence Operations
-  findAllEvents(params?: { category?: string; location?: string; search?: string; limit?: number; skip?: number }): Promise<any[]>;
-  findEventById(id: string): Promise<any | null>;
-  createEvent(data: any): Promise<any>;
-  upsertEventIntelligence(eventId: string, intelligenceData: any): Promise<any>;
+  // GitHub Connections
+  getGithubConnection(userId: string | bigint): Promise<any>;
+  upsertGithubConnection(userId: string | bigint, data: any): Promise<any>;
+
+  // Student AI Summary
+  getStudentAiSummary(userId: string | bigint): Promise<any>;
+  upsertStudentAiSummary(userId: string | bigint, data: any): Promise<any>;
+
+  // Dedicated Student Skills
+  getStudentSkills(userId: string | bigint): Promise<any[]>;
+  addStudentSkill(userId: string | bigint, skillData: any): Promise<any>;
+  updateStudentSkill(userId: string | bigint, skillName: string, proficiency: number): Promise<any>;
+
+  // Skill Evolution History
+  logSkillEvolution(data: {
+    userId: string | bigint;
+    skillName: string;
+    previousProficiency: number;
+    newProficiency: number;
+    changeReason?: string;
+    eventId?: string | bigint;
+  }): Promise<any>;
+  getSkillEvolutionHistory(userId: string | bigint): Promise<any[]>;
+
+  // Student Activities
+  getStudentActivities(userId: string | bigint): Promise<any[]>;
+  addStudentActivity(userId: string | bigint, activityData: any): Promise<any>;
+
+  // Event Participation
+  getEventParticipations(userId: string | bigint): Promise<any[]>;
+  registerEventParticipation(userId: string | bigint, eventId: string | bigint, status?: string): Promise<any>;
+  updateEventParticipation(userId: string | bigint, eventId: string | bigint, data: any): Promise<any>;
+
+  // Events & Categories
+  getEventById(id: string | bigint): Promise<any>;
+  findEventById(id: string | bigint): Promise<any>;
+  findAllEvents(params?: any): Promise<any[]>;
   getCandidateEventsForStudent(limit?: number): Promise<any[]>;
+  listEvents(filters?: any): Promise<any[]>;
+  createEvent(data: any): Promise<any>;
 
-  // Interaction Operations
-  logInteraction(data: { studentId: string; eventId: string; action: ActionType; metadata?: any }): Promise<any>;
-  getStudentInteractions(studentId: string): Promise<any[]>;
+  // Event AI Analysis & Analytics
+  getEventAiAnalysis(eventId: string | bigint): Promise<any>;
+  upsertEventAiAnalysis(eventId: string | bigint, analysisData: any): Promise<any>;
+  upsertEventIntelligence(eventId: string | bigint, analysisData: any): Promise<any>;
+  getEventAnalytics(eventId: string | bigint): Promise<any>;
+  updateEventAnalytics(eventId: string | bigint, analyticsData: any): Promise<any>;
 
-  // Recommendation Operations
-  findRecommendationsByStudentId(studentId: string): Promise<any[]>;
-  upsertRecommendation(data: {
-    studentId: string;
-    eventId: string;
-    score: number;
-    reason: string;
-    explanation: string;
-    agentRefined: boolean;
-    status: string;
-  }): Promise<any>;
+  // Category Details
+  getHackathonDetails(eventId: string | bigint): Promise<any>;
+  getInternshipDetails(eventId: string | bigint): Promise<any>;
+  getProjectDetails(eventId: string | bigint): Promise<any>;
+  getWorkshopDetails(eventId: string | bigint): Promise<any>;
 
-  // Calendar Operations
-  addCalendarEvent(data: {
-    studentId: string;
-    eventId: string;
-    startDate: Date;
-    registrationDeadline: Date;
-    reminderTime: Date;
-    reminderType?: string;
-    status?: string;
-  }): Promise<any>;
-  getStudentCalendarEvents(studentId: string): Promise<any[]>;
-  removeCalendarEvent(id: string, studentId: string): Promise<boolean>;
+  // User Interactions & Telemetry
+  logInteraction(data: { userId?: string | bigint; studentId?: string | bigint; eventId: string | bigint; action: string; metadata?: any }): Promise<any>;
+  getStudentInteractions(userId: string | bigint): Promise<any[]>;
 
-  // Notification Operations
-  createNotification(data: {
-    studentId: string;
-    eventId?: string;
-    title: string;
-    message: string;
-    type: NotificationType;
-  }): Promise<any>;
-  getStudentNotifications(studentId: string, limit?: number): Promise<any[]>;
-  markNotificationAsRead(id: string, studentId: string): Promise<boolean>;
+  // Calendar & Notifications
+  addCalendarEvent(data: any): Promise<any>;
+  getStudentCalendarEvents(studentId: string | bigint): Promise<any[]>;
+  removeCalendarEvent(id: string): Promise<any>;
+  createNotification(data: any): Promise<any>;
+  getStudentNotifications(studentId: string | bigint): Promise<any[]>;
+  markNotificationAsRead(id: string): Promise<any>;
 
-  // AI Usage Telemetry Operations
-  logAIUsage(metrics: any): Promise<any>;
-  logAIRequest(requestData: any): Promise<any>;
+  // Recommendations
+  getRecommendations(userId: string | bigint): Promise<any[]>;
+  findRecommendationsByStudentId(userId: string | bigint): Promise<any[]>;
+  upsertRecommendation(dataOrStudentId: any, eventId?: string | bigint, score?: number, reason?: string): Promise<any>;
+  saveRecommendations(userId: string | bigint, recommendations: any[]): Promise<any>;
+
+  // AI Telemetry
+  logAIUsage(metrics: AIUsageMetrics): Promise<any>;
+  logAIRequest(data: any): Promise<any>;
   getAIUsageSummary(): Promise<any>;
 }

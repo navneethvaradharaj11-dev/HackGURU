@@ -1,6 +1,5 @@
 import { AdapterFactory } from '../adapters/adapterFactory';
 import { IDatabaseAdapter } from '../adapters/databaseAdapter.interface';
-import { Role } from '@prisma/client';
 
 export class UserRepository {
   private get adapter(): IDatabaseAdapter {
@@ -11,14 +10,17 @@ export class UserRepository {
     return this.adapter.findUserByEmail(email);
   }
 
-  public async findById(id: string): Promise<any | null> {
+  public async findById(id: string | bigint): Promise<any | null> {
     return this.adapter.findUserById(id);
   }
 
   public async createUser(data: {
     email: string;
-    passwordHash: string;
-    role?: Role;
+    fullName?: string;
+    department?: string;
+    college?: string;
+    passwordHash?: string;
+    role?: any;
   }): Promise<any> {
     return this.adapter.createUser(data);
   }

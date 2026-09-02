@@ -1,5 +1,5 @@
 import { InteractionRepository } from '../repositories/interactionRepository';
-import { ActionType } from '@prisma/client';
+import { ActionType } from '../types/enums';
 
 export class InteractionService {
   private interactionRepository: InteractionRepository;

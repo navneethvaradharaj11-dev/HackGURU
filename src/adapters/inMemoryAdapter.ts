@@ -1,395 +1,455 @@
 import { IDatabaseAdapter } from './databaseAdapter.interface';
-import { ActionType, NotificationType, Role } from '@prisma/client';
+import { AIUsageMetrics } from '../types/ai.types';
 
 export class InMemoryDatabaseAdapter implements IDatabaseAdapter {
   private users: Map<string, any> = new Map();
-  private studentProfiles: Map<string, any> = new Map();
-  private interests: Map<string, any> = new Map();
-  private skills: Map<string, any> = new Map();
   private events: Map<string, any> = new Map();
-  private eventIntelligences: Map<string, any> = new Map();
-  private studentInterests: Map<string, any[]> = new Map();
+  private eventAiAnalysis: Map<string, any> = new Map();
+  private eventAnalytics: Map<string, any> = new Map();
+  private githubConnections: Map<string, any> = new Map();
+  private studentAiSummaries: Map<string, any> = new Map();
   private studentSkills: Map<string, any[]> = new Map();
-  private interactions: any[] = [];
-  private recommendations: Map<string, any> = new Map();
-  private calendarEvents: Map<string, any> = new Map();
-  private notifications: Map<string, any> = new Map();
-  private notificationPreferences: Map<string, any> = new Map();
-  private aiUsageLogs: any[] = [];
+  private skillEvolutions: Map<string, any[]> = new Map();
+  private studentActivities: Map<string, any[]> = new Map();
+  private eventParticipations: Map<string, any[]> = new Map();
+  private hackathonDetails: Map<string, any> = new Map();
+  private internshipDetails: Map<string, any> = new Map();
+  private projectDetails: Map<string, any> = new Map();
+  private workshopDetails: Map<string, any> = new Map();
+  private userInteractions: Map<string, any[]> = new Map();
+  private calendarEvents: Map<string, any[]> = new Map();
+  private notifications: Map<string, any[]> = new Map();
+  private recommendations: Map<string, any[]> = new Map();
+  private aiLogs: any[] = [];
   private aiRequests: any[] = [];
 
   constructor() {
-    this.seedDefaultContractData();
+    this.seedSampleData();
   }
 
-  private seedDefaultContractData() {
-    // Seed basic skills taxonomy
-    const skillList = [
-      { id: 'sk-1', name: 'Python', category: 'Programming Languages' },
-      { id: 'sk-2', name: 'TypeScript', category: 'Programming Languages' },
-      { id: 'sk-3', name: 'PyTorch', category: 'Machine Learning' },
-      { id: 'sk-4', name: 'React', category: 'Frontend' },
-      { id: 'sk-5', name: 'Node.js', category: 'Backend' },
-    ];
-    for (const sk of skillList) {
-      this.skills.set(sk.id, sk);
-    }
-
-    // Seed basic interests
-    const interestList = [
-      { id: 'in-1', name: 'Generative AI', category: 'Artificial Intelligence' },
-      { id: 'in-2', name: 'Web Development', category: 'Software Development' },
-      { id: 'in-3', name: 'Machine Learning', category: 'Artificial Intelligence' },
-    ];
-    for (const intr of interestList) {
-      this.interests.set(intr.id, intr);
-    }
-
-    // Seed sample contract events
-    const now = new Date();
-    const event1 = {
+  private seedSampleData() {
+    const sampleEvent = {
       id: 'event-contract-1',
+      eventId: '1',
       title: 'HackGURU Shared DB AI Hackathon 2026',
-      description: 'Flagship AI hackathon ingested into shared database contract.',
+      description: 'Build production AI agent systems using Gemini and PostgreSQL.',
       category: 'AI & ML',
-      eligibility: 'All Engineering Students',
-      requiredSkills: ['Python', 'PyTorch', 'Gemini API'],
-      location: 'Bengaluru / Online',
+      eligibility: 'Open to all undergraduates',
+      requiredSkills: ['Python', 'Generative AI', 'PostgreSQL'],
+      location: 'Bengaluru / Hybrid',
       duration: '48 Hours',
-      startDate: new Date(now.getTime() + 5 * 24 * 60 * 60 * 1000),
-      registrationDeadline: new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000),
-      organizer: 'AllCollegeEvent Shared Network',
-      externalUrl: 'https://allcollegeevent.com/events/shared-1',
+      startDate: new Date(),
+      endDate: new Date(Date.now() + 172800000),
+      registrationDeadline: new Date(Date.now() + 86400000),
+      organizer: 'AllCollegeEvent Engine',
+      externalUrl: 'https://allcollegeevent.com/hackguru-2026',
       isRaw: false,
     };
-    this.events.set(event1.id, event1);
+    this.events.set('event-contract-1', sampleEvent);
+    this.events.set('1', sampleEvent);
 
-    this.eventIntelligences.set(event1.id, {
-      id: `intel-${event1.id}`,
-      eventId: event1.id,
-      domains: ['Artificial Intelligence', 'Generative AI'],
-      skills: ['Python', 'PyTorch'],
-      targetAudience: ['Undergraduate Students'],
+    this.eventAiAnalysis.set('1', {
+      eventId: '1',
+      domains: ['AI & ML', 'Generative AI', 'Software Engineering'],
+      skills: ['Python', 'PostgreSQL', 'LLMs'],
+      targetAudience: ['Computer Science', 'Data Science'],
       difficulty: 'INTERMEDIATE',
-      careerPaths: ['AI Research Engineer', 'Data Scientist'],
-      prerequisites: ['Basic Python'],
-      learningOutcomes: ['Project Building', 'Mentorship'],
+      careerPaths: ['AI Engineer', 'Backend Developer'],
+      prerequisites: ['Python Basics'],
+      learningOutcomes: ['Multi-agent architecture', 'Vector search'],
       eventType: 'HACKATHON',
-      contentHash: `hash_${event1.id}_v1`,
-      analyzedAt: new Date(),
+      contentHash: 'hash_sample_event_1',
     });
   }
 
-  // --- USER OPERATIONS ---
-  public async findUserByEmail(email: string): Promise<any | null> {
+  public async findUserById(id: string | bigint): Promise<any> {
+    const key = String(id);
+    return this.users.get(key) || null;
+  }
+
+  public async findUserByEmail(email: string): Promise<any> {
     for (const u of this.users.values()) {
-      if (u.email === email) {
-        const student = this.findStudentByUserIdSync(u.id);
-        return { ...u, student };
-      }
+      if (u.email === email) return u;
     }
     return null;
   }
 
-  public async findUserById(id: string): Promise<any | null> {
-    const u = this.users.get(id);
-    if (!u) return null;
-    const student = this.findStudentByUserIdSync(u.id);
-    return { ...u, student };
-  }
-
-  public async createUser(data: { email: string; passwordHash: string; role?: Role }): Promise<any> {
-    const user = {
-      id: `user-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-      email: data.email,
-      passwordHash: data.passwordHash,
-      role: data.role || Role.STUDENT,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    this.users.set(user.id, user);
+  public async createUser(data: any): Promise<any> {
+    const id = data.id || data.userId || `user_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
+    const user = { id, userId: id, ...data, createdAt: new Date() };
+    this.users.set(String(id), user);
     return user;
   }
 
-  // --- STUDENT OPERATIONS ---
-  private findStudentByUserIdSync(userId: string): any | null {
-    for (const sp of this.studentProfiles.values()) {
-      if (sp.userId === userId) {
-        return this.enrichStudentProfile(sp);
-      }
-    }
-    return null;
+  public async updateUser(id: string | bigint, data: any): Promise<any> {
+    const key = String(id);
+    const existing = this.users.get(key) || { id: key, userId: key };
+    const updated = { ...existing, ...data, updatedAt: new Date() };
+    this.users.set(key, updated);
+    return updated;
   }
 
-  private enrichStudentProfile(sp: any) {
-    const sInterests = (this.studentInterests.get(sp.id) || []).map((si) => ({
-      ...si,
-      interest: this.interests.get(si.interestId),
-    }));
-    const sSkills = (this.studentSkills.get(sp.id) || []).map((ss) => ({
-      ...ss,
-      skill: this.skills.get(ss.skillId),
-    }));
-    const prefs = this.notificationPreferences.get(sp.id) || {
-      enableDeadlineAlerts: true,
-      enableRecommendationAlerts: true,
-      emailNotifications: true,
-      pushNotifications: true,
-    };
-    return {
-      ...sp,
-      interests: sInterests,
-      skills: sSkills,
-      projects: [],
-      hackathons: [],
-      internships: [],
-      notificationPreferences: prefs,
-    };
+  public async findStudentByUserId(userId: string | bigint): Promise<any> {
+    return this.findUserById(userId);
   }
 
-  public async findStudentByUserId(userId: string): Promise<any | null> {
-    return this.findStudentByUserIdSync(userId);
-  }
-
-  public async findStudentById(id: string): Promise<any | null> {
-    const sp = this.studentProfiles.get(id);
-    if (!sp) return null;
-    return this.enrichStudentProfile(sp);
+  public async findStudentById(id: string | bigint): Promise<any> {
+    return this.findUserById(id);
   }
 
   public async createStudentProfile(data: any): Promise<any> {
-    const id = `student-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
-    const student = {
-      id,
-      ...data,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    this.studentProfiles.set(id, student);
-
-    this.notificationPreferences.set(id, {
-      id: `pref-${id}`,
-      studentId: id,
-      enableDeadlineAlerts: true,
-      enableRecommendationAlerts: true,
-      emailNotifications: true,
-      pushNotifications: true,
-    });
-
-    return this.enrichStudentProfile(student);
+    return this.createUser(data);
   }
 
-  public async updateStudentProfile(studentId: string, data: any): Promise<any> {
-    const existing = this.studentProfiles.get(studentId);
-    if (!existing) throw new Error('Student profile not found');
-    const updated = { ...existing, ...data, updatedAt: new Date() };
-    this.studentProfiles.set(studentId, updated);
-    return this.enrichStudentProfile(updated);
+  public async updateStudentProfile(id: string | bigint, data: any): Promise<any> {
+    return this.updateUser(id, data);
   }
 
-  public async updateStudentInterests(studentId: string, interestIds: string[]): Promise<void> {
-    const sInterests = interestIds.map((interestId) => ({
-      id: `si-${Date.now()}-${Math.random()}`,
-      studentId,
-      interestId,
-    }));
-    this.studentInterests.set(studentId, sInterests);
+  public async updateStudentInterests(studentId: string | bigint, interests: any[]): Promise<any> {
+    return this.updateUser(studentId, { interests });
   }
 
-  public async updateStudentSkills(studentId: string, skillsList: any[]): Promise<void> {
-    const sSkills = skillsList.map((s) => ({
-      id: `ss-${Date.now()}-${Math.random()}`,
-      studentId,
-      skillId: s.skillId,
-      proficiencyLevel: s.proficiencyLevel || 'INTERMEDIATE',
-    }));
-    this.studentSkills.set(studentId, sSkills);
+  public async updateStudentSkills(studentId: string | bigint, skills: any[]): Promise<any> {
+    for (const s of skills) {
+      const name = typeof s === 'string' ? s : s.name || s.skillName;
+      const prof = typeof s === 'object' ? s.proficiencyScore || 50 : 50;
+      if (name) {
+        await this.updateStudentSkill(studentId, name, prof);
+      }
+    }
+    return this.getStudentSkills(studentId);
   }
 
   public async getAllInterests(): Promise<any[]> {
-    return Array.from(this.interests.values());
+    return [
+      { id: 'int-ai', name: 'Artificial Intelligence', category: 'AI & ML' },
+      { id: 'int-web', name: 'Web Development', category: 'Software' },
+      { id: 'int-mobile', name: 'Mobile App Development', category: 'Software' },
+      { id: 'int-cloud', name: 'Cloud Computing', category: 'DevOps' },
+      { id: 'int-cyber', name: 'Cybersecurity', category: 'Security' },
+    ];
   }
 
   public async getAllSkills(): Promise<any[]> {
-    return Array.from(this.skills.values());
+    return [
+      { id: 'skill-python', name: 'Python', category: 'Programming' },
+      { id: 'skill-ts', name: 'TypeScript', category: 'Programming' },
+      { id: 'skill-react', name: 'React', category: 'Frontend' },
+      { id: 'skill-node', name: 'Node.js', category: 'Backend' },
+      { id: 'skill-pg', name: 'PostgreSQL', category: 'Database' },
+    ];
   }
 
-  // --- EVENT & INTELLIGENCE OPERATIONS ---
-  public async findAllEvents(params?: any): Promise<any[]> {
-    let result = Array.from(this.events.values());
-    if (params?.category) {
-      result = result.filter((e) => e.category.toLowerCase().includes(params.category.toLowerCase()));
+  public async getGithubConnection(userId: string | bigint): Promise<any> {
+    return this.githubConnections.get(String(userId)) || null;
+  }
+
+  public async upsertGithubConnection(userId: string | bigint, data: any): Promise<any> {
+    const key = String(userId);
+    const conn = { userId: key, ...data, updatedAt: new Date() };
+    this.githubConnections.set(key, conn);
+    return conn;
+  }
+
+  public async getStudentAiSummary(userId: string | bigint): Promise<any> {
+    return this.studentAiSummaries.get(String(userId)) || null;
+  }
+
+  public async upsertStudentAiSummary(userId: string | bigint, data: any): Promise<any> {
+    const key = String(userId);
+    const summary = { userId: key, ...data, updatedAt: new Date() };
+    this.studentAiSummaries.set(key, summary);
+    return summary;
+  }
+
+  public async getStudentSkills(userId: string | bigint): Promise<any[]> {
+    return this.studentSkills.get(String(userId)) || [];
+  }
+
+  public async addStudentSkill(userId: string | bigint, skillData: any): Promise<any> {
+    const key = String(userId);
+    const list = this.studentSkills.get(key) || [];
+    const skill = { id: `skill_${Date.now()}`, ...skillData };
+    list.push(skill);
+    this.studentSkills.set(key, list);
+    return skill;
+  }
+
+  public async updateStudentSkill(userId: string | bigint, skillName: string, proficiency: number): Promise<any> {
+    const key = String(userId);
+    const list = this.studentSkills.get(key) || [];
+    const idx = list.findIndex((s) => s.skillName === skillName);
+    if (idx >= 0) {
+      list[idx].proficiencyScore = proficiency;
+      list[idx].lastUpdatedAt = new Date();
+    } else {
+      list.push({ skillName, proficiencyScore: proficiency, lastUpdatedAt: new Date() });
     }
-    if (params?.search) {
-      result = result.filter((e) =>
-        e.title.toLowerCase().includes(params.search.toLowerCase()) ||
-        e.description.toLowerCase().includes(params.search.toLowerCase())
-      );
-    }
-    return result.map((e) => ({
-      ...e,
-      intelligence: this.eventIntelligences.get(e.id) || null,
-    }));
-  }
-
-  public async findEventById(id: string): Promise<any | null> {
-    const event = this.events.get(id);
-    if (!event) return null;
-    return {
-      ...event,
-      intelligence: this.eventIntelligences.get(id) || null,
-    };
-  }
-
-  public async createEvent(data: any): Promise<any> {
-    const id = data.id || `event-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
-    const event = { id, ...data, createdAt: new Date(), updatedAt: new Date() };
-    this.events.set(id, event);
-    return event;
-  }
-
-  public async upsertEventIntelligence(eventId: string, intelligenceData: any): Promise<any> {
-    const intelligence = {
-      id: `intel-${eventId}`,
-      eventId,
-      ...intelligenceData,
-      analyzedAt: new Date(),
-    };
-    this.eventIntelligences.set(eventId, intelligence);
-    return intelligence;
-  }
-
-  public async getCandidateEventsForStudent(limit: number = 500): Promise<any[]> {
-    return this.findAllEvents({ limit });
-  }
-
-  // --- INTERACTION OPERATIONS ---
-  public async logInteraction(data: any): Promise<any> {
-    const entry = {
-      id: `act-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-      ...data,
-      createdAt: new Date(),
-    };
-    this.interactions.push(entry);
-    return entry;
-  }
-
-  public async getStudentInteractions(studentId: string): Promise<any[]> {
-    return this.interactions.filter((i) => i.studentId === studentId);
-  }
-
-  // --- RECOMMENDATION OPERATIONS ---
-  public async findRecommendationsByStudentId(studentId: string): Promise<any[]> {
-    const list: any[] = [];
-    for (const rec of this.recommendations.values()) {
-      if (rec.studentId === studentId && rec.status === 'ACTIVE') {
-        const ev = await this.findEventById(rec.eventId);
-        list.push({ ...rec, event: ev });
-      }
-    }
-    return list.sort((a, b) => b.score - a.score);
-  }
-
-  public async upsertRecommendation(data: any): Promise<any> {
-    const key = `${data.studentId}_${data.eventId}`;
-    const rec = {
-      id: `rec-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-      ...data,
-      updatedAt: new Date(),
-    };
-    this.recommendations.set(key, rec);
-    const ev = await this.findEventById(data.eventId);
-    return { ...rec, event: ev };
-  }
-
-  // --- CALENDAR OPERATIONS ---
-  public async addCalendarEvent(data: any): Promise<any> {
-    const id = `cal-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
-    const calEvent = { id, ...data, createdAt: new Date() };
-    this.calendarEvents.set(id, calEvent);
-    const ev = await this.findEventById(data.eventId);
-    return { ...calEvent, event: ev };
-  }
-
-  public async getStudentCalendarEvents(studentId: string): Promise<any[]> {
-    const list: any[] = [];
-    for (const c of this.calendarEvents.values()) {
-      if (c.studentId === studentId) {
-        const ev = await this.findEventById(c.eventId);
-        list.push({ ...c, event: ev });
-      }
-    }
+    this.studentSkills.set(key, list);
     return list;
   }
 
-  public async removeCalendarEvent(id: string, studentId: string): Promise<boolean> {
-    const existing = this.calendarEvents.get(id);
-    if (existing && existing.studentId === studentId) {
-      this.calendarEvents.delete(id);
-      return true;
-    }
-    return false;
+  public async logSkillEvolution(data: any): Promise<any> {
+    const key = String(data.userId);
+    const list = this.skillEvolutions.get(key) || [];
+    const item = { id: `evo_${Date.now()}`, recordedAt: new Date(), ...data };
+    list.push(item);
+    this.skillEvolutions.set(key, list);
+    return item;
   }
 
-  // --- NOTIFICATION OPERATIONS ---
+  public async getSkillEvolutionHistory(userId: string | bigint): Promise<any[]> {
+    return this.skillEvolutions.get(String(userId)) || [];
+  }
+
+  public async getStudentActivities(userId: string | bigint): Promise<any[]> {
+    return this.studentActivities.get(String(userId)) || [];
+  }
+
+  public async addStudentActivity(userId: string | bigint, activityData: any): Promise<any> {
+    const key = String(userId);
+    const list = this.studentActivities.get(key) || [];
+    const activity = { id: `act_${Date.now()}`, createdAt: new Date(), ...activityData };
+    list.push(activity);
+    this.studentActivities.set(key, list);
+    return activity;
+  }
+
+  public async getEventParticipations(userId: string | bigint): Promise<any[]> {
+    return this.eventParticipations.get(String(userId)) || [];
+  }
+
+  public async registerEventParticipation(userId: string | bigint, eventId: string | bigint, status: string = 'REGISTERED'): Promise<any> {
+    const key = String(userId);
+    const list = this.eventParticipations.get(key) || [];
+    const part = {
+      userId: key,
+      eventId: String(eventId),
+      registrationDate: new Date(),
+      participationStatus: status,
+      attended: false,
+      completed: false,
+    };
+    list.push(part);
+    this.eventParticipations.set(key, list);
+    return part;
+  }
+
+  public async updateEventParticipation(userId: string | bigint, eventId: string | bigint, data: any): Promise<any> {
+    const key = String(userId);
+    const list = this.eventParticipations.get(key) || [];
+    const idx = list.findIndex((p) => String(p.eventId) === String(eventId));
+    if (idx >= 0) {
+      list[idx] = { ...list[idx], ...data, updatedAt: new Date() };
+    }
+    this.eventParticipations.set(key, list);
+    return list[idx] || null;
+  }
+
+  public async getEventById(id: string | bigint): Promise<any> {
+    const key = String(id);
+    const event = this.events.get(key);
+    if (!event) return null;
+    const intel = this.eventAiAnalysis.get(key);
+    return { ...event, intelligence: intel || null };
+  }
+
+  public async findEventById(id: string | bigint): Promise<any> {
+    return this.getEventById(id);
+  }
+
+  public async findAllEvents(params?: any): Promise<any[]> {
+    return this.listEvents(params);
+  }
+
+  public async getCandidateEventsForStudent(limit: number = 500): Promise<any[]> {
+    return this.listEvents({ limit });
+  }
+
+  public async listEvents(filters?: any): Promise<any[]> {
+    const results: any[] = [];
+    for (const e of this.events.values()) {
+      const intel = this.eventAiAnalysis.get(String(e.eventId || e.id));
+      results.push({ ...e, intelligence: intel || null });
+    }
+    return results;
+  }
+
+  public async createEvent(data: any): Promise<any> {
+    const id = data.id || data.eventId || `event_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
+    const event = { id, eventId: id, ...data, createdAt: new Date() };
+    this.events.set(String(id), event);
+    return event;
+  }
+
+  public async getEventAiAnalysis(eventId: string | bigint): Promise<any> {
+    return this.eventAiAnalysis.get(String(eventId)) || null;
+  }
+
+  public async upsertEventAiAnalysis(eventId: string | bigint, analysisData: any): Promise<any> {
+    const key = String(eventId);
+    const intel = { eventId: key, ...analysisData, updatedAt: new Date() };
+    this.eventAiAnalysis.set(key, intel);
+    return intel;
+  }
+
+  public async upsertEventIntelligence(eventId: string | bigint, analysisData: any): Promise<any> {
+    return this.upsertEventAiAnalysis(eventId, analysisData);
+  }
+
+  public async getEventAnalytics(eventId: string | bigint): Promise<any> {
+    return this.eventAnalytics.get(String(eventId)) || { views: 0, clicks: 0, saves: 0, registrations: 0, shares: 0 };
+  }
+
+  public async updateEventAnalytics(eventId: string | bigint, analyticsData: any): Promise<any> {
+    const key = String(eventId);
+    const existing = await this.getEventAnalytics(key);
+    const updated = { ...existing, ...analyticsData, updatedAt: new Date() };
+    this.eventAnalytics.set(key, updated);
+    return updated;
+  }
+
+  public async getHackathonDetails(eventId: string | bigint): Promise<any> {
+    return this.hackathonDetails.get(String(eventId)) || null;
+  }
+
+  public async getInternshipDetails(eventId: string | bigint): Promise<any> {
+    return this.internshipDetails.get(String(eventId)) || null;
+  }
+
+  public async getProjectDetails(eventId: string | bigint): Promise<any> {
+    return this.projectDetails.get(String(eventId)) || null;
+  }
+
+  public async getWorkshopDetails(eventId: string | bigint): Promise<any> {
+    return this.workshopDetails.get(String(eventId)) || null;
+  }
+
+  public async logInteraction(data: any): Promise<any> {
+    const key = String(data.userId || data.studentId || 1);
+    const list = this.userInteractions.get(key) || [];
+    const item = { id: `int_${Date.now()}`, interactionTime: new Date(), ...data };
+    list.push(item);
+    this.userInteractions.set(key, list);
+    return item;
+  }
+
+  public async getStudentInteractions(userId: string | bigint): Promise<any[]> {
+    return this.userInteractions.get(String(userId)) || [];
+  }
+
+  public async addCalendarEvent(data: any): Promise<any> {
+    const key = String(data.studentId || data.userId);
+    const list = this.calendarEvents.get(key) || [];
+    const event = { id: `cal_${Date.now()}`, createdAt: new Date(), ...data };
+    list.push(event);
+    this.calendarEvents.set(key, list);
+    return event;
+  }
+
+  public async getStudentCalendarEvents(studentId: string | bigint): Promise<any[]> {
+    return this.calendarEvents.get(String(studentId)) || [];
+  }
+
+  public async removeCalendarEvent(id: string): Promise<any> {
+    for (const [key, list] of this.calendarEvents.entries()) {
+      const filtered = list.filter((item) => item.id !== id);
+      this.calendarEvents.set(key, filtered);
+    }
+    return { success: true };
+  }
+
   public async createNotification(data: any): Promise<any> {
-    const id = `notif-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
-    const notification = { id, ...data, isRead: false, createdAt: new Date() };
-    this.notifications.set(id, notification);
-    return notification;
+    const key = String(data.studentId || data.userId);
+    const list = this.notifications.get(key) || [];
+    const notif = { id: `notif_${Date.now()}`, isRead: false, createdAt: new Date(), ...data };
+    list.push(notif);
+    this.notifications.set(key, list);
+    return notif;
   }
 
-  public async getStudentNotifications(studentId: string, limit: number = 20): Promise<any[]> {
-    const list: any[] = [];
-    for (const n of this.notifications.values()) {
-      if (n.studentId === studentId) {
-        const ev = n.eventId ? await this.findEventById(n.eventId) : null;
-        list.push({ ...n, event: ev });
-      }
+  public async getStudentNotifications(studentId: string | bigint): Promise<any[]> {
+    return this.notifications.get(String(studentId)) || [];
+  }
+
+  public async markNotificationAsRead(id: string): Promise<any> {
+    for (const list of this.notifications.values()) {
+      const target = list.find((n) => n.id === id);
+      if (target) target.isRead = true;
     }
-    return list.slice(0, limit);
+    return { success: true };
   }
 
-  public async markNotificationAsRead(id: string, studentId: string): Promise<boolean> {
-    const n = this.notifications.get(id);
-    if (n && n.studentId === studentId) {
-      n.isRead = true;
-      this.notifications.set(id, n);
-      return true;
+  public async getRecommendations(userId: string | bigint): Promise<any[]> {
+    const rawList = this.recommendations.get(String(userId)) || [];
+    return rawList.map((r) => {
+      const event = this.events.get(String(r.eventId));
+      return { ...r, event: event || null };
+    });
+  }
+
+  public async findRecommendationsByStudentId(userId: string | bigint): Promise<any[]> {
+    return this.getRecommendations(userId);
+  }
+
+  public async upsertRecommendation(dataOrStudentId: any, eventId?: string | bigint, score?: number, reason?: string): Promise<any> {
+    let studentId = dataOrStudentId;
+    let targetEventId = eventId;
+    let targetScore = score;
+    let targetReason = reason;
+
+    if (typeof dataOrStudentId === 'object' && dataOrStudentId !== null) {
+      studentId = dataOrStudentId.studentId || dataOrStudentId.userId;
+      targetEventId = dataOrStudentId.eventId;
+      targetScore = dataOrStudentId.score;
+      targetReason = dataOrStudentId.reason || dataOrStudentId.explanation;
     }
-    return false;
+
+    const key = String(studentId);
+    const list = this.recommendations.get(key) || [];
+    const existingIdx = list.findIndex((r) => String(r.eventId) === String(targetEventId));
+    const item = { studentId: key, eventId: String(targetEventId), score: targetScore, reason: targetReason, explanation: targetReason };
+    if (existingIdx >= 0) {
+      list[existingIdx] = item;
+    } else {
+      list.push(item);
+    }
+    this.recommendations.set(key, list);
+    return item;
   }
 
-  // --- AI USAGE TELEMETRY OPERATIONS ---
-  public async logAIUsage(metrics: any): Promise<any> {
-    const entry = { id: `usage-${Date.now()}`, ...metrics, timestamp: new Date() };
-    this.aiUsageLogs.push(entry);
-    return entry;
+  public async saveRecommendations(userId: string | bigint, recommendationsList: any[]): Promise<any> {
+    const key = String(userId);
+    this.recommendations.set(key, recommendationsList);
+    return recommendationsList;
   }
 
-  public async logAIRequest(requestData: any): Promise<any> {
-    const entry = { id: `reqlog-${Date.now()}`, ...requestData, createdAt: new Date() };
-    this.aiRequests.push(entry);
-    return entry;
+  public async logAIUsage(metrics: AIUsageMetrics): Promise<any> {
+    const item = { id: `usage_${Date.now()}`, timestamp: new Date(), ...metrics };
+    this.aiLogs.push(item);
+    return item;
+  }
+
+  public async logAIRequest(data: any): Promise<any> {
+    const item = { id: `req_${Date.now()}`, createdAt: new Date(), ...data };
+    this.aiRequests.push(item);
+    return item;
   }
 
   public async getAIUsageSummary(): Promise<any> {
-    const totalRequests = this.aiUsageLogs.length;
-    const successRequests = this.aiUsageLogs.filter((u) => u.success).length;
-
-    const totalInputTokens = this.aiUsageLogs.reduce((acc, curr) => acc + (curr.inputTokens || 0), 0);
-    const totalOutputTokens = this.aiUsageLogs.reduce((acc, curr) => acc + (curr.outputTokens || 0), 0);
-    const totalTokens = this.aiUsageLogs.reduce((acc, curr) => acc + (curr.totalTokens || 0), 0);
-    const totalEstimatedCost = this.aiUsageLogs.reduce((acc, curr) => acc + (curr.estimatedCost || 0), 0);
+    const totalRequests = this.aiLogs.length;
+    const successfulRequests = this.aiLogs.filter((l) => l.success).length;
+    const totalTokens = this.aiLogs.reduce((acc, curr) => acc + (curr.totalTokens || 0), 0);
+    const totalEstimatedCost = this.aiLogs.reduce((acc, curr) => acc + (curr.estimatedCost || 0), 0);
 
     return {
       totalRequests,
-      successRequests,
-      failedRequests: totalRequests - successRequests,
-      totalInputTokens,
-      totalOutputTokens,
+      successfulRequests,
+      failedRequests: totalRequests - successfulRequests,
       totalTokens,
       totalEstimatedCost,
+      logsCount: this.aiLogs.length,
+      requestLogsCount: this.aiRequests.length,
     };
   }
 }

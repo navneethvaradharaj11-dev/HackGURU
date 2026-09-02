@@ -8,13 +8,27 @@ const studentController = new StudentController();
 // Global interests catalogue
 router.get('/interests', studentController.getInterests);
 
-// Student profile & interests/skills endpoints
-router.get('/students/me', authMiddleware, studentController.getMe);
-router.put('/students/me', authMiddleware, studentController.updateMe);
+// Student profile & interests/skills endpoints (mounted at /api/students)
+router.get('/me', authMiddleware, studentController.getMe);
+router.put('/me', authMiddleware, studentController.updateMe);
 
-router.get('/students/me/interests', authMiddleware, studentController.getMyInterests);
-router.put('/students/me/interests', authMiddleware, studentController.updateMyInterests);
+router.get('/me/interests', authMiddleware, studentController.getMyInterests);
+router.put('/me/interests', authMiddleware, studentController.updateMyInterests);
 
-router.get('/students/me/skills', authMiddleware, studentController.getMySkills);
+router.get('/me/skills', authMiddleware, studentController.getMySkills);
+
+// GitHub connection
+router.post('/me/github', authMiddleware, studentController.connectGithub);
+
+// Student activities & participation
+router.get('/me/activities', authMiddleware, studentController.getActivities);
+router.post('/me/activities', authMiddleware, studentController.addActivity);
+router.post('/me/participate', authMiddleware, studentController.participateInEvent);
+
+// Dedicated skill evolution history
+router.get('/me/skills/evolution', authMiddleware, studentController.getSkillEvolution);
+
+// AI Student Intelligence profile summary
+router.get('/me/intelligence', authMiddleware, studentController.getIntelligenceProfile);
 
 export default router;

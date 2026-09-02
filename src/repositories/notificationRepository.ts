@@ -1,6 +1,6 @@
 import { AdapterFactory } from '../adapters/adapterFactory';
 import { IDatabaseAdapter } from '../adapters/databaseAdapter.interface';
-import { NotificationType } from '@prisma/client';
+import { NotificationType } from '../types/enums';
 
 export class NotificationRepository {
   private get adapter(): IDatabaseAdapter {
@@ -18,10 +18,10 @@ export class NotificationRepository {
   }
 
   public async getStudentNotifications(studentId: string, limit: number = 20): Promise<any[]> {
-    return this.adapter.getStudentNotifications(studentId, limit);
+    return this.adapter.getStudentNotifications(studentId);
   }
 
   public async markAsRead(id: string, studentId: string): Promise<boolean> {
-    return this.adapter.markNotificationAsRead(id, studentId);
+    return this.adapter.markNotificationAsRead(id);
   }
 }
