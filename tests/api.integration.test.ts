@@ -86,4 +86,12 @@ describe('Comprehensive REST API Integration Test Suite', () => {
     expect(res.status).toBe(201);
     expect(res.body.success).toBe(true);
   });
+
+  it('should fetch AI usage telemetry and pool statuses (GET /api/ai/usage)', async () => {
+    const res = await request(app).get('/api/ai/usage');
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.usageSummary).toBeDefined();
+    expect(res.body.data.gatewayPools).toBeDefined();
+  });
 });

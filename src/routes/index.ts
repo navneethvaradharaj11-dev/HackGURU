@@ -7,6 +7,7 @@ import interactionRoutes from './interactionRoutes';
 import calendarRoutes from './calendarRoutes';
 import notificationRoutes from './notificationRoutes';
 import dashboardRoutes from './dashboard.routes';
+import aiRoutes from './aiRoutes';
 
 const router = Router();
 
@@ -18,5 +19,6 @@ router.use('/interactions', interactionRoutes);
 router.use('/calendar', calendarRoutes);
 router.use('/notifications', notificationRoutes);
 router.use('/dashboard', dashboardRoutes);
+router.use('/ai', aiRoutes);
 
 export default router;

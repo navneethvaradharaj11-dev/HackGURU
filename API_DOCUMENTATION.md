@@ -95,3 +95,12 @@ Base URL: `http://localhost:5000/api`
 `GET /api/dashboard` (Header: `Authorization: Bearer <token>`)
 
 Aggregates student profile, interests, skills, hackathons, internships, projects, events, upcoming deadlines, recommendations, and notifications in one payload.
+
+---
+
+## 🤖 AI Telemetry & Gateway Pool Status
+
+`GET /api/ai/usage`
+
+Returns total tokens consumed, request counts, estimated costs, latency, cache hit/miss stats, and current Gateway Pool health for Gemini, OpenAI, and Hugging Face.
+

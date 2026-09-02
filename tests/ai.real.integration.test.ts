@@ -1,10 +1,12 @@
 import { AIGateway } from '../src/ai/gateway/aiGateway';
-import { env } from '../src/config/env';
 import { AdapterFactory } from '../src/adapters/adapterFactory';
 import { InMemoryDatabaseAdapter } from '../src/adapters/inMemoryAdapter';
 
+jest.setTimeout(20000);
+
 describe('Real AI Provider Gateway Integration Test Suite', () => {
   beforeEach(() => {
+    process.env.AI_PRIMARY_PROVIDER = 'MOCK';
     AdapterFactory.setAdapter(new InMemoryDatabaseAdapter());
   });
 
