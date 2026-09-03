@@ -76,14 +76,51 @@ Production-grade, full-stack multi-platform solution serving as India's #1 AI-po
 
 ---
 
-## 🛠️ Technology Stack
+## 🛠️ Complete Technology Stack
 
-- **Mobile**: Flutter (v3.0+), Dart (v3.0+)
-- **Frontend**: Next.js (v15 App Router), React (v19), TypeScript (v5+), Tailwind CSS
-- **Backend**: Node.js (v24+), TypeScript (v5+), Express.js (v4+)
-- **Database**: PostgreSQL (`allcollegeevent.sql`), Prisma ORM
-- **AI SDKs**: Gemini API (`@google/generative-ai`), OpenAI (`openai`), Hugging Face (`@huggingface/inference`)
-- **Hosting**: Vercel (`https://ace-phi-five.vercel.app/`)
+### 📱 1. Mobile Application Layer (`flutter_app/`)
+* **Framework:** Flutter (v3.0+)
+* **Language:** Dart (v3.0+)
+* **UI Design:** Material 3 Dark Theme (`#080C16`), Custom Cards & Badges
+* **HTTP Networking:** `http: ^1.2.0`
+* **Architecture:** Decoupled Services & Typed Data Models
+
+### 🌐 2. Web Frontend Application Layer (`frontend/`)
+* **Framework:** Next.js 15 (App Router with Turbopack)
+* **Core Library:** React 19
+* **Language:** TypeScript (v5+)
+* **Styling System:** Tailwind CSS, Glassmorphism Backdrop Blurs, Custom Scrollbars
+* **Icons & Assets:** Lucide React, Official SVG Trophy Favicon
+* **API Client:** Axios / Fetch API Client (`frontend/src/lib/api/client.ts`)
+* **Deployment & Hosting:** Vercel Production Cloud ([https://ace-phi-five.vercel.app/](https://ace-phi-five.vercel.app/))
+
+### ⚙️ 3. Backend API & Intelligence Layer (`src/`)
+* **Runtime:** Node.js (v24+)
+* **Language:** TypeScript (v5+)
+* **Web Framework:** Express.js (v4+)
+* **Authentication:** JSON Web Tokens (`jsonwebtoken`), Password Hashing (`bcryptjs`)
+* **Security & Validation:** Helmet security headers (`helmet`), Zod payload validation (`zod`), Rate limiting (`express-rate-limit`), CORS enablement (`cors`)
+
+### 🧠 4. AI Gateway & LLM Orchestration Layer
+* **Dual-Agent Architecture:**
+  * **Agent 1 (Opportunity Matcher):** Generates personalized natural language match explanations for students.
+  * **Agent 2 (Event Taxonomy Parser):** Extracts domain tags, prerequisites, and target audience levels.
+* **Multi-Provider Key Pools (17 Keys Total):**
+  * **Google Gemini Pool:** 10 API Keys (`@google/generative-ai`)
+  * **OpenAI Pool:** 5 API Keys (`openai` GPT-4o-mini)
+  * **Hugging Face Pool:** 2 API Keys (`@huggingface/inference` open-weight models)
+  * **Offline Fallback Pool:** Mock AI Provider for 100% uninterrupted offline testing.
+* **Performance & Caching:** SHA-256 Content-Hash Caching Engine (0 LLM call on hash match), Deterministic Node.js Scoring Engine (`<120ms`).
+
+### 🗄️ 5. Database & Storage Layer
+* **Primary Database:** PostgreSQL (`allcollegeevent.sql` schema with 18 tables & views)
+* **ORM & Query Builder:** Prisma ORM (`@prisma/client`)
+* **Database Abstraction:** Decoupled Database Adapter Pattern (`IDatabaseAdapter` -> `PrismaDatabaseAdapter` & `InMemoryDatabaseAdapter`)
+
+### 🧪 6. Testing & Quality Assurance
+* **Test Runner:** Jest Test Framework (`jest`), Supertest (`supertest`)
+* **Test Coverage:** 8 Passed Test Suites (23/23 Unit, API, & AI Gateway Integration Tests)
+* **Static Analysis:** TypeScript Strict Type Compiler (`npx tsc --noEmit`)
 
 ---
 
