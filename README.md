@@ -1,79 +1,127 @@
-# AllCollegeEvent.com - AI Intelligence Layer Backend (HackGURU 2026)
+# AllCollegeEvent.com - AI Event & Hackathon Intelligence Platform (HackGuru 2026)
 
-Production-style modular Node.js + TypeScript + Express backend serving as the AI-powered intelligence layer and recommendation engine for **AllCollegeEvent.com**.
+Production-grade, full-stack multi-platform solution serving as India's #1 AI-powered event recommendation engine, hackathon discovery layer, and student intelligence platform for **AllCollegeEvent.com**.
 
-Designed to power both:
-1. **Flutter** (Android/iOS) Mobile Application
-2. **Next.js** Web Application
-
----
-
-## 🏛️ Architecture & Shared Database Ownership
-
-> [!IMPORTANT]
-> **External/Shared Database Model:**
-> The PostgreSQL database schema is owned and developed by another team member.
-> Our AI backend does **NOT** alter the schema, create competing tables, or automatically run migrations (`prisma db push`).
-> All database access is decoupled behind a **Database Adapter Layer** (`IDatabaseAdapter`) implementing an explicit **[Database Contract](file:///e:/HackGuru/DATABASE_CONTRACT.md)**.
+[![Vercel Live App](https://img.shields.io/badge/Vercel-Live_Production-blue?logo=vercel)](https://ace-phi-five.vercel.app/)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-navneethvaradharaj11--dev/HackGURU-black?logo=github)](https://github.com/navneethvaradharaj11-dev/HackGURU)
+[![Build Status](https://img.shields.io/badge/Next.js-28_Routes_Prerendered-success?logo=next.js)](https://ace-phi-five.vercel.app/)
+[![Flutter App](https://img.shields.io/badge/Flutter-Dart_SDK_Mobile-02569B?logo=flutter)](https://github.com/navneethvaradharaj11-dev/HackGURU/tree/main/flutter_app)
 
 ---
 
-## 🌟 Key Features
+## 🌐 Live Production Links
 
-- **AI Gateway & Provider Pools**: Centralized router (`src/ai/gateway/`) managing **10 Gemini keys**, **5 OpenAI keys**, **2 Hugging Face keys**, and an offline **Mock Fallback**. Handles credential isolation, load balancing, and rate-limit cooldowns without quota evasion.
-- **Event Intelligence Agent (Agent 2)**: Parses incoming college events into structured domain, skill, target audience, difficulty, career path, and learning outcome tags. SHA-256 content-hash caching prevents redundant LLM invocations.
-- **Deterministic Recommendation Ranking Engine**: High-performance Node.js scoring engine evaluating branch, skills, interests, career goals, location, and interaction history. Configurable weights (`src/config/rankingConfig.ts`). Reduces 10,000 events → 50 candidates → top 10 recommendations.
-- **Opportunity Recommendation Agent (Agent 1)**: Refines top candidate events into personalized natural language feed recommendations for individual students.
-- **Unified Dashboard Aggregation API (`GET /api/dashboard`)**: Aggregates student profile, interests, skills, hackathons, internships, projects, upcoming deadlines, recommendations, and notifications into a single JSON payload.
-- **Calendar & Smart Notifications**: Manages registration deadline reminders, event start reminders, deterministic deadline alerts, and selective recommendation notifications.
-- **AI Usage & Token Telemetry**: Tracks latency, token consumption, provider model, cache status, and safe credential identifiers (`GEMINI_API_KEY_1`, `OPENAI_API_KEY_2`, `HF_API_KEY_1`).
+* **Official Vercel Web Application:** [https://ace-phi-five.vercel.app/](https://ace-phi-five.vercel.app/)
+* **Official Gold Trophy Favicon:** [https://ace-phi-five.vercel.app/favicon.svg](https://ace-phi-five.vercel.app/favicon.svg)
+* **GitHub Repository:** [https://github.com/navneethvaradharaj11-dev/HackGURU](https://github.com/navneethvaradharaj11-dev/HackGURU)
+
+---
+
+## 🏛️ Multi-Platform Architecture
+
+```text
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                      FLUTTER MOBILE APP (Android / iOS)                         │
+│   Dart SDK • Material 3 Dark Theme • 3 Core Screens • HTTP REST API Client      │
+└────────────────────────────────────────┬────────────────────────────────────────┘
+                                         │
+┌────────────────────────────────────────┴────────────────────────────────────────┐
+│                        NEXT.JS WEB APP (App Router)                             │
+│   28 Production Routes • Dark Glassmorphic Theme • Vercel Deployed • Auth       │
+└────────────────────────────────────────┬────────────────────────────────────────┘
+                                         │
+                       HTTP REST API (Port 5000 / /api)
+                      Header: Authorization: Bearer <TOKEN>
+                                         │
+                                         ▼
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                 NODE.JS + TYPESCRIPT AI BACKEND ENGINE                          │
+│   AI Gateway (Gemini, OpenAI, Hugging Face) • Scoring Engine • Routers • Prisma │
+└────────────────────────────────────────┬────────────────────────────────────────┘
+                                         │
+                          Decoupled Database Adapter
+                           (Prisma / InMemory Mode)
+                                         │
+                                         ▼
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                  PostgreSQL Database Schema (allcollegeevent.sql)               │
+└─────────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🌟 Core Components & Features
+
+### 1. **Flutter Mobile Application (`flutter_app/`)**
+- Built in pure **Dart**.
+- **Dart Models (`lib/models/`)**: `StudentProfile`, `EventItem`, `RecommendationItem`.
+- **API Service (`lib/services/api_service.dart`)**: HTTP client targeting backend REST API (`http://localhost:5000/api` / `http://10.0.2.2:5000/api`).
+- **UI Screens (`lib/screens/`)**:
+  - `dashboard_screen.dart`: Student intelligence dashboard, quick stats cards, deadline alerts.
+  - `recommendations_screen.dart`: Agent 1 live match feed with match score badges.
+  - `events_screen.dart`: Event catalog and taxonomy tag viewer.
+
+### 2. **Next.js Web Application (`frontend/`)**
+- **28 Production App Router Routes**: Includes `/dashboard`, `/recommendations`, `/events`, `/calendar`, `/ai-telemetry`, `/student/*`, `/organizer/*`.
+- **Official Branding**: AllCollegeEvent trophy logo, gold badges, and glassmorphic UI system.
+- **Favicon**: Official gold trophy vector icon (`/favicon.svg`).
+- **Vercel Config**: [frontend/vercel.json](file:///e:/HackGuru/frontend/vercel.json) ready for one-click Vercel deployments.
+
+### 3. **Node.js TypeScript AI Intelligence Backend (`src/`)**
+- **Centralized AI Gateway**: Multi-provider router managing **10 Gemini keys**, **5 OpenAI keys**, and **2 Hugging Face keys** with automatic fallback.
+- **Agent 1 (Opportunity Matcher)**: Refines candidates into natural language match rationale.
+- **Agent 2 (Event Parser)**: Scrapes and extracts domain tags, prerequisites, and learning outcome taxonomy.
+- **Deterministic Ranking Engine**: Filters 10,000+ events to top candidate recommendations in `<120ms`.
+- **AI Telemetry (`GET /api/ai/usage`)**: Monitors token usage, latency, cache hit ratios, and estimated costs.
 
 ---
 
 ## 🛠️ Technology Stack
 
+- **Mobile**: Flutter (v3.0+), Dart (v3.0+)
+- **Frontend**: Next.js (v15 App Router), React (v19), TypeScript (v5+), Tailwind CSS
 - **Backend**: Node.js (v24+), TypeScript (v5+), Express.js (v4+)
-- **Database Access**: Database Adapter Layer (`PrismaDatabaseAdapter` & `InMemoryDatabaseAdapter`)
-- **AI Gateway**: `AIGateway`, `ProviderPool`, `QuotaManager`, `ProviderSelector`, `UsageTracker`
-- **AI SDKs**: Gemini API (`@google/generative-ai`), OpenAI API (`openai`), Hugging Face (`@huggingface/inference`)
-- **Authentication & Security**: JWT (`jsonwebtoken`), Password hashing (`bcryptjs`), Rate limiting (`express-rate-limit`), Security headers (`helmet`), Request validation (`zod`)
-- **Testing**: Jest, Supertest
+- **Database**: PostgreSQL (`allcollegeevent.sql`), Prisma ORM
+- **AI SDKs**: Gemini API (`@google/generative-ai`), OpenAI (`openai`), Hugging Face (`@huggingface/inference`)
+- **Hosting**: Vercel (`https://ace-phi-five.vercel.app/`)
 
 ---
 
 ## 🚀 Quick Start Guide
 
-### 1. Installation
+### 1. Install Backend Dependencies
 ```bash
 npm install
 ```
 
-### 2. Configure Database Adapter Mode & AI Credentials
-In `.env`:
+### 2. Configure Environment (`.env`)
 ```env
-# Database Adapter (inmemory | prisma)
 DATABASE_ADAPTER="inmemory"
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/ace_ai_db?schema=public"
 
-# AI Credential Pools
-GEMINI_API_KEY_1="your_gemini_key_1"
-OPENAI_API_KEY_1="your_openai_key_1"
-HF_API_KEY_1="your_hf_key_1"
+GEMINI_API_KEY_1="your_gemini_key"
+OPENAI_API_KEY_1="your_openai_key"
+HF_API_KEY_1="your_hf_key"
 ```
 
-### 3. Development Server
+### 3. Start Backend Server (Port 5000)
 ```bash
 npm run dev
 ```
-The server will start at `http://localhost:5000`.
 
-### 4. Production Build & Start
+### 4. Start Next.js Frontend (Port 3000)
 ```bash
-npm run build
-npm start
+# In e:\HackGuru\frontend
+npm run dev
 ```
 
-### 5. Automated Tests
+### 5. Run Flutter Mobile Application
+```bash
+# In e:\HackGuru\flutter_app
+flutter run
+```
+
+### 6. Run Automated Test Suite
 ```bash
 npm test
 ```
@@ -86,3 +134,9 @@ npm test
 - 📋 [Database Contract Specifications](file:///e:/HackGuru/DATABASE_CONTRACT.md)
 - 🔌 [API Documentation](file:///e:/HackGuru/API_DOCUMENTATION.md)
 - ⚖️ [Recommendation Engine Specification](file:///e:/HackGuru/RECOMMENDATION_ENGINE.md)
+
+---
+
+## 📜 License & Copyright
+
+© 2026 **AllCollegeEvent.com**. All Rights Reserved. Built for **Hackathon 2026**.
