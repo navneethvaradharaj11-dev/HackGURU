@@ -30,13 +30,13 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF070A12),
+      backgroundColor: const Color(0xFF080C16),
       appBar: AppBar(
         backgroundColor: const Color(0xFF0F172A),
-        title: const Text('AI Match Feed (Agent 1)', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        title: const Text('Agent 1 Opportunity Feed', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         actions: [
           IconButton(
-            icon: const Icon(Icons.auto_awesome, color: Colors.blueAccent),
+            icon: const Icon(Icons.auto_awesome, color: Color(0xFF60A5FA)),
             onPressed: () {
               setState(() => _loading = true);
               _loadRecommendations();
@@ -45,7 +45,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
         ],
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator(color: Colors.blueAccent))
+          ? const Center(child: CircularProgressIndicator(color: Color(0xFF2563EB)))
           : ListView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: _recommendations.length,
@@ -57,7 +57,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
                   decoration: BoxDecoration(
                     color: const Color(0xFF1E293B).withOpacity(0.7),
                     borderRadius: BorderRadius.circular(18),
-                    border: Border.all(color: Colors.blueAccent.withOpacity(0.3)),
+                    border: Border.all(color: const Color(0xFF2563EB).withOpacity(0.4)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,10 +68,10 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
-                              color: Colors.blueAccent.withOpacity(0.2),
+                              color: const Color(0xFF2563EB).withOpacity(0.2),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: Text(item.event.category, style: const TextStyle(color: Colors.blueAccent, fontSize: 11, fontWeight: FontWeight.bold)),
+                            child: Text(item.event.category, style: const TextStyle(color: Color(0xFF60A5FA), fontSize: 11, fontWeight: FontWeight.bold)),
                           ),
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -79,7 +79,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
                               color: Colors.greenAccent.withOpacity(0.2),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: Text('${item.score.toInt()}% Match', style: const TextStyle(color: Colors.greenAccent, fontSize: 11, fontWeight: FontWeight.bold)),
+                            child: Text('🏆 ${item.score.toInt()}% ACE Match', style: const TextStyle(color: Colors.greenAccent, fontSize: 11, fontWeight: FontWeight.bold)),
                           ),
                         ],
                       ),
@@ -89,13 +89,13 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
                       Text(item.event.description, style: const TextStyle(color: Colors.grey, fontSize: 12)),
                       const SizedBox(height: 12),
                       Container(
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: Colors.blue.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Colors.blue.withOpacity(0.2)),
+                          color: const Color(0xFF2563EB).withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: const Color(0xFF2563EB).withOpacity(0.25)),
                         ),
-                        child: Text('🧠 AI Rationale: ${item.matchReason}', style: const TextStyle(color: Colors.lightBlueAccent, fontSize: 12)),
+                        child: Text('🧠 AllCollegeEvent AI Rationale: ${item.matchReason}', style: const TextStyle(color: Color(0xFF93C5FD), fontSize: 12)),
                       ),
                       const SizedBox(height: 14),
                       Row(
@@ -104,10 +104,12 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
                             child: ElevatedButton.icon(
                               onPressed: () => ApiService.logInteraction(item.eventId, 'REGISTER'),
                               icon: const Icon(Icons.arrow_forward, size: 16),
-                              label: const Text('Register'),
+                              label: const Text('Register via AllCollegeEvent'),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blueAccent,
+                                backgroundColor: const Color(0xFF2563EB),
                                 foregroundColor: Colors.white,
+                                padding: const EdgeInsets.vertical(12),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                               ),
                             ),
                           ),

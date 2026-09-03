@@ -4,21 +4,26 @@ import 'screens/recommendations_screen.dart';
 import 'screens/events_screen.dart';
 
 void main() {
-  runApp(const AceFlutterApp());
+  runApp(const AllCollegeEventFlutterApp());
 }
 
-class AceFlutterApp extends StatelessWidget {
-  const AceFlutterApp({super.key});
+class AllCollegeEventFlutterApp extends StatelessWidget {
+  const AllCollegeEventFlutterApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'AllCollegeEvent.AI',
+      title: 'AllCollegeEvent.com',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
-        scaffoldBackgroundColor: const Color(0xFF070A12),
-        primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: const Color(0xFF080C16),
+        primaryColor: const Color(0xFF2563EB),
+        colorScheme: const ColorScheme.dark(
+          primary: Color(0xFF2563EB),
+          secondary: Color(0xFF06B6D4),
+          surface: Color(0xFF0F172A),
+        ),
       ),
       home: const MainNavigationShell(),
     );
@@ -45,17 +50,23 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _screens[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
-        backgroundColor: const Color(0xFF0F172A),
-        selectedItemColor: Colors.blueAccent,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
-          BottomNavigationBarItem(icon: Icon(Icons.auto_awesome), label: 'AI Feed'),
-          BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Events'),
-        ],
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          border: Border(top: BorderSide(color: Colors.white10)),
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) => setState(() => _currentIndex = index),
+          backgroundColor: const Color(0xFF0F172A),
+          selectedItemColor: const Color(0xFF60A5FA),
+          unselectedItemColor: Colors.grey,
+          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.dashboard_customize), label: 'ACE Dashboard'),
+            BottomNavigationBarItem(icon: Icon(Icons.auto_awesome), label: 'AI Feed'),
+            BottomNavigationBarItem(icon: Icon(Icons.emoji_events), label: 'Events'),
+          ],
+        ),
       ),
     );
   }
