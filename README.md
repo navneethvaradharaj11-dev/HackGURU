@@ -17,6 +17,18 @@
 
 ---
 
+## Project Visuals
+
+<p align="center">
+  <img src="image2" alt="First uploaded image shared by the user" width="900" />
+</p>
+<p align="center"><em>First uploaded image</em></p>
+
+<p align="center">
+  <img src="image1" alt="Second uploaded image shared by the user" width="900" />
+</p>
+<p align="center"><em>Second uploaded image</em></p>
+
 ## About HackGURU 2026
 
 **HackGURU 2026** is a production-ready, multi-platform intelligence platform created for **AllCollegeEvent**. It helps students discover hackathons, competitions, workshops, internships, and other high-value opportunities through personalized recommendations rather than generic event listings.
