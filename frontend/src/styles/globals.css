@@ -43,3 +43,10 @@ h1, h2, h3, h4, h5, h6 { color: var(--text-primary); font-weight: 700; }
 h1 { font-size: var(--fs-h1); }
 h2 { font-size: var(--fs-h2); }
 h3 { font-size: var(--fs-h3); }
+
+/* Skeleton animation keyframes */
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
