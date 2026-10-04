@@ -1,5 +1,10 @@
 <div align="center">
   <img src="frontend/public/favicon.svg" alt="HackGURU logo" width="96" />
+  <p>
+    <img src="image2" alt="EC Learnox logo" width="220" />
+    &nbsp;&nbsp;&nbsp;
+    <img src="image1" alt="Ace All College Event logo in purple" width="220" />
+  </p>
   <h1>HackGURU 2026</h1>
   <p><strong>AI-powered event discovery and opportunity intelligence for every college student.</strong></p>
   <p>
