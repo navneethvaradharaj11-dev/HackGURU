@@ -1,5 +1,13 @@
 <div align="center">
-  <img src="frontend/public/favicon.svg" alt="HackGURU logo" width="96" />
+  <p align="center">
+    <a href="https://www.allcollegeevent.com" target="_blank">
+      <img src="docs/ace-logo.png" alt="All College Event (ACE) Logo" width="360" />
+    </a>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="https://www.eclearnix.com" target="_blank">
+      <img src="docs/ec-learnix-logo.png" alt="EC Learnix Logo" width="240" />
+    </a>
+  </p>
   <h1>HackGURU 2026</h1>
   <p><strong>AI-powered event discovery and opportunity intelligence for every college student.</strong></p>
   <p>
@@ -19,7 +27,7 @@
 
 ## About HackGURU 2026
 
-**HackGURU 2026** is a production-ready, multi-platform intelligence platform created for **AllCollegeEvent**. It helps students discover hackathons, competitions, workshops, internships, and other high-value opportunities through personalized recommendations rather than generic event listings.
+**HackGURU 2026** is a production-ready, multi-platform intelligence platform created for **AllCollegeEvent.com** in partnership with **EC Learnix**. It helps students discover hackathons, competitions, workshops, internships, and other high-value opportunities through personalized recommendations rather than generic event listings.
 
 The platform combines a modern web experience, a Flutter mobile application, a secure TypeScript API, and an AI-assisted recommendation layer. Together, these components turn a large and constantly changing event ecosystem into a focused opportunity feed tailored to each student's interests, skills, eligibility, and goals.
 

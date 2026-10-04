@@ -61,10 +61,8 @@ export function Navbar() {
     }}>
       <nav style={{ maxWidth: 'var(--container, 1200px)', margin: '0 auto', padding: '0 24px', height: 'var(--nav-h, 68px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         {/* Branding */}
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary, #171717)', textDecoration: 'none' }}>
-          <span style={{ width: '32px', height: '32px', borderRadius: '10px', display: 'grid', placeItems: 'center', background: 'var(--violet-600, #6D28D9)', color: '#fff' }}>
-            <Trophy size={18} />
-          </span>
+        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-primary, #171717)', textDecoration: 'none' }}>
+          <img src="/icon.png" alt="ACE Logo" style={{ width: '36px', height: '36px', objectFit: 'contain' }} />
           <span style={{ fontWeight: 700, fontSize: '17px', letterSpacing: '-0.2px' }}>
             AllCollegeEvent<span style={{ color: 'var(--violet-600, #6D28D9)' }}>.com</span>
           </span>

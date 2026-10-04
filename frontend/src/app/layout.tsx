@@ -8,9 +8,13 @@ export const metadata: Metadata = {
   title: 'AllCollegeEvent.com — Discover College Events, Hackathons & Opportunities',
   description: 'India\'s leading platform for college students to discover hackathons, workshops, competitions, internships and technical events. AI-powered personalized recommendations.',
   icons: {
-    icon: '/favicon.svg',
-    shortcut: '/favicon.svg',
-    apple: '/favicon.svg',
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/icon.png', sizes: '512x512', type: 'image/png' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+    shortcut: '/favicon.ico',
+    apple: '/apple-icon.png',
   },
 };
 
