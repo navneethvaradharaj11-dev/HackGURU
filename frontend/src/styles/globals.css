@@ -1,0 +1,45 @@
+@import './tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global Reset & Base Styles */
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* { box-sizing: border-box; }
+
+a { color: var(--violet-700); text-decoration: none; transition: color 0.15s ease; }
+a:hover { color: var(--violet-600); }
+
+/* Accessibility Focus States */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-radius: var(--r-sm);
+}
+
+/* Override legacy dark/glass/neon utilities if they exist */
+.bg-dark, .glass, .glass-card, .neon, .glow, .backdrop-blur {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-soft) !important;
+  backdrop-filter: none !important;
+  box-shadow: var(--shadow-sm) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Typography fallbacks */
+h1, h2, h3, h4, h5, h6 { color: var(--text-primary); font-weight: 700; }
+h1 { font-size: var(--fs-h1); }
+h2 { font-size: var(--fs-h2); }
+h3 { font-size: var(--fs-h3); }
