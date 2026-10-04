@@ -1,103 +1,171 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { cn } from '@/lib/utils/cn';
-import { publicNavItems } from '@/lib/constants';
-import Button from '@/components/ui/Button';
+import { Trophy, Search, Bell, Menu, X, LogOut, LayoutDashboard } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
+import { useAuth } from '@/contexts/AuthContext'; // Preserving existing auth logic
 
-export default function Navbar() {
-  const pathname = usePathname();
+const navLinks = [
+  { label: 'Home', href: '/' },
+  { label: 'Explore Events', href: '/events' },
+  { label: 'Hackathons', href: '/events?category=hackathon' },
+  { label: 'Workshops', href: '/events?category=workshop' },
+  { label: 'Internships', href: '/events?category=internship' },
+  { label: 'Competitions', href: '/events?category=competition' },
+];
+
+export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
+  const { user, logout } = useAuth(); // Existing auth logic untouched
+
+  const isActive = (href: string) => {
+    if (href === '/') return pathname === '/';
+    const baseHref = href.split('?')[0];
+    return pathname?.startsWith(baseHref);
+  };
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-border">
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 shrink-0">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-white font-bold text-sm">A</span>
-            </div>
-            <span className="font-semibold text-text-primary text-lg hidden sm:block">
-              AllCollegeEvent
-            </span>
-          </Link>
+    <header style={{
+      position: 'sticky',
+      top: 0,
+      zIndex: 50,
+      background: 'rgba(255,255,255,0.95)',
+      backdropFilter: 'blur(10px)',
+      borderBottom: '1px solid var(--border-soft)',
+    }}>
+      <nav style={{
+        maxWidth: 'var(--container)',
+        margin: '0 auto',
+        padding: '0 24px',
+        height: 'var(--nav-h)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+      }}>
+        {/* Branding */}
+        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)' }}>
+          <span style={{
+            width: '32px',
+            height: '32px',
+            borderRadius: '10px',
+            display: 'grid',
+            placeItems: 'center',
+            background: 'var(--violet-600)',
+            color: '#fff',
+          }}>
+            <Trophy size={18} />
+          </span>
+          <span style={{ fontWeight: 700, fontSize: '17px', letterSpacing: '-0.2px' }}>
+            AllCollegeEvent<span style={{ color: 'var(--violet-600)' }}>.com</span>
+          </span>
+        </Link>
 
-          {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-1">
-            {publicNavItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  'px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-180',
-                  pathname === item.href
-                    ? 'text-primary bg-primary-light'
-                    : 'text-text-secondary hover:text-text-primary hover:bg-bg-secondary'
-                )}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
-
-          {/* Desktop right actions */}
-          <div className="hidden md:flex items-center gap-3">
-            <Link href="/login">
-              <Button variant="ghost" size="sm">Log In</Button>
+        {/* Desktop Links */}
+        <div className="hidden lg:flex" style={{ gap: '24px', flex: 1, justifyContent: 'center' }}>
+          {navLinks.map((link) => (
+            <Link 
+              key={link.label} 
+              href={link.href}
+              style={{
+                fontSize: '14px',
+                fontWeight: isActive(link.href) ? 600 : 500,
+                color: isActive(link.href) ? 'var(--violet-600)' : 'var(--text-secondary)',
+                transition: 'color 0.15s ease',
+              }}
+            >
+              {link.label}
             </Link>
-            <Link href="/register">
-              <Button size="sm">Get Started</Button>
-            </Link>
-          </div>
-
-          {/* Mobile hamburger */}
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 text-text-secondary hover:text-text-primary cursor-pointer"
-            aria-label="Toggle menu"
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              {mobileOpen ? (
-                <path d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
+          ))}
         </div>
 
-        {/* Mobile menu */}
-        {mobileOpen && (
-          <div className="md:hidden border-t border-border py-4 space-y-1">
-            {publicNavItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setMobileOpen(false)}
-                className={cn(
-                  'block px-3 py-2 text-sm font-medium rounded-lg',
-                  pathname === item.href
-                    ? 'text-primary bg-primary-light'
-                    : 'text-text-secondary hover:bg-bg-secondary'
-                )}
-              >
-                {item.label}
+        {/* Right Actions */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <Link href="/events" aria-label="Search" style={iconBtnStyle}><Search size={18} /></Link>
+          <button aria-label="Notifications" style={iconBtnStyle}><Bell size={18} /></button>
+
+          {user ? (
+            <>
+              <Link href="/dashboard" className="hidden sm:block">
+                <Button variant="outline" size="sm" leftIcon={<LayoutDashboard size={14} />}>Dashboard</Button>
               </Link>
-            ))}
-            <div className="pt-3 flex flex-col gap-2 px-3">
-              <Link href="/login">
-                <Button variant="outline" fullWidth size="sm">Log In</Button>
+              <Button variant="ghost" size="sm" onClick={logout} leftIcon={<LogOut size={14} />}>Logout</Button>
+            </>
+          ) : (
+            <>
+              <Link href="/login" className="hidden sm:block">
+                <Button variant="ghost" size="sm">Login</Button>
               </Link>
-              <Link href="/register">
-                <Button fullWidth size="sm">Get Started</Button>
+              <Link href="/register" className="hidden sm:block">
+                <Button variant="primary" size="sm">Register</Button>
+              </Link>
+            </>
+          )}
+
+          <button 
+            aria-label="Toggle menu" 
+            className="lg:hidden" 
+            style={iconBtnStyle} 
+            onClick={() => setMobileOpen(!mobileOpen)}
+          >
+            {mobileOpen ? <X size={18} /> : <Menu size={18} />}
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile Menu */}
+      {mobileOpen && (
+        <div className="lg:hidden" style={{
+          display: 'flex',
+          flexDirection: 'column',
+          padding: '0 24px 16px',
+          borderBottom: '1px solid var(--border-soft)',
+          background: '#fff',
+        }}>
+          {navLinks.map((link) => (
+            <Link 
+              key={link.label} 
+              href={link.href}
+              style={{
+                fontSize: '15px',
+                fontWeight: isActive(link.href) ? 600 : 500,
+                color: isActive(link.href) ? 'var(--violet-600)' : 'var(--text-primary)',
+                padding: '10px 0',
+              }}
+              onClick={() => setMobileOpen(false)}
+            >
+              {link.label}
+            </Link>
+          ))}
+          
+          {!user && (
+            <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+              <Link href="/login" style={{ flex: 1 }} onClick={() => setMobileOpen(false)}>
+                <Button variant="outline" size="sm" fullWidth>Login</Button>
+              </Link>
+              <Link href="/register" style={{ flex: 1 }} onClick={() => setMobileOpen(false)}>
+                <Button variant="primary" size="sm" fullWidth>Register</Button>
               </Link>
             </div>
-          </div>
-        )}
-      </nav>
+          )}
+        </div>
+      )}
     </header>
   );
 }
+
+export default Navbar;
+
+const iconBtnStyle: React.CSSProperties = {
+  width: '36px',
+  height: '36px',
+  borderRadius: '10px',
+  border: '1px solid var(--border-soft)',
+  background: '#fff',
+  color: 'var(--text-secondary)',
+  display: 'grid',
+  placeItems: 'center',
+  cursor: 'pointer',
+};
