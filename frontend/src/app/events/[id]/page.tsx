@@ -37,7 +37,7 @@ const mockDbEvents: Record<string, EventDetails> = {
     time: '09:00 AM IST',
     deadlineInDays: 3,
     skills: ['Python', 'AI', 'Machine Learning', 'Data Science'],
-    image: 'https://images.unsplash.com/photo-1531497865144-2d6e3c1e6f1e?auto=format&fit=crop&w=1200&q=80',
+    image: '/images/events/ai-hackathon.jpg',
     description: 'Join the premier AI hackathon where innovation meets excellence. This 48-hour challenge brings together the brightest minds to build cutting-edge AI solutions. Participate in workshops, network with industry leaders, and compete for exciting prizes.',
     eligibility: 'Open to all undergraduate and postgraduate students',
     fee: 'Free',
@@ -56,7 +56,7 @@ const mockDbEvents: Record<string, EventDetails> = {
     time: '10:00 AM IST',
     deadlineInDays: 9,
     skills: ['LLMs', 'PyTorch'],
-    image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80',
+    image: '/images/events/genai-bootcamp.jpg',
     description: 'Master large language models, prompt engineering, and fine-tuning with industry experts in this comprehensive hands-on bootcamp.',
     eligibility: 'Open to all students and early researchers',
     fee: 'Free',
@@ -75,7 +75,7 @@ const mockDbEvents: Record<string, EventDetails> = {
     time: '02:00 PM IST',
     deadlineInDays: 14,
     skills: ['DSA', 'C++'],
-    image: 'https://images.unsplash.com/photo-1559628233-1c7e7c6b3e9b?auto=format&fit=crop&w=800&q=80',
+    image: '/images/events/coding-cup.jpg',
     description: 'Compete with the top algorithmic programmers across colleges in India for exciting prizes and corporate sponsorship.',
     eligibility: 'College students from accredited institutions',
     fee: '₹100 / team',
@@ -109,7 +109,7 @@ const fetchEventDetails = async (id: string): Promise<EventDetails | null> => {
       time: '09:30 AM IST',
       deadlineInDays: 5,
       skills: foundInMock.skills,
-      image: 'https://images.unsplash.com/photo-1531497865144-2d6e3c1e6f1e?auto=format&fit=crop&w=1200&q=80',
+      image: '/images/events/ai-hackathon.jpg',
       description: foundInMock.description,
       eligibility: foundInMock.eligibility?.[0] || 'Open to all undergraduate and postgraduate students',
       fee: 'Free',
@@ -135,7 +135,7 @@ const fetchRelatedEvents = async (id: string): Promise<EventCardProps[]> => {
       date: '12 Nov 2026',
       deadlineInDays: 9,
       skills: ['LLMs', 'PyTorch'],
-      image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80'
+      image: '/images/events/genai-bootcamp.jpg'
     },
     {
       id: '3',
@@ -147,7 +147,7 @@ const fetchRelatedEvents = async (id: string): Promise<EventCardProps[]> => {
       date: '05 Dec 2026',
       deadlineInDays: 14,
       skills: ['DSA', 'C++'],
-      image: 'https://images.unsplash.com/photo-1559628233-1c7e7c6b3e9b?auto=format&fit=crop&w=800&q=80'
+      image: '/images/events/coding-cup.jpg'
     },
   ];
 
@@ -199,7 +199,7 @@ export default function EventDetailsPage() {
   if (loading) return <SkeletonLayout />;
   if (error || !event) return <ErrorState />;
 
-  const heroImage = event.image || 'https://images.unsplash.com/photo-1531497865144-2d6e3c1e6f1e?auto=format&fit=crop&w=1200&q=80';
+  const heroImage = event.image || '/images/events/ai-hackathon.jpg';
 
   return (
     <div style={{ background: 'var(--bg-page)', minHeight: '100vh' }}>

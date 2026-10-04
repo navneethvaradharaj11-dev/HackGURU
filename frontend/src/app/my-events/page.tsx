@@ -27,19 +27,19 @@ const fetchMyEvents = async (userId: string, tab: EventTab): Promise<EventCardPr
       id: '1', title: 'AI Innovation Challenge 2026', category: 'Hackathon', organizer: 'IIT Bombay',
       location: 'Mumbai', mode: 'Offline', date: '26 Oct 2026', deadlineInDays: 3,
       skills: ['Python', 'AI'], matchScore: 94, saved: true,
-      image: 'https://images.unsplash.com/photo-1531497865144-2d6e3c1e6f1e?auto=format&fit=crop&w=800&q=80'
+      image: '/images/events/ai-hackathon.jpg'
     },
     {
       id: '2', title: 'GenAI Bootcamp', category: 'Workshop', organizer: 'NIT Trichy',
       location: 'Online', mode: 'Online', date: '12 Nov 2026', deadlineInDays: 9,
       skills: ['LLMs', 'PyTorch'], saved: false,
-      image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80'
+      image: '/images/events/genai-bootcamp.jpg'
     },
     {
       id: '3', title: 'National Coding Cup 2025', category: 'Competition', organizer: 'Anna University',
       location: 'Chennai', mode: 'Offline', date: '15 May 2025', deadlineInDays: -150, // Past event
       skills: ['DSA', 'C++'], saved: false,
-      image: 'https://images.unsplash.com/photo-1559628233-1c7e7c6b3e9b?auto=format&fit=crop&w=800&q=80'
+      image: '/images/events/coding-cup.jpg'
     },
   ];
 

@@ -67,7 +67,7 @@ const fetchRecommendations = async (userId: string): Promise<RecommendationResul
         id: '1', title: 'AI Innovation Challenge 2026', category: 'Hackathon', organizer: 'IIT Bombay',
         location: 'Mumbai', mode: 'Offline', date: '26 Oct 2026', deadlineInDays: 3,
         skills: ['Python', 'AI'], matchScore: 94,
-        image: 'https://images.unsplash.com/photo-1531497865144-2d6e3c1e6f1e?auto=format&fit=crop&w=800&q=80'
+        image: '/images/events/ai-hackathon.jpg'
       },
     ],
     total: 1,

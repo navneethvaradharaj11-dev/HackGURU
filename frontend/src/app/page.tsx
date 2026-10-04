@@ -21,7 +21,7 @@ const featuredEvents = [
     date: '26 Oct 2026',
     deadlineInDays: 3,
     skills: ['Python', 'AI', 'ML'],
-    image: 'https://images.unsplash.com/photo-1531497865144-2d6e3c1e6f1e?auto=format&fit=crop&w=800&q=80'
+    image: '/images/events/ai-hackathon.jpg'
   },
   {
     id: '2',
@@ -33,7 +33,7 @@ const featuredEvents = [
     date: '12 Nov 2026',
     deadlineInDays: 9,
     skills: ['LLMs', 'PyTorch'],
-    image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80'
+    image: '/images/events/genai-bootcamp.jpg'
   }
 ];
 
@@ -49,7 +49,7 @@ const recommendedEvents = [
     deadlineInDays: 14,
     skills: ['DSA', 'C++'],
     matchScore: 94,
-    image: 'https://images.unsplash.com/photo-1559628233-1c7e7c6b3e9b?auto=format&fit=crop&w=800&q=80'
+    image: '/images/events/coding-cup.jpg'
   },
   {
     id: '4',
@@ -62,7 +62,7 @@ const recommendedEvents = [
     deadlineInDays: 25,
     skills: ['ROS', 'Embedded'],
     matchScore: 88,
-    image: 'https://images.unsplash.com/photo-1581090700227-1e8e0c0e1e1e?auto=format&fit=crop&w=800&q=80'
+    image: '/images/events/robotics.jpg'
   }
 ];
 
@@ -117,7 +117,7 @@ export default function Home() {
           <div className="hidden md:block" style={{ flex: '0.9' }}>
             <div style={{ position: 'relative', borderRadius: 'var(--r-xl)', overflow: 'hidden', boxShadow: 'var(--shadow-md)', aspectRatio: '4/3' }}>
               <img 
-                src="https://images.unsplash.com/photo-1523580496186-3de8d4548b25?auto=format&fit=crop&w=1200&q=80" 
+                src="/images/hero-hackathon.jpg" 
                 alt="Students collaborating at a college event" 
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />

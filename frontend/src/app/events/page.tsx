@@ -24,7 +24,7 @@ const fallbackEvents: EventCardProps[] = [
     date: '26 Oct 2026',
     deadlineInDays: 3,
     skills: ['Python', 'AI'],
-    image: 'https://images.unsplash.com/photo-1531497865144-2d6e3c1e6f1e?auto=format&fit=crop&w=800&q=80',
+    image: '/images/events/ai-hackathon.jpg',
   },
   {
     id: '2',
@@ -36,7 +36,7 @@ const fallbackEvents: EventCardProps[] = [
     date: '12 Nov 2026',
     deadlineInDays: 9,
     skills: ['LLMs'],
-    image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80',
+    image: '/images/events/genai-bootcamp.jpg',
   },
   {
     id: '3',
@@ -49,7 +49,7 @@ const fallbackEvents: EventCardProps[] = [
     deadlineInDays: 14,
     skills: ['DSA', 'C++'],
     matchScore: 94,
-    image: 'https://images.unsplash.com/photo-1559628233-1c7e7c6b3e9b?auto=format&fit=crop&w=800&q=80',
+    image: '/images/events/coding-cup.jpg',
   },
   {
     id: '4',
@@ -62,7 +62,7 @@ const fallbackEvents: EventCardProps[] = [
     deadlineInDays: 25,
     skills: ['ROS', 'Embedded'],
     matchScore: 88,
-    image: 'https://images.unsplash.com/photo-1581090700227-1e8e0c0e1e1e?auto=format&fit=crop&w=800&q=80',
+    image: '/images/events/robotics.jpg',
   },
 ];
 

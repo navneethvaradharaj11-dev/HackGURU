@@ -30,15 +30,15 @@ export interface EventCardProps {
 
 // Map categories to realistic Unsplash photos for the fallback state
 const categoryFallbackImages: Record<string, string> = {
-  Hackathon: 'https://images.unsplash.com/photo-1531497865144-2d6e3c1e6f1e?auto=format&fit=crop&w=800&q=80',
-  Workshop: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80',
-  Competition: 'https://images.unsplash.com/photo-1559628233-1c7e7c6b3e9b?auto=format&fit=crop&w=800&q=80',
-  Internship: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80',
-  Conference: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=800&q=80',
-  Startup: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=800&q=80',
-  Cultural: 'https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=800&q=80',
-  Sports: 'https://images.unsplash.com/photo-1526232761682-d26e03ac148e?auto=format&fit=crop&w=800&q=80',
-  Default: 'https://images.unsplash.com/photo-1523580496186-3de8d4548b25?auto=format&fit=crop&w=800&q=80',
+  Hackathon: '/images/events/ai-hackathon.jpg',
+  Workshop: '/images/events/genai-bootcamp.jpg',
+  Competition: '/images/events/coding-cup.jpg',
+  Internship: '/images/events/internship.jpg',
+  Conference: '/images/events/conference.jpg',
+  Startup: '/images/events/startup.jpg',
+  Cultural: '/images/events/cultural.jpg',
+  Sports: '/images/events/sports.jpg',
+  Default: '/images/hero-hackathon.jpg',
 };
 
 const getCategoryIcon = (category: string) => {
