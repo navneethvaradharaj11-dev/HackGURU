@@ -1,68 +1,118 @@
-﻿import React from 'react';
-import { cn } from '@/lib/utils/cn';
+import React from 'react';
 
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
 type ButtonSize = 'sm' | 'md' | 'lg';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
   icon?: React.ReactNode;
   loading?: boolean;
   fullWidth?: boolean;
 }
 
-const variantStyles: Record<ButtonVariant, string> = {
-  primary:
-    'bg-primary text-white hover:bg-primary-dark shadow-sm hover:shadow',
-  secondary:
-    'bg-bg-secondary text-text-primary border border-border hover:bg-bg-tertiary',
-  outline:
-    'bg-transparent text-primary border border-primary/30 hover:bg-primary-light hover:border-primary/50',
-  ghost:
-    'bg-transparent text-text-secondary hover:bg-bg-secondary hover:text-text-primary',
-  danger:
-    'bg-error text-white hover:bg-red-600 shadow-sm',
+const baseStyles: React.CSSProperties = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '8px',
+  fontWeight: 600,
+  borderRadius: '10px',
+  cursor: 'pointer',
+  border: '1px solid transparent',
+  transition: 'all 0.15s ease',
+  fontFamily: 'inherit',
+  lineHeight: 1,
+  whiteSpace: 'nowrap',
 };
 
-const sizeStyles: Record<ButtonSize, string> = {
-  sm: 'px-3 py-1.5 text-sm gap-1.5',
-  md: 'px-4 py-2 text-sm gap-2',
-  lg: 'px-6 py-2.5 text-base gap-2',
+const variantStyles: Record<ButtonVariant, React.CSSProperties> = {
+  primary: {
+    background: 'var(--violet-600, #6D28D9)',
+    color: '#FFFFFF',
+  },
+  secondary: {
+    background: 'var(--violet-50, #F5F3FF)',
+    color: 'var(--violet-700, #5B21B6)',
+  },
+  outline: {
+    background: 'transparent',
+    color: 'var(--violet-700, #5B21B6)',
+    border: '1px solid var(--violet-200, #DDD6FE)',
+  },
+  ghost: {
+    background: 'transparent',
+    color: 'var(--text-secondary, #52525B)',
+  },
+  danger: {
+    background: 'var(--error, #DC2626)',
+    color: '#FFFFFF',
+  },
 };
 
-export default function Button({
+const sizeStyles: Record<ButtonSize, React.CSSProperties> = {
+  sm: { padding: '6px 12px', fontSize: '13px' },
+  md: { padding: '10px 16px', fontSize: '14px' },
+  lg: { padding: '14px 24px', fontSize: '16px' },
+};
+
+export const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
   size = 'md',
+  leftIcon,
+  rightIcon,
   icon,
   loading = false,
   fullWidth = false,
-  className,
-  children,
   disabled,
-  ...props
-}: ButtonProps) {
+  style,
+  children,
+  className,
+  ...rest
+}) => {
+  const actualLeftIcon = leftIcon || icon;
+
   return (
     <button
-      className={cn(
-        'inline-flex items-center justify-center rounded-lg font-medium transition-all duration-180 focus-ring cursor-pointer',
-        variantStyles[variant],
-        sizeStyles[size],
-        fullWidth && 'w-full',
-        (disabled || loading) && 'opacity-50 cursor-not-allowed pointer-events-none',
-        className
-      )}
+      className={className}
       disabled={disabled || loading}
-      {...props}
+      style={{
+        ...baseStyles,
+        ...variantStyles[variant],
+        ...sizeStyles[size],
+        width: fullWidth ? '100%' : 'auto',
+        opacity: (disabled || loading) ? 0.6 : 1,
+        pointerEvents: (disabled || loading) ? 'none' : 'auto',
+        ...style,
+      }}
+      onMouseEnter={(e) => {
+        if (disabled || loading) return;
+        e.currentTarget.style.transform = 'translateY(-1px)';
+        if (variant === 'primary') e.currentTarget.style.background = 'var(--violet-700, #5B21B6)';
+        if (variant === 'outline' || variant === 'secondary') e.currentTarget.style.background = 'var(--violet-100, #EDE9FE)';
+      }}
+      onMouseLeave={(e) => {
+        if (disabled || loading) return;
+        e.currentTarget.style.transform = 'translateY(0)';
+        if (variant === 'primary') e.currentTarget.style.background = 'var(--violet-600, #6D28D9)';
+        if (variant === 'outline' || variant === 'secondary') {
+          e.currentTarget.style.background = variant === 'outline' ? 'transparent' : 'var(--violet-50, #F5F3FF)';
+        }
+      }}
+      {...rest}
     >
-      {loading && (
+      {loading ? (
         <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
         </svg>
-      )}
-      {!loading && icon}
+      ) : actualLeftIcon}
       {children}
+      {rightIcon}
     </button>
   );
-}
+};
+
+export default Button;
