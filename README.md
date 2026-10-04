@@ -1,179 +1,204 @@
-# AllCollegeEvent.com - AI Event & Hackathon Intelligence Platform (HackGuru 2026)
-
-Production-grade, full-stack multi-platform solution serving as India's #1 AI-powered event recommendation engine, hackathon discovery layer, and student intelligence platform for **AllCollegeEvent.com**.
-
-[![Vercel Live App](https://img.shields.io/badge/Vercel-Live_Production-blue?logo=vercel)](https://ace-phi-five.vercel.app/)
-[![GitHub Repository](https://img.shields.io/badge/GitHub-navneethvaradharaj11--dev/HackGURU-black?logo=github)](https://github.com/navneethvaradharaj11-dev/HackGURU)
-[![Build Status](https://img.shields.io/badge/Next.js-32_Routes_Prerendered-success?logo=next.js)](https://ace-phi-five.vercel.app/)
-[![Flutter App](https://img.shields.io/badge/Flutter-Dart_SDK_Mobile-02569B?logo=flutter)](https://github.com/navneethvaradharaj11-dev/HackGURU/tree/main/flutter_app)
+<div align="center">
+  <img src="frontend/public/favicon.svg" alt="HackGURU logo" width="96" />
+  <h1>HackGURU 2026</h1>
+  <p><strong>AI-powered event discovery and opportunity intelligence for every college student.</strong></p>
+  <p>
+    <a href="https://ace-phi-five.vercel.app/">Live Demo</a> ·
+    <a href="https://github.com/navneethvaradharaj11-dev/HackGURU">Repository</a>
+  </p>
+  <p>
+    <img src="https://img.shields.io/badge/Next.js-15-black?logo=next.js" alt="Next.js 15" />
+    <img src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white" alt="React 19" />
+    <img src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white" alt="TypeScript" />
+    <img src="https://img.shields.io/badge/Flutter-Mobile-02569B?logo=flutter&logoColor=white" alt="Flutter" />
+    <img src="https://img.shields.io/badge/License-All%20Rights%20Reserved-lightgrey" alt="License" />
+  </p>
+</div>
 
 ---
 
-## 🌐 Live Production Links
+## About HackGURU 2026
 
-* **Official Vercel Web Application:** [https://ace-phi-five.vercel.app/](https://ace-phi-five.vercel.app/)
-* **Official Gold Trophy Favicon:** [https://ace-phi-five.vercel.app/favicon.svg](https://ace-phi-five.vercel.app/favicon.svg)
-* **GitHub Repository:** [https://github.com/navneethvaradharaj11-dev/HackGURU](https://github.com/navneethvaradharaj11-dev/HackGURU)
+**HackGURU 2026** is a production-ready, multi-platform intelligence platform created for **AllCollegeEvent**. It helps students discover hackathons, competitions, workshops, internships, and other high-value opportunities through personalized recommendations rather than generic event listings.
 
----
+The platform combines a modern web experience, a Flutter mobile application, a secure TypeScript API, and an AI-assisted recommendation layer. Together, these components turn a large and constantly changing event ecosystem into a focused opportunity feed tailored to each student's interests, skills, eligibility, and goals.
 
-## 🏛️ Multi-Platform Architecture
+> **Vision:** Make the right opportunity easier to discover, understand, and act on.
+
+## What HackGURU Solves
+
+Students often miss valuable opportunities because event information is fragmented, deadlines are difficult to track, and eligibility requirements are unclear. HackGURU addresses these challenges by providing:
+
+- **Personalized discovery** based on a student's profile and interests
+- **AI-assisted matching** with clear explanations for why an opportunity is relevant
+- **Structured event intelligence** including domains, prerequisites, audience level, and learning outcomes
+- **Deadline awareness** through dashboards and event alerts
+- **Multi-platform access** across web and mobile
+- **Reliable performance** through deterministic ranking, caching, and provider fallbacks
+
+## Key Features
+
+### Student Experience
+
+- Personalized dashboard with opportunity insights and quick statistics
+- Event and hackathon discovery with searchable categories and tags
+- Recommendation feed with match scores and natural-language rationale
+- Calendar-oriented planning and deadline visibility
+- Student profile support for skills, interests, and preferred domains
+
+### AI & Intelligence Layer
+
+- **Opportunity Matcher:** ranks relevant opportunities and explains each match
+- **Event Parser:** extracts domains, prerequisites, target audience, and outcomes
+- Multi-provider AI gateway with fallback support
+- Content-hash caching to reduce repeated model calls
+- AI telemetry for usage, latency, cache performance, and estimated cost
+
+### Platform & Engineering
+
+- Responsive Next.js web application
+- Flutter mobile application for Android and iOS
+- Type-safe Node.js and TypeScript backend
+- JWT authentication and validated API payloads
+- Prisma/PostgreSQL support with an in-memory development adapter
+- Automated tests with Jest and Supertest
+
+## Architecture
 
 ```text
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                      FLUTTER MOBILE APP (Android / iOS)                         │
-│   Dart SDK • Material 3 Dark Theme • 3 Core Screens • HTTP REST API Client      │
-└────────────────────────────────────────┬────────────────────────────────────────┘
-                                         │
-┌────────────────────────────────────────┴────────────────────────────────────────┐
-│                        NEXT.JS WEB APP (App Router)                             │
-│   32 Production Routes • White & Violet Design System • Vercel Deployed • Auth  │
-└────────────────────────────────────────┬────────────────────────────────────────┘
-                                         │
-                       HTTP REST API (Port 5000 / /api)
-                      Header: Authorization: Bearer <TOKEN>
-                                         │
-                                         ▼
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                 NODE.JS + TYPESCRIPT AI BACKEND ENGINE                          │
-│   AI Gateway (Gemini, OpenAI, Hugging Face) • Scoring Engine • Routers • Prisma │
-└────────────────────────────────────────┬────────────────────────────────────────┘
-                                         │
-                          Decoupled Database Adapter
-                           (Prisma / InMemory Mode)
-                                         │
-                                         ▼
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                  PostgreSQL Database Schema (allcollegeevent.sql)               │
-└─────────────────────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│                    Flutter Mobile App                        │
+│                  Android / iOS • Dart                        │
+└──────────────────────────────┬───────────────────────────────┘
+                               │ REST API
+┌──────────────────────────────▼───────────────────────────────┐
+│                    Next.js Web Application                    │
+│                 React • TypeScript • Tailwind                 │
+└──────────────────────────────┬───────────────────────────────┘
+                               │
+┌──────────────────────────────▼───────────────────────────────┐
+│              Node.js + TypeScript Intelligence API            │
+│       Authentication • Ranking • AI Gateway • Telemetry       │
+└──────────────────────────────┬───────────────────────────────┘
+                               │
+┌──────────────────────────────▼───────────────────────────────┐
+│              Prisma / PostgreSQL Data Layer                   │
+│             In-memory adapter for local development           │
+└──────────────────────────────────────────────────────────────┘
 ```
 
----
+## Technology Stack
 
-## 🌟 Core Components & Features
+| Layer | Technologies |
+| --- | --- |
+| Web | Next.js 15, React 19, TypeScript, Tailwind CSS |
+| Mobile | Flutter, Dart, Material 3 |
+| Backend | Node.js, Express, TypeScript |
+| AI | Google Gemini, OpenAI, Hugging Face, offline fallback provider |
+| Data | PostgreSQL, Prisma ORM, in-memory adapter |
+| Security | JWT, bcryptjs, Helmet, Zod, CORS, rate limiting |
+| Quality | Jest, Supertest, TypeScript strict mode |
+| Deployment | Vercel |
 
-### 1. **Flutter Mobile Application (`flutter_app/`)**
-- Built in pure **Dart**.
-- **Dart Models (`lib/models/`)**: `StudentProfile`, `EventItem`, `RecommendationItem`.
-- **API Service (`lib/services/api_service.dart`)**: HTTP client targeting backend REST API (`http://localhost:5000/api` / `http://10.0.2.2:5000/api`).
-- **UI Screens (`lib/screens/`)**:
-  - `dashboard_screen.dart`: Student intelligence dashboard, quick stats cards, deadline alerts.
-  - `recommendations_screen.dart`: Agent 1 live match feed with match score badges.
-  - `events_screen.dart`: Event catalog and taxonomy tag viewer.
+## Project Structure
 
-### 2. **Next.js Web Application (`frontend/`)**
-- **28 Production App Router Routes**: Includes `/dashboard`, `/recommendations`, `/events`, `/calendar`, `/ai-telemetry`, `/student/*`, `/organizer/*`.
-- **Official Branding**: AllCollegeEvent trophy logo, gold badges, and glassmorphic UI system.
-- **Favicon**: Official gold trophy vector icon (`/favicon.svg`).
-- **Vercel Config**: [frontend/vercel.json](file:///e:/HackGuru/frontend/vercel.json) ready for one-click Vercel deployments.
+```text
+.
+├── frontend/             # Next.js web application
+├── flutter_app/          # Flutter mobile application
+├── src/                  # TypeScript backend and AI services
+├── prisma/               # Database schema and Prisma configuration
+├── docs/                 # Architecture and API documentation
+└── README.md
+```
 
-### 3. **Node.js TypeScript AI Intelligence Backend (`src/`)**
-- **Centralized AI Gateway**: Multi-provider router managing **10 Gemini keys**, **5 OpenAI keys**, and **2 Hugging Face keys** with automatic fallback.
-- **Agent 1 (Opportunity Matcher)**: Refines candidates into natural language match rationale.
-- **Agent 2 (Event Parser)**: Scrapes and extracts domain tags, prerequisites, and learning outcome taxonomy.
-- **Deterministic Ranking Engine**: Filters 10,000+ events to top candidate recommendations in `<120ms`.
-- **AI Telemetry (`GET /api/ai/usage`)**: Monitors token usage, latency, cache hit ratios, and estimated costs.
+## Getting Started
 
----
+### Prerequisites
 
-## 🛠️ Complete Technology Stack
+- Node.js 20+
+- npm
+- Flutter SDK 3+
+- PostgreSQL (optional when using the in-memory adapter)
 
-### 📱 1. Mobile Application Layer (`flutter_app/`)
-* **Framework:** Flutter (v3.0+)
-* **Language:** Dart (v3.0+)
-* **UI Design:** Material 3 Dark Theme (`#080C16`), Custom Cards & Badges
-* **HTTP Networking:** `http: ^1.2.0`
-* **Architecture:** Decoupled Services & Typed Data Models
+### 1. Install backend dependencies
 
-### 🌐 2. Web Frontend Application Layer (`frontend/`)
-* **Framework:** Next.js 15 (App Router with Turbopack)
-* **Core Library:** React 19
-* **Language:** TypeScript (v5+)
-* **Styling System:** Tailwind CSS, Glassmorphism Backdrop Blurs, Custom Scrollbars
-* **Icons & Assets:** Lucide React, Official SVG Trophy Favicon
-* **API Client:** Axios / Fetch API Client (`frontend/src/lib/api/client.ts`)
-* **Deployment & Hosting:** Vercel Production Cloud ([https://ace-phi-five.vercel.app/](https://ace-phi-five.vercel.app/))
-
-### ⚙️ 3. Backend API & Intelligence Layer (`src/`)
-* **Runtime:** Node.js (v24+)
-* **Language:** TypeScript (v5+)
-* **Web Framework:** Express.js (v4+)
-* **Authentication:** JSON Web Tokens (`jsonwebtoken`), Password Hashing (`bcryptjs`)
-* **Security & Validation:** Helmet security headers (`helmet`), Zod payload validation (`zod`), Rate limiting (`express-rate-limit`), CORS enablement (`cors`)
-
-### 🧠 4. AI Gateway & LLM Orchestration Layer
-* **Dual-Agent Architecture:**
-  * **Agent 1 (Opportunity Matcher):** Generates personalized natural language match explanations for students.
-  * **Agent 2 (Event Taxonomy Parser):** Extracts domain tags, prerequisites, and target audience levels.
-* **Multi-Provider Key Pools (17 Keys Total):**
-  * **Google Gemini Pool:** 10 API Keys (`@google/generative-ai`)
-  * **OpenAI Pool:** 5 API Keys (`openai` GPT-4o-mini)
-  * **Hugging Face Pool:** 2 API Keys (`@huggingface/inference` open-weight models)
-  * **Offline Fallback Pool:** Mock AI Provider for 100% uninterrupted offline testing.
-* **Performance & Caching:** SHA-256 Content-Hash Caching Engine (0 LLM call on hash match), Deterministic Node.js Scoring Engine (`<120ms`).
-
-### 🗄️ 5. Database & Storage Layer
-* **Primary Database:** PostgreSQL (`allcollegeevent.sql` schema with 18 tables & views)
-* **ORM & Query Builder:** Prisma ORM (`@prisma/client`)
-* **Database Abstraction:** Decoupled Database Adapter Pattern (`IDatabaseAdapter` -> `PrismaDatabaseAdapter` & `InMemoryDatabaseAdapter`)
-
-### 🧪 6. Testing & Quality Assurance
-* **Test Runner:** Jest Test Framework (`jest`), Supertest (`supertest`)
-* **Test Coverage:** 8 Passed Test Suites (23/23 Unit, API, & AI Gateway Integration Tests)
-* **Static Analysis:** TypeScript Strict Type Compiler (`npx tsc --noEmit`)
-
----
-
-## 🚀 Quick Start Guide
-
-### 1. Install Backend Dependencies
 ```bash
 npm install
 ```
 
-### 2. Configure Environment (`.env`)
+### 2. Configure environment variables
+
+Create a `.env` file in the repository root:
+
 ```env
 DATABASE_ADAPTER="inmemory"
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/ace_ai_db?schema=public"
 
 GEMINI_API_KEY_1="your_gemini_key"
 OPENAI_API_KEY_1="your_openai_key"
-HF_API_KEY_1="your_hf_key"
+HF_API_KEY_1="your_huggingface_key"
 ```
 
-### 3. Start Backend Server (Port 5000)
+Never commit real credentials or production secrets to the repository.
+
+### 3. Start the backend
+
 ```bash
 npm run dev
 ```
 
-### 4. Start Next.js Frontend (Port 3000)
+The API runs on port `5000` by default.
+
+### 4. Start the web application
+
 ```bash
-# In e:\HackGuru\frontend
+cd frontend
+npm install
 npm run dev
 ```
 
-### 5. Run Flutter Mobile Application
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### 5. Run the Flutter application
+
 ```bash
-# In e:\HackGuru\flutter_app
+cd flutter_app
+flutter pub get
 flutter run
 ```
 
-### 6. Run Automated Test Suite
+### 6. Run tests
+
+From the repository root:
+
 ```bash
 npm test
+npx tsc --noEmit
 ```
 
----
+## Live Application
 
-## 📚 Documentation Links
+- **Web application:** [ace-phi-five.vercel.app](https://ace-phi-five.vercel.app/)
+- **Repository:** [navneethvaradharaj11-dev/HackGURU](https://github.com/navneethvaradharaj11-dev/HackGURU)
 
-- 🤖 [AI Architecture & Gateway Guide](file:///e:/HackGuru/docs/AI_ARCHITECTURE.md)
-- 📋 [Database Contract Specifications](file:///e:/HackGuru/DATABASE_CONTRACT.md)
-- 🔌 [API Documentation](file:///e:/HackGuru/API_DOCUMENTATION.md)
-- ⚖️ [Recommendation Engine Specification](file:///e:/HackGuru/RECOMMENDATION_ENGINE.md)
+## Documentation
 
----
+- [AI Architecture](docs/AI_ARCHITECTURE.md)
+- [API Documentation](API_DOCUMENTATION.md)
+- [Database Contract](DATABASE_CONTRACT.md)
+- [Recommendation Engine](RECOMMENDATION_ENGINE.md)
 
-## 📜 License & Copyright
+## HackGURU 2026
 
-© 2026 **AllCollegeEvent.com**. All Rights Reserved. Built for **Hackathon 2026**.
+HackGURU 2026 is built with a simple goal: **help students find opportunities that move their future forward**. From discovering a first hackathon to planning a complete learning and competition journey, the platform brings event discovery, personalization, and actionable intelligence into one experience.
+
+## Contributing
+
+Contributions, ideas, and feedback are welcome. Please open an issue to discuss a proposed change before submitting a pull request.
+
+## License
+
+© 2026 AllCollegeEvent.com. All rights reserved.
+
+This project is currently intended for the HackGURU 2026 event and is not distributed under an open-source license.
