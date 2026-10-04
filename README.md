@@ -4,7 +4,7 @@ Production-grade, full-stack multi-platform solution serving as India's #1 AI-po
 
 [![Vercel Live App](https://img.shields.io/badge/Vercel-Live_Production-blue?logo=vercel)](https://ace-phi-five.vercel.app/)
 [![GitHub Repository](https://img.shields.io/badge/GitHub-navneethvaradharaj11--dev/HackGURU-black?logo=github)](https://github.com/navneethvaradharaj11-dev/HackGURU)
-[![Build Status](https://img.shields.io/badge/Next.js-28_Routes_Prerendered-success?logo=next.js)](https://ace-phi-five.vercel.app/)
+[![Build Status](https://img.shields.io/badge/Next.js-32_Routes_Prerendered-success?logo=next.js)](https://ace-phi-five.vercel.app/)
 [![Flutter App](https://img.shields.io/badge/Flutter-Dart_SDK_Mobile-02569B?logo=flutter)](https://github.com/navneethvaradharaj11-dev/HackGURU/tree/main/flutter_app)
 
 ---
@@ -27,7 +27,7 @@ Production-grade, full-stack multi-platform solution serving as India's #1 AI-po
                                          │
 ┌────────────────────────────────────────┴────────────────────────────────────────┐
 │                        NEXT.JS WEB APP (App Router)                             │
-│   28 Production Routes • Dark Glassmorphic Theme • Vercel Deployed • Auth       │
+│   32 Production Routes • White & Violet Design System • Vercel Deployed • Auth  │
 └────────────────────────────────────────┬────────────────────────────────────────┘
                                          │
                        HTTP REST API (Port 5000 / /api)
