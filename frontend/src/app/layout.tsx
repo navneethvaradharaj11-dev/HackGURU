@@ -5,8 +5,8 @@ import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 
 export const metadata: Metadata = {
-  title: 'AllCollegeEvent.com - AI Hackathon & Event Intelligence Platform',
-  description: 'India #1 AI Event & Hackathon Discovery Platform for College Students. Dual-agent LLM recommendation engine.',
+  title: 'AllCollegeEvent.com — Discover College Events, Hackathons & Opportunities',
+  description: 'India\'s leading platform for college students to discover hackathons, workshops, competitions, internships and technical events. AI-powered personalized recommendations.',
   icons: {
     icon: '/favicon.svg',
     shortcut: '/favicon.svg',
@@ -20,13 +20,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className="antialiased bg-[#080c16] text-gray-100 flex flex-col min-h-screen">
+    <html lang="en">
+      <body className="antialiased bg-white text-neutral-900 flex flex-col min-h-screen">
         <AuthProvider>
-          {/* Background Ambient Glow Blobs */}
-          <div className="fixed top-0 left-1/4 w-[500px] h-[500px] bg-blue-600/15 rounded-full pointer-events-none glow-bg-blob-1 -z-10" />
-          <div className="fixed bottom-10 right-1/4 w-[600px] h-[600px] bg-purple-600/15 rounded-full pointer-events-none glow-bg-blob-2 -z-10" />
-
           <Navbar />
           <main className="flex-grow">{children}</main>
           <Footer />

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import Link from 'next/link';
@@ -24,50 +24,48 @@ export default function OrganizerSidebar() {
   };
 
   return (
-    <aside className="w-60 bg-white border-r border-border h-[calc(100vh-64px)] sticky top-16 overflow-y-auto hidden lg:block">
-      <div className="p-4">
-        {/* Organizer info */}
-        <div className="flex items-center gap-3 px-3 py-3 mb-4 rounded-lg bg-bg-secondary">
-          <Avatar name="Priya Venkatesh" size="sm" />
-          <div className="min-w-0">
-            <p className="text-sm font-medium text-text-primary truncate">Priya Venkatesh</p>
-            <p className="text-xs text-text-tertiary truncate">FutureTech Labs</p>
-          </div>
+    <aside className="w-full lg:w-64 bg-white border border-gray-200 rounded-lg p-4 shadow-sm shrink-0 h-fit">
+      {/* Organizer info */}
+      <div className="flex items-center gap-3 px-3 py-3 mb-4 rounded-lg bg-gray-50 border border-gray-100">
+        <Avatar name="Priya Venkatesh" size="sm" />
+        <div className="min-w-0">
+          <p className="text-xs font-semibold text-gray-900 truncate">Priya Venkatesh</p>
+          <p className="text-[11px] text-gray-500 truncate">FutureTech Labs</p>
         </div>
+      </div>
 
-        {/* Nav items */}
-        <nav className="space-y-0.5">
-          {organizerNavItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                'flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-180',
-                isActive(item.href)
-                  ? 'text-primary bg-primary-light'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-secondary'
-              )}
-            >
-              <span className={cn('shrink-0', isActive(item.href) ? 'text-primary' : 'text-text-tertiary')}>
-                {item.icon && iconMap[item.icon]}
-              </span>
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-
-        {/* Switch to Student view */}
-        <div className="mt-6 pt-4 border-t border-border">
+      {/* Nav items */}
+      <nav className="space-y-1">
+        {organizerNavItems.map((item) => (
           <Link
-            href="/student"
-            className="flex items-center gap-2 px-3 py-2 text-sm text-text-secondary hover:text-text-primary rounded-lg hover:bg-bg-secondary transition-colors"
+            key={item.href}
+            href={item.href}
+            className={cn(
+              'flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-md transition-colors',
+              isActive(item.href)
+                ? 'text-violet-700 bg-violet-50 font-semibold'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+            )}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5" />
-            </svg>
-            Switch to Student View
+            <span className={cn('shrink-0', isActive(item.href) ? 'text-violet-600' : 'text-gray-400')}>
+              {item.icon && iconMap[item.icon]}
+            </span>
+            {item.label}
           </Link>
-        </div>
+        ))}
+      </nav>
+
+      {/* Switch to Student view */}
+      <div className="mt-6 pt-4 border-t border-gray-100">
+        <Link
+          href="/dashboard"
+          className="flex items-center gap-2 px-3 py-2 text-xs text-gray-500 hover:text-gray-900 rounded-md hover:bg-gray-50 transition-colors"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          Switch to Student View
+        </Link>
       </div>
     </aside>
   );

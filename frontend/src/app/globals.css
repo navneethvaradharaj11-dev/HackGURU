@@ -1,114 +1,249 @@
 @import "tailwindcss";
 
+/* ===========================================
+   AllCollegeEvent.com Design Token System
+   White + Violet + Light Gray
+   =========================================== */
+
 @layer base {
   :root {
-    --ace-bg-dark: #080c16;
-    --ace-card-bg: rgba(15, 23, 42, 0.75);
-    --ace-card-border: rgba(255, 255, 255, 0.08);
-    --ace-blue: #2563eb;
-    --ace-cyan: #06b6d4;
-    --ace-purple: #7c3aed;
-    --ace-gold: #f59e0b;
-    --ace-emerald: #10b981;
+    /* === Brand Colors === */
+    --ace-violet:        #7C3AED;
+    --ace-violet-dark:   #5B21B6;
+    --ace-violet-light:  #F5F3FF;
+    --ace-violet-soft:   #FAF9FF;
+    --ace-violet-mid:    #EDE9FE;
+
+    /* === Neutral Scale === */
+    --ace-bg:            #FFFFFF;
+    --ace-bg-section:    #F8F8FA;
+    --ace-bg-card:       #FFFFFF;
+    --ace-border:        #E4E4E7;
+    --ace-border-strong: #D4D4D8;
+
+    /* === Text Scale === */
+    --ace-text-primary:   #171717;
+    --ace-text-secondary: #52525B;
+    --ace-text-muted:     #71717A;
+
+    /* === Semantic Colors === */
+    --ace-success:       #16A34A;
+    --ace-success-light: #F0FDF4;
+    --ace-warning:       #D97706;
+    --ace-warning-light: #FFFBEB;
+    --ace-error:         #DC2626;
+    --ace-error-light:   #FEF2F2;
+    --ace-info:          #2563EB;
+    --ace-info-light:    #EFF6FF;
   }
 
   body {
-    background-color: #080c16;
-    color: #f8fafc;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: #F3F4F6;
+    color: #1F2937;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     min-height: 100vh;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   /* Custom Scrollbar */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-  ::-webkit-scrollbar-track {
-    background: #080c16;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #1e293b;
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: #F4F4F5; }
+  ::-webkit-scrollbar-thumb { background: #D4D4D8; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #A1A1AA; }
+
+  /* Focus States */
+  *:focus-visible {
+    outline: 2px solid var(--ace-violet);
+    outline-offset: 2px;
     border-radius: 4px;
   }
-  ::-webkit-scrollbar-thumb:hover {
-    background: #334155;
-  }
 }
 
-/* AllCollegeEvent Glassmorphism & UI System */
-.ace-glass {
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
+/* ===========================================
+   UTILITY CLASSES — Replacing dark glassmorphism
+   =========================================== */
 
+/* Professional white card */
 .ace-card {
-  background: rgba(15, 23, 42, 0.65);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #FFFFFF;
+  border: 1px solid #E4E4E7;
+  border-radius: 12px;
+  transition: all 0.2s ease;
 }
 
 .ace-card:hover {
-  background: rgba(30, 41, 59, 0.75);
-  border-color: rgba(37, 99, 235, 0.45);
-  box-shadow: 0 12px 30px -10px rgba(37, 99, 235, 0.3);
-  transform: translateY(-2px);
+  border-color: #C4B5FD;
+  box-shadow: 0 4px 16px -4px rgba(124, 58, 237, 0.12);
+  transform: translateY(-1px);
 }
 
+/* Section background */
+.ace-section-bg {
+  background-color: #F8F8FA;
+}
+
+/* Violet gradient text (kept for emphasis only) */
 .ace-gradient-text {
-  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 40%, #a78bfa 70%, #ec4899 100%);
+  background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.ace-gradient-cyan {
-  background: linear-gradient(135deg, #22d3ee 0%, #2563eb 60%, #7c3aed 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
+/* Primary CTA button */
 .ace-button {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 50%, #7c3aed 100%);
-  box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
-  transition: all 0.2s ease-in-out;
+  background: #7C3AED;
+  color: #ffffff;
+  transition: all 0.18s ease;
 }
 
 .ace-button:hover {
-  box-shadow: 0 0 30px rgba(37, 99, 235, 0.7);
-  transform: scale(1.02);
+  background: #5B21B6;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
 }
 
-.ace-badge-gold {
-  background: rgba(245, 158, 11, 0.15);
-  color: #fbbf24;
-  border: 1px solid rgba(245, 158, 11, 0.3);
+/* Outline button */
+.ace-button-outline {
+  background: transparent;
+  color: #7C3AED;
+  border: 1.5px solid #7C3AED;
+  transition: all 0.18s ease;
+}
+
+.ace-button-outline:hover {
+  background: #F5F3FF;
+}
+
+/* Badge — Category */
+.ace-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+
+.ace-badge-violet {
+  background: #EDE9FE;
+  color: #5B21B6;
+}
+
+.ace-badge-green {
+  background: #F0FDF4;
+  color: #16A34A;
+}
+
+.ace-badge-amber {
+  background: #FFFBEB;
+  color: #D97706;
+}
+
+.ace-badge-red {
+  background: #FEF2F2;
+  color: #DC2626;
 }
 
 .ace-badge-blue {
-  background: rgba(37, 99, 235, 0.15);
-  color: #60a5fa;
-  border: 1px solid rgba(37, 99, 235, 0.3);
+  background: #EFF6FF;
+  color: #2563EB;
 }
 
-.ace-badge-purple {
-  background: rgba(124, 58, 237, 0.15);
-  color: #c084fc;
-  border: 1px solid rgba(124, 58, 237, 0.3);
+.ace-badge-gray {
+  background: #F4F4F5;
+  color: #52525B;
 }
 
-@keyframes pulseGlow {
-  0%, 100% { opacity: 0.35; filter: blur(50px); }
-  50% { opacity: 0.75; filter: blur(65px); }
+/* Input */
+.ace-input {
+  background: #FFFFFF;
+  border: 1px solid #E4E4E7;
+  border-radius: 8px;
+  color: #171717;
+  font-size: 14px;
+  transition: border-color 0.18s, box-shadow 0.18s;
 }
 
-.glow-bg-blob-1 {
-  animation: pulseGlow 8s infinite ease-in-out;
+.ace-input:focus {
+  border-color: #7C3AED;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+  outline: none;
 }
 
-.glow-bg-blob-2 {
-  animation: pulseGlow 10s infinite ease-in-out 2s;
+.ace-input::placeholder {
+  color: #A1A1AA;
 }
+
+/* Navbar */
+.ace-navbar {
+  background: rgba(255, 255, 255, 0.98);
+  border-bottom: 1px solid #E4E4E7;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Score chip */
+.ace-score-chip {
+  background: linear-gradient(135deg, #7C3AED, #5B21B6);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 100px;
+  letter-spacing: 0.01em;
+}
+
+/* Subtle fade-in animation */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-up {
+  animation: fadeInUp 0.35s ease both;
+}
+
+/* Deadline urgency bar */
+.ace-urgency-high { border-left: 3px solid #DC2626; }
+.ace-urgency-med  { border-left: 3px solid #D97706; }
+.ace-urgency-low  { border-left: 3px solid #16A34A; }
+
+/* Remove old dark glass classes so they degrade gracefully */
+.ace-glass,
+.glass-card,
+.glass-panel {
+  background: #FFFFFF;
+  border: 1px solid #E4E4E7;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Old glow buttons → clean violet */
+.glow-button,
+.ace-button-glow {
+  background: #7C3AED;
+  color: #ffffff;
+  box-shadow: none;
+}
+
+.glow-button:hover,
+.ace-button-glow:hover {
+  background: #5B21B6;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3);
+}
+
+/* Old gradient text → violet */
+.gradient-text {
+  background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Category color helpers (keep for EventCard backward compat) */
+.cat-hackathon  { --cat: #7C3AED; }
+.cat-workshop   { --cat: #D97706; }
+.cat-internship { --cat: #16A34A; }
+.cat-competition{ --cat: #DC2626; }
+.cat-conference { --cat: #2563EB; }
+.cat-project    { --cat: #8B5CF6; }
