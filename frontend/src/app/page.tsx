@@ -144,13 +144,15 @@ export default function Home() {
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
             {categories.map((cat) => (
-              <Card key={cat.name} hoverable style={{ padding: '24px', cursor: 'pointer' }}>
-                <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--violet-50)', color: 'var(--violet-600)', display: 'grid', placeItems: 'center', marginBottom: '16px' }}>
-                  {cat.icon}
-                </div>
-                <h3 style={{ fontSize: '18px', fontWeight: 700, margin: '0 0 6px' }}>{cat.name}</h3>
-                <p style={{ fontSize: '14px', color: 'var(--text-muted)', margin: 0 }}>{cat.desc}</p>
-              </Card>
+              <Link key={cat.name} href={`/events?category=${encodeURIComponent(cat.name)}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Card hoverable style={{ padding: '24px', cursor: 'pointer', height: '100%' }}>
+                  <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--violet-50)', color: 'var(--violet-600)', display: 'grid', placeItems: 'center', marginBottom: '16px' }}>
+                    {cat.icon}
+                  </div>
+                  <h3 style={{ fontSize: '18px', fontWeight: 700, margin: '0 0 6px' }}>{cat.name}</h3>
+                  <p style={{ fontSize: '14px', color: 'var(--text-muted)', margin: 0 }}>{cat.desc}</p>
+                </Card>
+              </Link>
             ))}
           </div>
         </div>

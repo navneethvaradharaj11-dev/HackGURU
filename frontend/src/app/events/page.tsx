@@ -333,13 +333,13 @@ function EventsCatalogContent() {
         {error ? (
           <ErrorState onRetry={() => { setError(false); setCategory(category); }} />
         ) : loading ? (
-          <div style={gridStyle}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {[...Array(8)].map((_, i) => <SkeletonCard key={i} />)}
           </div>
         ) : events.length === 0 ? (
           <EmptyState onClear={clearAllFilters} hasFilters={activeFilters.length > 0} />
         ) : (
-          <div style={gridStyle}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {events.map(e => <EventCard key={e.id} {...e} />)}
           </div>
         )}
@@ -353,7 +353,7 @@ export default function EventsCatalog() {
   return (
     <Suspense fallback={
       <div style={{ maxWidth: 'var(--container, 1200px)', margin: '0 auto', padding: '40px 24px' }}>
-        <div style={gridStyle}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {[...Array(8)].map((_, i) => <SkeletonCard key={i} />)}
         </div>
       </div>

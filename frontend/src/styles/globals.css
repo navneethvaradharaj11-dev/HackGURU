@@ -29,6 +29,13 @@ a:hover { color: var(--violet-600); }
   border-radius: var(--r-sm);
 }
 
+.container {
+  max-width: var(--container, 1200px);
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
 /* Override legacy dark/glass/neon utilities if they exist */
 .bg-dark, .glass, .glass-card, .neon, .glow, .backdrop-blur {
   background: var(--bg-card) !important;
