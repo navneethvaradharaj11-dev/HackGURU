@@ -1,408 +1,222 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import {
-  Sparkles,
-  ArrowRight,
-  Trophy,
-  Target,
-  Briefcase,
-  Calendar,
-  Bell,
-  Search,
-  CheckCircle2,
-  Building,
-  MapPin,
-  Clock,
-  ShieldCheck,
-  TrendingUp,
-  Bookmark
-} from 'lucide-react';
+import { ArrowRight, Sparkles, Trophy, Code, Presentation, Briefcase, Mic, Rocket, Calendar, Bell, Bookmark, BarChart2, Search } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import EventCard from '@/components/events/EventCard';
 
-const CATEGORY_CHIPS = [
-  { label: 'All Events', href: '/events', count: '10,000+' },
-  { label: 'Hackathons', href: '/events?category=hackathon', count: '320+' },
-  { label: 'Workshops', href: '/events?category=workshop', count: '1,200+' },
-  { label: 'Internships', href: '/events?category=internship', count: '450+' },
-  { label: 'Competitions', href: '/events?category=competition', count: '680+' },
-  { label: 'Conferences', href: '/events?category=conference', count: '150+' },
-];
-
-const FEATURED_OPPORTUNITIES = [
+// Preserving existing fetch logic structure: 
+// In the real app, replace these arrays with data from `eventsService.getFeatured()` and `recommendationService.getForUser()`
+const featuredEvents = [
   {
-    id: 'ev-1',
+    id: '1',
+    title: 'AI Innovation Challenge 2026',
     category: 'Hackathon',
-    badgeClass: 'bg-violet-50 text-violet-700 border-violet-200',
-    title: 'IIT Bombay TechFest Hackathon 2026',
-    org: 'IIT Bombay TechFest Team',
-    location: 'Mumbai · Hybrid',
-    deadline: 'Closes in 2 days',
-    deadlineUrgent: true,
-    prize: '₹3,50,000 Prize Pool',
-    matchScore: 98,
-    skills: ['Python', 'Generative AI', 'React', 'Robotics'],
+    organizer: 'IIT Bombay',
+    location: 'Mumbai',
+    mode: 'Offline' as const,
+    date: '26 Oct 2026',
+    deadlineInDays: 3,
+    skills: ['Python', 'AI', 'ML'],
+    image: 'https://images.unsplash.com/photo-1531497865144-2d6e3c1e6f1e?auto=format&fit=crop&w=800&q=80'
   },
   {
-    id: 'ev-2',
-    category: 'Hackathon',
-    badgeClass: 'bg-violet-50 text-violet-700 border-violet-200',
-    title: 'Smart India Hackathon (SIH) Regional Round',
-    org: 'Ministry of Education Innovation Cell',
-    location: 'Bengaluru · Offline',
-    deadline: 'Closes in 8 days',
-    deadlineUrgent: false,
-    prize: 'Govt. Incubation Grants',
-    matchScore: 94,
-    skills: ['Smart Cities', 'Full Stack', 'Cloud'],
-  },
-  {
-    id: 'ev-3',
+    id: '2',
+    title: 'GenAI Bootcamp',
     category: 'Workshop',
-    badgeClass: 'bg-amber-50 text-amber-800 border-amber-200',
-    title: 'Autonomous Agents & LLM Fine-Tuning Masterclass',
-    org: 'HackGuru AI Academy',
-    location: 'Online Webinar',
-    deadline: 'Closes in 5 days',
-    deadlineUrgent: false,
-    prize: 'Certificate of Mastery',
-    matchScore: 92,
-    skills: ['PyTorch', 'QLoRA', 'vLLM', 'Agents'],
-  },
-  {
-    id: 'ev-4',
-    category: 'Internship',
-    badgeClass: 'bg-emerald-50 text-emerald-800 border-emerald-200',
-    title: 'Deep Learning Fellowship & Research Internship',
-    org: 'ACE Intelligence Labs',
-    location: 'Bengaluru / Hybrid',
-    deadline: 'Closes in 12 days',
-    deadlineUrgent: false,
-    prize: '₹25,000 / month Stipend',
-    matchScore: 89,
-    skills: ['Computer Vision', 'NLP', 'PyTorch'],
-  },
+    organizer: 'NIT Trichy',
+    location: 'Online',
+    mode: 'Online' as const,
+    date: '12 Nov 2026',
+    deadlineInDays: 9,
+    skills: ['LLMs', 'PyTorch'],
+    image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80'
+  }
 ];
 
-const PLATFORM_PILLARS = [
+const recommendedEvents = [
   {
-    icon: Target,
-    title: 'Personalized AI Matching',
-    desc: 'Match your exact branch, target job roles, and tech stack to verified opportunities with real match scoring.',
+    id: '3',
+    title: 'National Coding Cup',
+    category: 'Competition',
+    organizer: 'Anna University',
+    location: 'Chennai',
+    mode: 'Hybrid' as const,
+    date: '05 Dec 2026',
+    deadlineInDays: 14,
+    skills: ['DSA', 'C++'],
+    matchScore: 94,
+    image: 'https://images.unsplash.com/photo-1559628233-1c7e7c6b3e9b?auto=format&fit=crop&w=800&q=80'
   },
   {
-    icon: Bell,
-    title: 'Deadline Calendar Sync',
-    desc: 'Never miss registration cutoffs with automated alert notifications and Google Calendar export.',
-  },
-  {
-    icon: ShieldCheck,
-    title: 'Verified College Events',
-    desc: 'Direct listings from recognized university departments, IEEE branches, ACM chapters, and hackathon clubs.',
-  },
-  {
-    icon: Briefcase,
-    title: 'Verified Portfolio',
-    desc: 'Log participation, team submissions, certificates, and achievements all in one student profile.',
-  },
+    id: '4',
+    title: 'Techfest Robotics League',
+    category: 'Competition',
+    organizer: 'IIT Bombay',
+    location: 'Mumbai',
+    mode: 'Offline' as const,
+    date: '18 Jan 2027',
+    deadlineInDays: 25,
+    skills: ['ROS', 'Embedded'],
+    matchScore: 88,
+    image: 'https://images.unsplash.com/photo-1581090700227-1e8e0c0e1e1e?auto=format&fit=crop&w=800&q=80'
+  }
 ];
 
-export default function HomePage() {
-  const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState('');
+const categories = [
+  { name: 'Hackathons', icon: <Code />, desc: 'Build & innovate under pressure' },
+  { name: 'Workshops', icon: <Presentation />, desc: 'Learn from industry experts' },
+  { name: 'Competitions', icon: <Trophy />, desc: 'Test your skills & win prizes' },
+  { name: 'Internships', icon: <Briefcase />, desc: 'Kickstart your career journey' },
+  { name: 'Webinars', icon: <Mic />, desc: 'Explore latest tech trends' },
+  { name: 'Tech Events', icon: <Rocket />, desc: 'Network with peers & leaders' },
+];
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/events?search=${encodeURIComponent(searchQuery.trim())}`);
-    } else {
-      router.push('/events');
-    }
-  };
+const benefits = [
+  { icon: <Search />, title: 'Discover Events', desc: 'Find events from colleges across India all in one place.' },
+  { icon: <Sparkles />, title: 'Personalized Recommendations', desc: 'Our AI engine suggests events that match your profile.' },
+  { icon: <Bell />, title: 'Deadline Reminders', desc: 'Never miss a registration deadline with smart alerts.' },
+  { icon: <Bookmark />, title: 'Save Opportunities', desc: 'Bookmark events to view and apply later at your convenience.' },
+];
 
+export default function Home() {
   return (
-    <div className="space-y-6 pb-12">
+    <div style={{ background: 'var(--bg-page)', color: 'var(--text-primary)' }}>
       
-      {/* ===================== HERO SECTION ===================== */}
-      <section className="bg-white border-b border-gray-200 pt-10 pb-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center space-y-4">
-            
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-50 border border-violet-200 text-violet-700 text-xs font-semibold">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>India&apos;s Student Opportunity Network</span>
-            </div>
-
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-gray-900 leading-tight">
-              Discover College Events That{' '}
-              <span className="text-violet-700">Advance Your Career</span>
+      {/* HERO SECTION */}
+      <section style={{ 
+        background: 'linear-gradient(180deg, var(--violet-50) 0%, #FFFFFF 100%)',
+        padding: '80px 0 60px',
+        borderBottom: '1px solid var(--border-soft)'
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', display: 'flex', gap: '48px', alignItems: 'center' }}>
+          <div style={{ flex: '1.1' }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '6px 12px', background: '#fff', border: '1px solid var(--violet-200)', borderRadius: '999px', fontSize: '13px', fontWeight: 600, color: 'var(--violet-700)', marginBottom: '24px' }}>
+              <Sparkles size={14} /> AI-powered event discovery
+            </span>
+            <h1 style={{ fontSize: 'clamp(36px, 5vw, 60px)', lineHeight: 1.05, fontWeight: 800, margin: 0, letterSpacing: '-1px' }}>
+              Discover College Events That Match Your <span style={{ color: 'var(--violet-600)' }}>Ambitions</span>
             </h1>
-
-            <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto leading-relaxed">
-              Find hackathons, technical workshops, internships, and university competitions across India — matched intelligently to your skills and aspirations.
+            <p style={{ fontSize: '18px', color: 'var(--text-secondary)', marginTop: '20px', maxWidth: '540px' }}>
+              Find hackathons, workshops, competitions, internships and technical events from colleges across India.
             </p>
-
-            {/* LinkedIn-style Search Box */}
-            <form onSubmit={handleSearch} className="pt-2 max-w-xl mx-auto">
-              <div className="flex items-center bg-white border border-gray-300 rounded-lg p-1.5 shadow-sm focus-within:ring-2 focus-within:ring-violet-600 focus-within:border-violet-600 transition-all">
-                <Search className="w-5 h-5 text-gray-400 ml-2.5 shrink-0" />
-                <input
-                  type="text"
-                  placeholder="Search events, colleges (e.g. IIT, BITS), or skills (e.g. AI, React)..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full px-3 py-2 text-xs sm:text-sm text-gray-900 placeholder-gray-400 bg-transparent focus:outline-none"
-                />
-                <button
-                  type="submit"
-                  className="px-5 py-2 rounded-md bg-violet-600 hover:bg-violet-700 text-white font-semibold text-xs sm:text-sm shrink-0 transition-colors shadow-2xs"
-                >
-                  Search
-                </button>
-              </div>
-            </form>
-
-            {/* Quick Filter Chips */}
-            <div className="pt-2 flex items-center justify-center gap-2 flex-wrap text-xs text-gray-600">
-              <span className="text-gray-400 font-medium">Popular:</span>
-              {CATEGORY_CHIPS.map((chip) => (
-                <Link
-                  key={chip.label}
-                  href={chip.href}
-                  className="px-3 py-1 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium transition-colors"
-                >
-                  {chip.label}
-                </Link>
-              ))}
+            <div style={{ display: 'flex', gap: '16px', marginTop: '32px' }}>
+              <Link href="/events">
+                <Button size="lg" rightIcon={<ArrowRight size={16} />}>Explore Events</Button>
+              </Link>
+              <Link href="/register">
+                <Button variant="outline" size="lg">Create Student Profile</Button>
+              </Link>
             </div>
-
           </div>
-
-          {/* Quick Metrics Strip */}
-          <div className="mt-10 pt-8 border-t border-gray-100 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto text-center">
-            <div>
-              <p className="text-2xl font-bold text-gray-900">10,000+</p>
-              <p className="text-xs text-gray-500 mt-0.5">Events Listed</p>
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-gray-900">500+</p>
-              <p className="text-xs text-gray-500 mt-0.5">Partner Colleges</p>
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-gray-900">50,000+</p>
-              <p className="text-xs text-gray-500 mt-0.5">Registered Students</p>
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-violet-700">98%</p>
-              <p className="text-xs text-gray-500 mt-0.5">AI Match Precision</p>
+          
+          {/* Hero Visual - Realistic Imagery */}
+          <div className="hidden md:block" style={{ flex: '0.9' }}>
+            <div style={{ position: 'relative', borderRadius: 'var(--r-xl)', overflow: 'hidden', boxShadow: 'var(--shadow-md)', aspectRatio: '4/3' }}>
+              <img 
+                src="https://images.unsplash.com/photo-1523580496186-3de8d4548b25?auto=format&fit=crop&w=1200&q=80" 
+                alt="Students collaborating at a college event" 
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(transparent, rgba(0,0,0,0.6))', padding: '20px', color: 'white' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <p style={{ margin: 0, opacity: 0.9, fontSize: '14px' }}>Live Event</p>
+                    <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 700 }}>Hackathon Finals 2026</h3>
+                  </div>
+                  <Badge tone="violet">Live Now</Badge>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ===================== MAIN 3-COLUMN OPPORTUNITY FEED ===================== */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          
-          {/* LEFT SIDEBAR: Category Navigator */}
-          <aside className="lg:col-span-3 space-y-4">
-            <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
-              <h2 className="text-xs font-bold text-gray-900 uppercase tracking-wider mb-3">
-                Explore by Track
-              </h2>
-              <div className="space-y-1 text-xs">
-                {CATEGORY_CHIPS.map((cat) => (
-                  <Link
-                    key={cat.label}
-                    href={cat.href}
-                    className="flex items-center justify-between p-2 rounded-md hover:bg-gray-50 text-gray-700 font-medium transition-colors"
-                  >
-                    <span>{cat.label}</span>
-                    <span className="text-[11px] text-gray-400">{cat.count}</span>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            {/* AI Callout */}
-            <div className="bg-violet-50 rounded-lg border border-violet-200 p-4 space-y-2 text-xs">
-              <div className="flex items-center gap-2 font-bold text-violet-900">
-                <Sparkles className="w-4 h-4 text-violet-600" />
-                <span>Want Custom Recommendations?</span>
-              </div>
-              <p className="text-violet-800 text-[11px] leading-relaxed">
-                Log in and let HackGuru rank opportunities according to your degree and target tech roles.
-              </p>
-              <Link
-                href="/register"
-                className="mt-2 block w-full text-center py-1.5 rounded bg-violet-600 text-white font-semibold hover:bg-violet-700 transition-colors"
-              >
-                Set Up Profile
-              </Link>
-            </div>
-          </aside>
-
-          {/* CENTER FEED: Featured Opportunities */}
-          <main className="lg:col-span-6 space-y-4">
-            <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm flex items-center justify-between">
-              <div>
-                <h2 className="text-base font-bold text-gray-900">
-                  Featured Opportunities
-                </h2>
-                <p className="text-xs text-gray-500 mt-0.5">Top-rated hackathons and bootcamps right now</p>
-              </div>
-              <Link href="/events" className="text-xs font-semibold text-violet-700 hover:underline">
-                View All Events →
-              </Link>
-            </div>
-
-            <div className="space-y-4">
-              {FEATURED_OPPORTUNITIES.map((ev) => (
-                <article
-                  key={ev.id}
-                  className="bg-white rounded-lg border border-gray-200 p-5 shadow-sm hover:border-gray-300 transition-all space-y-3.5"
-                >
-                  {/* Top line */}
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center font-bold text-sm text-gray-700 shrink-0">
-                        <Building className="w-5 h-5 text-gray-600" />
-                      </div>
-                      <div>
-                        <h3 className="text-xs font-semibold text-gray-900 leading-tight">
-                          {ev.org}
-                        </h3>
-                        <p className="text-[11px] text-gray-500 flex items-center gap-1 mt-0.5">
-                          <MapPin className="w-3 h-3 text-gray-400" />
-                          <span>{ev.location}</span>
-                          <span>·</span>
-                          <span className="text-emerald-700 font-medium">Verified College</span>
-                        </p>
-                      </div>
-                    </div>
-
-                    <span className="px-2.5 py-0.5 rounded-full bg-violet-50 border border-violet-200 text-violet-800 text-xs font-bold shrink-0">
-                      {ev.matchScore}% Match
-                    </span>
-                  </div>
-
-                  {/* Title & Details */}
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className={`px-2 py-0.5 rounded text-[11px] font-semibold border ${ev.badgeClass}`}>
-                        {ev.category}
-                      </span>
-                      <span className={`text-[11px] font-medium ${ev.deadlineUrgent ? 'text-red-600' : 'text-gray-500'}`}>
-                        {ev.deadline}
-                      </span>
-                    </div>
-
-                    <Link href={`/events/${ev.id}`}>
-                      <h3 className="text-base font-bold text-gray-900 hover:text-violet-600 transition-colors leading-snug">
-                        {ev.title}
-                      </h3>
-                    </Link>
-
-                    {ev.prize && (
-                      <p className="text-xs font-semibold text-emerald-700 mt-1">
-                        🏆 {ev.prize}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Skills */}
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {ev.skills.map((s) => (
-                      <span key={s} className="px-2 py-0.5 rounded bg-gray-100 text-gray-600 text-[11px] font-medium">
-                        {s}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Actions Bar */}
-                  <div className="pt-3 border-t border-gray-100 flex items-center justify-between text-xs">
-                    <button
-                      onClick={() => alert(`Saved ${ev.title} to your bookmarks!`)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-md hover:bg-gray-100 text-gray-600 font-medium transition-colors"
-                    >
-                      <Bookmark className="w-3.5 h-3.5" />
-                      <span>Save</span>
-                    </button>
-
-                    <div className="flex items-center gap-2">
-                      <Link
-                        href={`/events/${ev.id}`}
-                        className="px-3 py-1.5 rounded-md border border-gray-300 font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-                      >
-                        Details
-                      </Link>
-                      <Link
-                        href={`/events/${ev.id}`}
-                        className="px-3.5 py-1.5 rounded-md bg-violet-600 hover:bg-violet-700 text-white font-semibold transition-colors"
-                      >
-                        Apply / Register
-                      </Link>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </main>
-
-          {/* RIGHT SIDEBAR: Upcoming Deadlines & College Directory */}
-          <aside className="lg:col-span-3 space-y-4">
-            
-            {/* Urgent Deadlines */}
-            <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
-              <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-red-600" />
-                Deadlines This Week
-              </h3>
-              <div className="space-y-3 text-xs">
-                <div className="border-b border-gray-100 pb-2.5">
-                  <span className="text-[10px] font-semibold text-red-600 bg-red-50 px-1.5 py-0.5 rounded">2 Days Left</span>
-                  <p className="font-semibold text-gray-900 mt-1 leading-snug">IIT Bombay TechFest Hackathon</p>
-                  <p className="text-[11px] text-gray-500">Mumbai · Hybrid</p>
+      {/* EXPLORE OPPORTUNITIES */}
+      <section style={{ padding: '64px 0' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
+          <h2 style={{ fontSize: '32px', fontWeight: 700, textAlign: 'center', marginBottom: '12px' }}>Explore Opportunities</h2>
+          <p style={{ color: 'var(--text-secondary)', textAlign: 'center', maxWidth: '600px', margin: '0 auto 40px' }}>
+            Browse through various categories to find exactly what you&apos;re looking for.
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
+            {categories.map((cat) => (
+              <Card key={cat.name} hoverable style={{ padding: '24px', cursor: 'pointer' }}>
+                <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--violet-50)', color: 'var(--violet-600)', display: 'grid', placeItems: 'center', marginBottom: '16px' }}>
+                  {cat.icon}
                 </div>
-                <div className="border-b border-gray-100 pb-2.5">
-                  <span className="text-[10px] font-semibold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded">5 Days Left</span>
-                  <p className="font-semibold text-gray-900 mt-1 leading-snug">Autonomous Agents Masterclass</p>
-                  <p className="text-[11px] text-gray-500">Online Webinar</p>
-                </div>
-                <div>
-                  <span className="text-[10px] font-semibold text-gray-600 bg-gray-100 px-1.5 py-0.5 rounded">8 Days Left</span>
-                  <p className="font-semibold text-gray-900 mt-1 leading-snug">Smart India Hackathon Regional</p>
-                  <p className="text-[11px] text-gray-500">Bengaluru · Offline</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Why AllCollegeEvent */}
-            <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm space-y-3 text-xs">
-              <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wider">
-                Why AllCollegeEvent?
-              </h3>
-              {PLATFORM_PILLARS.map((p) => {
-                const Icon = p.icon;
-                return (
-                  <div key={p.title} className="flex items-start gap-2.5">
-                    <div className="w-6 h-6 rounded bg-violet-50 text-violet-700 flex items-center justify-center shrink-0 mt-0.5">
-                      <Icon className="w-3.5 h-3.5" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gray-800 leading-snug">{p.title}</p>
-                      <p className="text-[11px] text-gray-500 leading-normal mt-0.5">{p.desc}</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-          </aside>
-
+                <h3 style={{ fontSize: '18px', fontWeight: 700, margin: '0 0 6px' }}>{cat.name}</h3>
+                <p style={{ fontSize: '14px', color: 'var(--text-muted)', margin: 0 }}>{cat.desc}</p>
+              </Card>
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
+
+      {/* FEATURED EVENTS */}
+      <section style={{ padding: '32px 0 64px', background: 'var(--bg-section)' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '32px' }}>
+            <div>
+              <h2 style={{ fontSize: '32px', fontWeight: 700, margin: 0 }}>Featured Events</h2>
+              <p style={{ color: 'var(--text-secondary)', marginTop: '8px' }}>Don&apos;t miss out on these top-rated events.</p>
+            </div>
+            <Link href="/events">
+              <Button variant="ghost" rightIcon={<ArrowRight size={16} />}>View All</Button>
+            </Link>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
+            {featuredEvents.map(e => <EventCard key={e.id} {...e} />)}
+          </div>
+        </div>
+      </section>
+
+      {/* RECOMMENDED FOR YOU */}
+      <section style={{ padding: '64px 0' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '32px' }}>
+            <Sparkles size={24} color="var(--violet-600)" />
+            <h2 style={{ fontSize: '32px', fontWeight: 700, margin: 0 }}>Recommended For You</h2>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
+            {recommendedEvents.map(e => <EventCard key={e.id} {...e} />)}
+          </div>
+        </div>
+      </section>
+
+      {/* WHY STUDENTS USE */}
+      <section style={{ padding: '32px 0 64px', background: 'var(--bg-section)' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
+          <h2 style={{ fontSize: '32px', fontWeight: 700, textAlign: 'center', marginBottom: '40px' }}>Why Students Use AllCollegeEvent</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '24px' }}>
+            {benefits.map((b, i) => (
+              <Card key={i} style={{ padding: '24px', textAlign: 'left' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'var(--violet-50)', color: 'var(--violet-600)', display: 'grid', placeItems: 'center', marginBottom: '16px' }}>
+                  {b.icon}
+                </div>
+                <h3 style={{ fontSize: '16px', fontWeight: 700, margin: '0 0 8px' }}>{b.title}</h3>
+                <p style={{ fontSize: '14px', color: 'var(--text-muted)', margin: 0 }}>{b.desc}</p>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA SECTION */}
+      <section style={{ padding: '80px 0' }}>
+        <div style={{ maxWidth: '900px', margin: '0 auto', padding: '0 24px', textAlign: 'center' }}>
+          <h2 style={{ fontSize: '36px', fontWeight: 800, marginBottom: '16px' }}>Ready to find your next big opportunity?</h2>
+          <p style={{ fontSize: '18px', color: 'var(--text-secondary)', marginBottom: '32px' }}>
+            Create your profile today and get personalized event recommendations delivered straight to your dashboard.
+          </p>
+          <Link href="/register">
+            <Button size="lg">Get Started For Free</Button>
+          </Link>
+        </div>
+      </section>
 
     </div>
   );
