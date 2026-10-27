@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '/api';
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -113,7 +113,7 @@ export const dashboardApi = {
 
 // Events API
 export const eventsApi = {
-  getEvents: async (params?: { category?: string; location?: string; search?: string }) => {
+  getEvents: async (params?: { category?: string; location?: string; search?: string; mode?: string }) => {
     const res = await api.get('/events', { params });
     return res.data;
   },
@@ -173,12 +173,44 @@ export const notificationApi = {
     const res = await api.post(`/notifications/${id}/read`);
     return res.data;
   },
+  markAllRead: async () => {
+    const res = await api.post('/notifications/mark-all-read');
+    return res.data;
+  },
 };
 
-// AI Telemetry API
+// AI Telemetry & Chat APIs
 export const aiApi = {
   getUsage: async () => {
     const res = await api.get('/ai/usage');
+    return res.data;
+  },
+  chat: async (prompt: string, action?: string, context?: string) => {
+    const res = await api.post('/ai/chat', { prompt, action, context });
+    return res.data;
+  },
+  semanticMatch: async (query: string) => {
+    const res = await api.post('/ai/semantic-match', { query });
+    return res.data;
+  },
+};
+
+// System Verification & Status API
+export const systemStatusApi = {
+  getStatus: async () => {
+    const res = await api.get('/system-status');
+    return res.data;
+  },
+};
+
+// Storage API
+export const storageApi = {
+  getAssets: async () => {
+    const res = await api.get('/storage/assets');
+    return res.data;
+  },
+  upload: async (filename: string, category?: string) => {
+    const res = await api.post('/storage/upload', { filename, category });
     return res.data;
   },
 };

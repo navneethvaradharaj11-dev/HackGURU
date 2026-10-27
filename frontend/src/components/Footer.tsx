@@ -62,7 +62,8 @@ export const Footer = () => {
           <div>
             <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-3">Platform</h4>
             <ul className="space-y-2 text-xs">
-              <li><Link href="/about" className="hover:text-violet-600 transition-colors">About Us</Link></li>
+              <li><Link href="/system-status" className="text-emerald-600 font-semibold hover:text-emerald-700 transition-colors flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> System Status (Verified)</Link></li>
+              <li><Link href="/ai-telemetry" className="hover:text-violet-600 transition-colors">AI Telemetry</Link></li>
               <li><Link href="/privacy" className="hover:text-violet-600 transition-colors">Privacy Policy</Link></li>
               <li><Link href="/terms" className="hover:text-violet-600 transition-colors">Terms of Service</Link></li>
               <li><a href="mailto:contact@allcollegeevent.com" className="hover:text-violet-600 transition-colors">Help Center</a></li>

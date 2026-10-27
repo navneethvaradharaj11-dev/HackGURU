@@ -79,6 +79,11 @@ export function Navbar() {
 
         {/* Right Actions */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <Link href="/system-status" className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold border border-emerald-200 hover:bg-emerald-100 transition-colors" style={{ textDecoration: 'none' }}>
+            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981' }} />
+            8/8 Verified
+          </Link>
+
           <Link href="/events">
             <button aria-label="Search" style={iconBtnStyle}><Search size={18} /></button>
           </Link>

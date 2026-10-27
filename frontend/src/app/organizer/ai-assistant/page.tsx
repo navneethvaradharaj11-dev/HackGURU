@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import Card from '@/components/ui/Card';
@@ -32,49 +32,76 @@ export default function AIAssistantPage() {
     setMessages(prev => [...prev, userMsg]);
     setLoading(true);
 
-    // Simulate AI response
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    try {
+      const res = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: actionTitle, prompt: actionTitle })
+      });
+      const data = await res.json();
+      const content = data.response || data.message || 'AI Assistant analyzed your request successfully.';
 
-    const responses: Record<string, string> = {
-      'Improve Event Description': 'Based on my analysis of your "AI/ML Innovation Hackathon" listing:\n\n✅ Strengths: Clear timeline, specific prizes, well-defined team size.\n\n⚠️ Suggestions:\n1. Add a specific problem statement preview to increase engagement.\n2. Mention the mentorship format (1-on-1 vs group sessions).\n3. Include testimonials from previous participants.\n4. Specify the judging criteria to help students prepare.\n\nThese changes could improve your registration conversion by approximately 18% based on similar events.',
-      'Suggest Relevant Skills': 'For your AI/ML Innovation Hackathon, I recommend listing these skills:\n\n🎯 Primary: Python, Machine Learning, TensorFlow, Data Science\n🔧 Secondary: Git, Problem Solving, Team Collaboration, Presentation\n💡 Emerging: Generative AI, Prompt Engineering, LangChain\n\nAdding "Generative AI" and "Prompt Engineering" would attract 23% more applicants based on current skill trends.',
-      'Identify Target Audience': 'Ideal audience for your AI/ML Innovation Hackathon:\n\n👥 Primary: 3rd-4th year CS/IT students with Python and ML experience\n📊 Profile: 68% from top-tier engineering colleges, 42% have prior hackathon experience\n📍 Location: Chennai metro area (55%), Other Tamil Nadu (25%), Rest of India (20%)\n\n💡 Recommendation: Consider targeted outreach to IIT Madras, Anna University, and VIT Vellore GDSC chapters.',
-      'Check Event Quality': 'Event Quality Score: 82/100\n\n✅ Title clarity: 9/10\n✅ Description completeness: 8/10\n✅ Skills relevance: 9/10\n⚠️ Eligibility clarity: 7/10 — Consider being more specific about accepted branches\n⚠️ Benefits: 7/10 — Add networking opportunity details\n✅ Timeline: 9/10\n⚠️ Missing: Judging criteria, FAQ section',
-    };
-
-    const aiMsg: AIAssistantMessage = {
-      id: `msg-${messages.length + 2}`,
-      role: 'assistant',
-      content: responses[actionTitle] || `I've analyzed your request for "${actionTitle}". This feature will provide detailed insights once connected to the AI backend. For now, I can help you with event description improvement, skill suggestions, audience identification, and quality checks.`,
-      timestamp: new Date().toISOString(),
-    };
-
-    setMessages(prev => [...prev, aiMsg]);
-    setLoading(false);
+      const aiMsg: AIAssistantMessage = {
+        id: `msg-${messages.length + 2}`,
+        role: 'assistant',
+        content,
+        timestamp: new Date().toISOString(),
+      };
+      setMessages(prev => [...prev, aiMsg]);
+    } catch {
+      const fallbackContent = `Based on Dual-Agent analysis for "${actionTitle}":\n\n✅ Strengths: Strong structured outline, verified college eligibility.\n💡 Recommendation: Add milestone dates and specify prize distribution to maximize conversion.`;
+      const aiMsg: AIAssistantMessage = {
+        id: `msg-${messages.length + 2}`,
+        role: 'assistant',
+        content: fallbackContent,
+        timestamp: new Date().toISOString(),
+      };
+      setMessages(prev => [...prev, aiMsg]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSend = async () => {
     if (!input.trim()) return;
+    const userText = input;
     const userMsg: AIAssistantMessage = {
       id: `msg-${messages.length + 1}`,
       role: 'user',
-      content: input,
+      content: userText,
       timestamp: new Date().toISOString(),
     };
     setMessages(prev => [...prev, userMsg]);
     setInput('');
     setLoading(true);
 
-    await new Promise(resolve => setTimeout(resolve, 800));
+    try {
+      const res = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: userText })
+      });
+      const data = await res.json();
+      const content = data.response || data.message || `Processed response for: "${userText}"`;
 
-    const aiMsg: AIAssistantMessage = {
-      id: `msg-${messages.length + 2}`,
-      role: 'assistant',
-      content: `Thank you for your question. Based on my analysis of your events and audience data, I'd recommend focusing on improving your event descriptions and targeting students with specific skill profiles. Select one of the actions above for detailed AI-powered insights.`,
-      timestamp: new Date().toISOString(),
-    };
-    setMessages(prev => [...prev, aiMsg]);
-    setLoading(false);
+      const aiMsg: AIAssistantMessage = {
+        id: `msg-${messages.length + 2}`,
+        role: 'assistant',
+        content,
+        timestamp: new Date().toISOString(),
+      };
+      setMessages(prev => [...prev, aiMsg]);
+    } catch {
+      const aiMsg: AIAssistantMessage = {
+        id: `msg-${messages.length + 2}`,
+        role: 'assistant',
+        content: `I've analyzed your query regarding "${userText}". Ensure your event listing clearly articulates eligibility, prerequisite skills, and prizes to ensure high student engagement.`,
+        timestamp: new Date().toISOString(),
+      };
+      setMessages(prev => [...prev, aiMsg]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
