@@ -70,27 +70,19 @@ export function Navbar({ onOpenPostModal }: { onOpenPostModal?: () => void }) {
       <nav style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 20px', height: '68px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}>
         {/* Branding */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-primary, #171717)', textDecoration: 'none' }}>
-            <div style={{
-              width: '38px', height: '38px', borderRadius: '10px',
-              background: 'linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%)',
-              display: 'grid', placeItems: 'center', color: '#fff', fontWeight: 800, fontSize: '18px',
-              boxShadow: '0 4px 12px rgba(124, 58, 237, 0.3)'
-            }}>
-              HG
-            </div>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <span style={{ fontWeight: 800, fontSize: '18px', letterSpacing: '-0.3px', color: '#111827' }}>
-                  Hack<span style={{ color: '#7C3AED' }}>GURU</span>
-                </span>
-                <span style={{ fontSize: '10px', fontWeight: 700, padding: '2px 6px', background: '#EDE9FE', color: '#6D28D9', borderRadius: '6px' }}>
-                  ACE
-                </span>
-              </div>
-              <p style={{ margin: 0, fontSize: '11px', color: '#6B7280', fontWeight: 500, lineHeight: 1 }}>
-                All College Events India
-              </p>
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--text-primary, #171717)', textDecoration: 'none' }}>
+            <img 
+              src="/ace-logo.png" 
+              alt="AllCollegeEvent.com Logo" 
+              style={{ height: '34px', width: 'auto', objectFit: 'contain' }} 
+            />
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span style={{ fontWeight: 800, fontSize: '18px', letterSpacing: '-0.3px', color: '#111827', lineHeight: 1.15 }}>
+                AllCollegeEvent<span style={{ color: '#7C3AED' }}>.com</span>
+              </span>
+              <span style={{ margin: 0, fontSize: '11px', color: '#64748B', fontWeight: 500, lineHeight: 1.2 }}>
+                Student Opportunity Network
+              </span>
             </div>
           </Link>
 

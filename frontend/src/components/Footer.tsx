@@ -15,7 +15,7 @@ export const Footer = () => {
           {/* Brand */}
           <div className="lg:col-span-2 space-y-3">
             <Link href="/" className="flex items-center gap-2.5">
-              <img src="/icon.png" alt="ACE Logo" className="w-8 h-8 object-contain" />
+              <img src="/ace-logo.png" alt="ACE Logo" className="w-8 h-8 object-contain" />
               <div>
                 <span className="font-bold text-base text-gray-900 tracking-tight leading-none block">
                   AllCollegeEvent<span className="text-violet-600">.com</span>
