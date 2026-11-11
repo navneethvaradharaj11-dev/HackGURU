@@ -1,9 +1,9 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Trophy, Search, Bell, Menu, X, LogOut, LayoutDashboard, CheckCheck, PlusCircle, MapPin, Sparkles } from 'lucide-react';
+import { Trophy, Search, Bell, Menu, X, LogOut, LayoutDashboard, CheckCheck, PlusCircle, MapPin, Sparkles, ArrowUpRight } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -14,12 +14,12 @@ const mockNotifications = [
 ];
 
 const navLinks = [
-  { label: 'Explore Events', href: '/events' },
+  { label: 'Explore', href: '/events' },
   { label: 'Hackathons', href: '/events?category=Hackathon' },
   { label: 'Symposiums', href: '/events?category=Symposium' },
   { label: 'Workshops', href: '/events?category=Workshop' },
-  { label: 'Cultural', href: '/events?category=Cultural' },
   { label: 'Robotics', href: '/events?category=Competition' },
+  { label: 'Directory', href: '/explore' },
 ];
 
 const cities = ['All India', 'Coimbatore', 'Chennai', 'Bangalore', 'Mumbai', 'Delhi NCR', 'Online'];
@@ -61,222 +61,219 @@ export function Navbar({ onOpenPostModal }: { onOpenPostModal?: () => void }) {
   };
 
   return (
-    <header style={{
-      position: 'sticky', top: 0, zIndex: 50,
-      background: 'rgba(255,255,255,0.96)', backdropFilter: 'blur(12px)',
-      borderBottom: '1px solid var(--border-soft, #E4E4E7)',
-      boxShadow: '0 2px 8px rgba(0,0,0,0.03)'
-    }}>
-      <nav style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 20px', height: '68px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}>
-        {/* Branding */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--text-primary, #171717)', textDecoration: 'none' }}>
-            <img 
-              src="/ace-logo.png" 
-              alt="AllCollegeEvent.com Logo" 
-              style={{ height: '34px', width: 'auto', objectFit: 'contain' }} 
-            />
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span style={{ fontWeight: 800, fontSize: '18px', letterSpacing: '-0.3px', color: '#111827', lineHeight: 1.15 }}>
-                AllCollegeEvent<span style={{ color: '#7C3AED' }}>.com</span>
+    <header className="sticky top-0 z-50 py-3 px-4 sm:px-6">
+      <div className="max-w-7xl mx-auto">
+        <nav className="h-16 px-4 sm:px-6 rounded-full bg-white/90 backdrop-blur-md border border-neutral-200/90 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex items-center justify-between gap-4 transition-all">
+          
+          {/* Brand Pill (Image 2 style) */}
+          <div className="flex items-center gap-3">
+            <Link href="/" className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-[#0B0B0E] text-white shadow-xs hover:opacity-90 transition-opacity">
+              <span className="w-5 h-5 rounded-full bg-violet-600 flex items-center justify-center text-[10px] font-black text-white">
+                G
               </span>
-              <span style={{ margin: 0, fontSize: '11px', color: '#64748B', fontWeight: 500, lineHeight: 1.2 }}>
-                Student Opportunity Network
+              <span className="font-bold text-[13.5px] tracking-tight text-white leading-none">
+                HackGURU<span className="text-violet-400">.ace</span>
               </span>
-            </div>
-          </Link>
-
-          {/* Location Selector */}
-          <div ref={cityRef} style={{ position: 'relative' }} className="hidden md:block">
-            <button
-              onClick={() => setCityOpen(!cityOpen)}
-              style={{
-                display: 'flex', alignItems: 'center', gap: '6px',
-                padding: '6px 12px', borderRadius: '20px',
-                background: '#F9FAFB', border: '1px solid #E5E7EB',
-                fontSize: '13px', fontWeight: 600, color: '#374151',
-                cursor: 'pointer', transition: 'all 0.15s ease'
-              }}
-            >
-              <MapPin size={14} color="#7C3AED" />
-              <span>{selectedCity}</span>
-            </button>
-            {cityOpen && (
-              <div style={{
-                position: 'absolute', top: 'calc(100% + 6px)', left: 0,
-                width: '160px', background: '#fff', border: '1px solid #E5E7EB',
-                borderRadius: '12px', boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
-                padding: '6px 0', zIndex: 100
-              }}>
-                {cities.map(city => (
-                  <button
-                    key={city}
-                    onClick={() => { setSelectedCity(city); setCityOpen(false); }}
-                    style={{
-                      width: '100%', textAlign: 'left', padding: '8px 14px',
-                      fontSize: '13px', fontWeight: selectedCity === city ? 700 : 500,
-                      color: selectedCity === city ? '#7C3AED' : '#374151',
-                      background: selectedCity === city ? '#F5F3FF' : 'transparent',
-                      border: 'none', cursor: 'pointer', display: 'block'
-                    }}
-                  >
-                    {city}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Desktop Links */}
-        <div className="hidden xl:flex" style={{ gap: '20px', flex: 1, justifyContent: 'center' }}>
-          {navLinks.map((link) => (
-            <Link
-              key={link.label}
-              href={link.href}
-              style={{
-                fontSize: '14px',
-                fontWeight: isActive(link.href) ? 700 : 500,
-                color: isActive(link.href) ? '#7C3AED' : '#4B5563',
-                textDecoration: 'none',
-                padding: '4px 8px',
-                borderRadius: '6px',
-                transition: 'color 0.15s ease'
-              }}
-            >
-              {link.label}
             </Link>
-          ))}
-        </div>
 
-        {/* Right Actions */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          {/* Post / Add Event CTA */}
-          <Link href="/organizer/events/create" style={{ textDecoration: 'none' }}>
-            <button
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: '6px',
-                padding: '8px 14px', borderRadius: '10px',
-                background: 'linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%)',
-                color: '#fff', fontSize: '13px', fontWeight: 700,
-                border: 'none', cursor: 'pointer',
-                boxShadow: '0 4px 12px rgba(124, 58, 237, 0.25)',
-                transition: 'all 0.15s ease'
-              }}
-            >
-              <PlusCircle size={15} />
-              <span className="hidden sm:inline">Post Event</span>
-            </button>
-          </Link>
-
-          <Link href="/events" title="Search Events">
-            <button aria-label="Search" style={iconBtnStyle}><Search size={18} /></button>
-          </Link>
-
-          {/* Notification Dropdown */}
-          <div ref={notifRef} style={{ position: 'relative' }}>
-            <button aria-label="Notifications" style={iconBtnStyle} onClick={() => setNotifOpen(!notifOpen)}>
-              <Bell size={18} />
-              {unreadCount > 0 && (
-                <span style={{ position: 'absolute', top: '-2px', right: '-2px', background: '#EF4444', color: '#fff', fontSize: '10px', fontWeight: 700, padding: '2px 5px', borderRadius: '10px', minWidth: '16px', textAlign: 'center' }}>
-                  {unreadCount}
-                </span>
-              )}
-            </button>
-
-            {notifOpen && (
-              <div style={{ position: 'absolute', right: 0, top: 'calc(100% + 8px)', width: '340px', background: '#fff', border: '1px solid #E5E7EB', borderRadius: '14px', boxShadow: '0 10px 30px rgba(0,0,0,0.12)', overflow: 'hidden', zIndex: 100 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 16px', borderBottom: '1px solid #F3F4F6' }}>
-                  <span style={{ fontWeight: 700, fontSize: '15px', color: '#111827' }}>Live Updates</span>
-                  <button onClick={handleMarkAll} style={{ background: 'none', border: 'none', color: '#7C3AED', fontSize: '12px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <CheckCheck size={14} /> Mark all
-                  </button>
-                </div>
-                <div style={{ maxHeight: '320px', overflowY: 'auto' }}>
-                  {notifications.map(n => (
-                    <Link key={n.id} href={n.link || '/events'} onClick={() => setNotifOpen(false)} style={{ display: 'flex', gap: '12px', padding: '12px 16px', borderBottom: '1px solid #F9FAFB', background: n.read ? 'transparent' : '#F5F3FF', textDecoration: 'none' }}>
-                      {!n.read && <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#7C3AED', flexShrink: 0, marginTop: '6px' }} />}
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontSize: '13px', fontWeight: 600, margin: 0, color: '#111827' }}>{n.title}</p>
-                        <p style={{ fontSize: '12px', color: '#4B5563', margin: '2px 0 0 0' }}>{n.message}</p>
-                      </div>
-                    </Link>
+            {/* Region Selector Pill */}
+            <div ref={cityRef} className="relative hidden lg:block">
+              <button
+                onClick={() => setCityOpen(!cityOpen)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-100/80 hover:bg-neutral-200/60 border border-neutral-200/60 text-xs font-semibold text-neutral-700 transition-colors cursor-pointer"
+              >
+                <MapPin size={12} className="text-violet-600" />
+                <span>{selectedCity}</span>
+              </button>
+              {cityOpen && (
+                <div className="absolute top-full mt-2 left-0 w-44 bg-white border border-neutral-200/80 rounded-2xl shadow-xl py-1.5 z-50">
+                  {cities.map(city => (
+                    <button
+                      key={city}
+                      onClick={() => { setSelectedCity(city); setCityOpen(false); }}
+                      className={`w-full text-left px-4 py-2 text-xs font-medium cursor-pointer transition-colors ${selectedCity === city ? 'bg-violet-50 text-violet-700 font-bold' : 'text-neutral-700 hover:bg-neutral-50'}`}
+                    >
+                      {city}
+                    </button>
                   ))}
                 </div>
-                <Link href="/notifications" onClick={() => setNotifOpen(false)} style={{ display: 'block', padding: '12px', textAlign: 'center', fontSize: '13px', fontWeight: 600, color: '#7C3AED', background: '#F9FAFB', textDecoration: 'none' }}>
-                  View all notifications
+              )}
+            </div>
+          </div>
+
+          {/* Desktop Navigation Links */}
+          <div className="hidden md:flex items-center gap-1.5 lg:gap-2">
+            {navLinks.map((link) => {
+              const active = isActive(link.href);
+              return (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className={`text-[13px] font-medium px-3 py-1.5 rounded-full transition-all ${
+                    active 
+                      ? 'bg-neutral-100 text-neutral-900 font-semibold' 
+                      : 'text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* Right Actions (Image 2 style) */}
+          <div className="flex items-center gap-2">
+            
+            {/* Quick Search */}
+            <Link href="/events" className="hidden sm:inline-flex w-9 h-9 rounded-full border border-neutral-200/80 bg-white items-center justify-center text-neutral-500 hover:text-neutral-900 hover:bg-neutral-50 transition-colors">
+              <Search size={15} />
+            </Link>
+
+            {/* Notification Dropdown */}
+            <div ref={notifRef} className="relative">
+              <button
+                aria-label="Notifications"
+                onClick={() => setNotifOpen(!notifOpen)}
+                className="w-9 h-9 rounded-full border border-neutral-200/80 bg-white flex items-center justify-center text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 transition-colors cursor-pointer relative"
+              >
+                <Bell size={15} />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-violet-600 text-white text-[9px] font-bold flex items-center justify-center">
+                    {unreadCount}
+                  </span>
+                )}
+              </button>
+
+              {notifOpen && (
+                <div className="absolute right-0 top-full mt-2 w-80 bg-white border border-neutral-200/90 rounded-2xl shadow-xl overflow-hidden z-50">
+                  <div className="flex justify-between items-center px-4 py-3 border-b border-neutral-100">
+                    <span className="font-bold text-xs text-neutral-900">Campus Alerts</span>
+                    <button onClick={handleMarkAll} className="text-violet-600 text-[11px] font-semibold hover:underline flex items-center gap-1 cursor-pointer">
+                      <CheckCheck size={13} /> Mark read
+                    </button>
+                  </div>
+                  <div className="max-h-64 overflow-y-auto divide-y divide-neutral-50">
+                    {notifications.map(n => (
+                      <Link
+                        key={n.id}
+                        href={n.link || '/events'}
+                        onClick={() => setNotifOpen(false)}
+                        className={`block px-4 py-3 text-left transition-colors ${n.read ? 'hover:bg-neutral-50' : 'bg-violet-50/50 hover:bg-violet-50'}`}
+                      >
+                        <p className="text-xs font-semibold text-neutral-900">{n.title}</p>
+                        <p className="text-[11px] text-neutral-500 mt-0.5">{n.message}</p>
+                      </Link>
+                    ))}
+                  </div>
+                  <Link
+                    href="/notifications"
+                    onClick={() => setNotifOpen(false)}
+                    className="block py-2 text-center text-xs font-semibold text-violet-600 hover:bg-neutral-50 border-t border-neutral-100"
+                  >
+                    View all notifications
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* Auth / Post Actions */}
+            {user ? (
+              <div className="flex items-center gap-2">
+                <Link href="/dashboard" className="hidden sm:inline-flex text-xs font-semibold px-3 py-1.5 rounded-full border border-neutral-200 text-neutral-700 hover:bg-neutral-50">
+                  Dashboard
+                </Link>
+                <button
+                  onClick={logout}
+                  className="w-8 h-8 rounded-full border border-neutral-200 flex items-center justify-center text-neutral-500 hover:text-red-600 transition-colors cursor-pointer"
+                  title="Logout"
+                >
+                  <LogOut size={13} />
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/login"
+                  className="hidden sm:inline-flex text-xs font-semibold text-neutral-700 px-3.5 py-2 rounded-full hover:bg-neutral-100 transition-colors"
+                >
+                  Sign in
+                </Link>
+                <Link
+                  href="/organizer/events/create"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-violet-600 hover:bg-violet-700 text-white text-xs font-semibold shadow-sm hover:shadow-md transition-all"
+                >
+                  <span>Post event</span>
+                  <ArrowUpRight size={13} />
                 </Link>
               </div>
             )}
+
+            {/* Mobile Menu Trigger */}
+            <button
+              aria-label="Toggle menu"
+              className="md:hidden w-9 h-9 rounded-full border border-neutral-200 flex items-center justify-center text-neutral-700"
+              onClick={() => setMobileOpen(!mobileOpen)}
+            >
+              {mobileOpen ? <X size={16} /> : <Menu size={16} />}
+            </button>
           </div>
 
-          {user ? (
-            <>
-              <Link href="/dashboard" className="hidden sm:block">
-                <Button variant="outline" size="sm" leftIcon={<LayoutDashboard size={14} />}>Dashboard</Button>
-              </Link>
-              <Button variant="ghost" size="sm" onClick={logout} leftIcon={<LogOut size={14} />}>Logout</Button>
-            </>
-          ) : (
-            <>
-              <Link href="/login" className="hidden sm:block"><Button variant="ghost" size="sm">Login</Button></Link>
-              <Link href="/register" className="hidden sm:block"><Button variant="primary" size="sm">Join Free</Button></Link>
-            </>
-          )}
+        </nav>
 
-          <button aria-label="Toggle menu" className="xl:hidden" style={iconBtnStyle} onClick={() => setMobileOpen(!mobileOpen)}>
-            {mobileOpen ? <X size={18} /> : <Menu size={18} />}
-          </button>
-        </div>
-      </nav>
+        {/* Mobile Navigation Drawer */}
+        {mobileOpen && (
+          <div className="md:hidden mt-2 p-4 bg-white/95 backdrop-blur-md border border-neutral-200 rounded-3xl shadow-xl flex flex-col gap-3">
+            <div className="pb-2 border-b border-neutral-100">
+              <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block mb-2">Campus Region</span>
+              <div className="flex flex-wrap gap-1.5">
+                {cities.slice(0, 5).map(c => (
+                  <button
+                    key={c}
+                    onClick={() => { setSelectedCity(c); setMobileOpen(false); }}
+                    className={`px-3 py-1 rounded-full text-xs font-semibold ${selectedCity === c ? 'bg-violet-600 text-white' : 'bg-neutral-100 text-neutral-700'}`}
+                  >
+                    {c}
+                  </button>
+                ))}
+              </div>
+            </div>
 
-      {/* Mobile Menu */}
-      {mobileOpen && (
-        <div className="xl:hidden" style={{ display: 'flex', flexDirection: 'column', padding: '12px 20px 20px', borderBottom: '1px solid #E5E7EB', background: '#fff' }}>
-          <div style={{ padding: '8px 0', borderBottom: '1px solid #F3F4F6', marginBottom: '8px' }}>
-            <span style={{ fontSize: '12px', fontWeight: 600, color: '#9CA3AF', textTransform: 'uppercase' }}>Select Region</span>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '6px' }}>
-              {cities.slice(0, 5).map(c => (
-                <button
-                  key={c}
-                  onClick={() => setSelectedCity(c)}
-                  style={{
-                    padding: '4px 10px', borderRadius: '12px', fontSize: '12px',
-                    fontWeight: selectedCity === c ? 700 : 500,
-                    background: selectedCity === c ? '#7C3AED' : '#F3F4F6',
-                    color: selectedCity === c ? '#fff' : '#4B5563',
-                    border: 'none', cursor: 'pointer'
-                  }}
+            <div className="flex flex-col gap-1">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={`text-sm py-2 px-3 rounded-xl font-medium ${isActive(link.href) ? 'bg-violet-50 text-violet-700 font-bold' : 'text-neutral-700 hover:bg-neutral-50'}`}
                 >
-                  {c}
-                </button>
+                  {link.label}
+                </Link>
               ))}
             </div>
-          </div>
-          {navLinks.map((link) => (
-            <Link key={link.label} href={link.href} style={{ fontSize: '15px', fontWeight: isActive(link.href) ? 700 : 500, color: isActive(link.href) ? '#7C3AED' : '#1F2937', padding: '10px 0', textDecoration: 'none' }} onClick={() => setMobileOpen(false)}>
-              {link.label}
-            </Link>
-          ))}
-          <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
-            <Link href="/organizer/events/create" style={{ flex: 1 }} onClick={() => setMobileOpen(false)}>
-              <Button variant="primary" size="sm" fullWidth leftIcon={<PlusCircle size={15} />}>Post Event</Button>
-            </Link>
-            {!user && (
-              <Link href="/login" style={{ flex: 1 }} onClick={() => setMobileOpen(false)}>
-                <Button variant="outline" size="sm" fullWidth>Login</Button>
+
+            <div className="pt-2 border-t border-neutral-100 flex gap-2">
+              <Link
+                href="/organizer/events/create"
+                onClick={() => setMobileOpen(false)}
+                className="flex-1 py-2.5 rounded-full bg-violet-600 text-white text-xs font-bold text-center flex items-center justify-center gap-1"
+              >
+                Post Event <ArrowUpRight size={13} />
               </Link>
-            )}
+              {!user && (
+                <Link
+                  href="/login"
+                  onClick={() => setMobileOpen(false)}
+                  className="px-4 py-2.5 rounded-full border border-neutral-200 text-neutral-700 text-xs font-bold text-center"
+                >
+                  Sign in
+                </Link>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </header>
   );
 }
 
 export default Navbar;
-
-const iconBtnStyle: React.CSSProperties = {
-  width: '36px', height: '36px', borderRadius: '10px', border: '1px solid #E5E7EB',
-  background: '#fff', color: '#4B5563', display: 'grid', placeItems: 'center', cursor: 'pointer', position: 'relative',
-};

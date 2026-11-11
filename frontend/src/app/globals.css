@@ -1,47 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 @import "../styles/tokens.css";
 
 /* ===========================================
-   AllCollegeEvent.com Design Token System
-   White + Violet + Light Gray
+   AllCollegeEvent.com / HackGURU Design Token System
+   Editorial Magazine + White + Violet + Ink Black
    =========================================== */
 
 @layer base {
   :root {
-    /* === Brand Colors === */
+    /* === Brand Colors (Strictly Preserved) === */
     --ace-violet:        #7C3AED;
     --ace-violet-dark:   #5B21B6;
     --ace-violet-light:  #F5F3FF;
     --ace-violet-soft:   #FAF9FF;
     --ace-violet-mid:    #EDE9FE;
 
-    /* === Neutral Scale === */
+    /* === Editorial High-End Neutral Scale === */
+    --ace-canvas:        #F8F9FA;
     --ace-bg:            #FFFFFF;
-    --ace-bg-section:    #F8F8FA;
+    --ace-bg-section:    #F7F8FA;
     --ace-bg-card:       #FFFFFF;
-    --ace-border:        #E4E4E7;
+    --ace-border:        #E5E7EB;
+    --ace-border-hairline: rgba(0, 0, 0, 0.07);
     --ace-border-strong: #D4D4D8;
+    --ace-ink:           #0B0B0E;
+    --ace-ink-soft:      #18181B;
 
     /* === Text Scale === */
-    --ace-text-primary:   #171717;
-    --ace-text-secondary: #52525B;
-    --ace-text-muted:     #71717A;
+    --ace-text-primary:   #0F1115;
+    --ace-text-secondary: #4B5563;
+    --ace-text-muted:     #6B7280;
 
     /* === Semantic Colors === */
-    --ace-success:       #16A34A;
-    --ace-success-light: #F0FDF4;
-    --ace-warning:       #D97706;
+    --ace-success:       #10B981;
+    --ace-success-light: #ECFDF5;
+    --ace-warning:       #F59E0B;
     --ace-warning-light: #FFFBEB;
-    --ace-error:         #DC2626;
+    --ace-error:         #EF4444;
     --ace-error-light:   #FEF2F2;
-    --ace-info:          #2563EB;
+    --ace-info:          #3B82F6;
     --ace-info-light:    #EFF6FF;
   }
 
   body {
-    background-color: #F3F4F6;
-    color: #1F2937;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--ace-canvas);
+    color: var(--ace-text-primary);
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     min-height: 100vh;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
@@ -58,8 +63,135 @@
   *:focus-visible {
     outline: 2px solid var(--ace-violet);
     outline-offset: 2px;
-    border-radius: 4px;
+    border-radius: 9999px;
   }
+}
+
+/* ===========================================
+   EDITORIAL MAGAZINE TYPOGRAPHY & LUXURY FINTECH UTILITIES
+   =========================================== */
+
+.font-editorial {
+  font-family: 'Newsreader', 'Playfair Display', Georgia, Cambria, 'Times New Roman', serif;
+  font-feature-settings: 'cv01', 'cv02';
+  letter-spacing: -0.025em;
+}
+
+.font-editorial-italic {
+  font-family: 'Newsreader', 'Playfair Display', Georgia, Cambria, 'Times New Roman', serif;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.font-tabular {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.015em;
+}
+
+/* Magazine Hairline Elevated Card */
+.card-diffusion {
+  background: #FFFFFF;
+  border: 1px solid rgba(228, 228, 231, 0.85);
+  box-shadow: 0 16px 36px -12px rgba(16, 24, 40, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.02);
+  border-radius: 24px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-diffusion:hover {
+  border-color: rgba(124, 58, 237, 0.35);
+  box-shadow: 0 24px 50px -12px rgba(124, 58, 237, 0.09), 0 2px 4px rgba(124, 58, 237, 0.04);
+  transform: translateY(-2px);
+}
+
+/* Deep Ink Black Card */
+.card-ink {
+  background: #0B0B0E;
+  color: #FFFFFF;
+  border: 1px solid #1F1F24;
+  border-radius: 28px;
+  box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.35);
+}
+
+/* Floating pill geometry */
+.pill-island {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(228, 228, 231, 0.85);
+  border-radius: 9999px;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.06);
+}
+
+/* Primary Ink Black Pill Button */
+.btn-ink-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 9999px;
+  background: #0B0B0E;
+  color: #FFFFFF;
+  font-size: 14.5px;
+  font-weight: 600;
+  border: 1px solid #0B0B0E;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 14px rgba(11, 11, 14, 0.15);
+}
+
+.btn-ink-pill:hover {
+  background: #18181B;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(11, 11, 14, 0.25);
+}
+
+/* Signal Violet Pill Button */
+.btn-violet-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 9999px;
+  background: #7C3AED;
+  color: #FFFFFF;
+  font-size: 14.5px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.35);
+}
+
+.btn-violet-pill:hover {
+  background: #6D28D9;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.45);
+}
+
+/* Ghost Pill Button */
+.btn-ghost-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 22px;
+  border-radius: 9999px;
+  background: #FFFFFF;
+  color: #1F2937;
+  font-size: 14.5px;
+  font-weight: 600;
+  border: 1px solid #E5E7EB;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.btn-ghost-pill:hover {
+  background: #F9FAFB;
+  border-color: #D1D5DB;
+  transform: translateY(-1px);
 }
 
 /* ===========================================
