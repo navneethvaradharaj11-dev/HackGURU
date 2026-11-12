@@ -381,9 +381,17 @@ export default function Home() {
           SECTION 1: HERO SECTION (LUMENWAVE EDITORIAL STYLE - Images 1 & 2)
           Editorial Serif Headlines, Pill Geometry, Floating Micro-UI Preview
          ========================================================================= */}
-      <section className="relative pt-12 pb-24 px-4 sm:px-6 overflow-hidden">
+      <section className="relative pt-12 pb-24 px-4 sm:px-6 overflow-hidden bg-ledger-grid">
+        {/* Atmospheric collegiate backdrop image layer */}
+        <div className="absolute inset-0 -z-20 overflow-hidden pointer-events-none">
+          <img 
+            src="/images/hero-hackathon.jpg" 
+            alt="Atmospheric collegiate hackathon" 
+            className="w-full h-full object-cover object-top opacity-[0.11] filter grayscale contrast-125 mask-hero-fade" 
+          />
+        </div>
         {/* Subtle radial ambient gradients (Strictly Violet + Slate) */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[850px] h-[550px] bg-gradient-to-b from-violet-100/40 via-violet-50/20 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[550px] bg-gradient-to-b from-violet-200/35 via-violet-50/20 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
 
         <div className="max-w-6xl mx-auto text-center">
           
@@ -1503,7 +1511,18 @@ export default function Home() {
          ========================================================================= */}
       <section className="py-16 px-4 sm:px-6 max-w-7xl mx-auto">
         <div className="card-ink rounded-[32px] p-8 sm:p-14 overflow-hidden relative">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          {/* Atmospheric background collegiate image */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+            <img 
+              src="/images/events/hackforge-2026.jpg" 
+              alt="Collegiate Hackathon Banner"
+              className="w-full h-full object-cover opacity-20 mix-blend-luminosity filter contrast-125 scale-105" 
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0B0B0E] via-[#0B0B0E]/90 to-[#0B0B0E]/60" />
+            <div className="absolute inset-0 bg-dark-grid opacity-40" />
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
             
             {/* Left Column: Editorial Pitch */}
             <div className="lg:col-span-7">

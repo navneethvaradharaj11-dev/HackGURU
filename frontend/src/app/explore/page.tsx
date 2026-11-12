@@ -95,44 +95,57 @@ function ExploreContent() {
   }, [search, selectedCategory, selectedMode, sortBy]);
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] relative py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#F8F9FA] bg-ledger-grid relative py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
       {/* Subtle radial ambient gradient */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[850px] h-[350px] bg-gradient-to-b from-violet-100/40 via-violet-50/20 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
 
       <div className="max-w-7xl mx-auto">
-        {/* Editorial Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-8 sm:mb-10">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-neutral-200/90 shadow-2xs mb-4">
-              <span className="w-2 h-2 rounded-full bg-violet-600 animate-pulse" />
-              <span className="text-xs font-semibold text-neutral-700">Campus Directory</span>
-              <span className="text-neutral-300">·</span>
-              <span className="text-xs font-semibold text-violet-700">100+ Accredited Colleges</span>
-            </div>
-
-            <h1 className="font-editorial text-4xl sm:text-5xl lg:text-[56px] text-neutral-950 font-normal tracking-tight leading-[1.1] mb-3">
-              National College Directory, <br />
-              <span className="font-editorial-italic font-normal">curated by track.</span>
-            </h1>
-            <p className="text-sm sm:text-base text-neutral-500 max-w-2xl font-normal leading-relaxed">
-              Explore university hackathons, technical symposiums, research fellowships, and robowars indexed across premier institutions.
-            </p>
+        {/* Themed Editorial Banner with Collegiate Campus Imagery */}
+        <div className="relative rounded-[28px] border border-neutral-200/90 bg-white/85 backdrop-blur-md overflow-hidden p-6 sm:p-10 lg:p-12 mb-8 sm:mb-10 shadow-xs">
+          {/* Atmospheric Campus Background Image */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+            <img 
+              src="/images/hero-hackathon.jpg" 
+              alt="Collegiate campus atmosphere"
+              className="w-full h-full object-cover object-center opacity-10 filter grayscale contrast-125 scale-105" 
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-white via-white/95 to-white/70" />
+            <div className="absolute inset-0 bg-ledger-grid opacity-60" />
           </div>
 
-          <div className="flex items-center gap-2.5 self-start sm:self-auto">
-            <Link
-              href="/recommendations"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white border border-neutral-200/90 text-neutral-800 text-xs font-semibold shadow-2xs hover:bg-neutral-50 transition-all"
-            >
-              <Sparkles size={14} className="text-violet-600" />
-              <span>AI Match Telemetry</span>
-            </Link>
-            <Link
-              href="/events"
-              className="btn-ink-pill text-xs py-2.5 px-5 shadow-xs"
-            >
-              <span>Ledger View</span>
-            </Link>
+          <div className="relative z-10 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
+            <div className="max-w-2xl">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-neutral-200/90 shadow-2xs mb-4">
+                <span className="w-2 h-2 rounded-full bg-violet-600 animate-pulse" />
+                <span className="text-xs font-semibold text-neutral-700">Campus Directory</span>
+                <span className="text-neutral-300">·</span>
+                <span className="text-xs font-semibold text-violet-700">100+ Accredited Colleges</span>
+              </div>
+
+              <h1 className="font-editorial text-4xl sm:text-5xl lg:text-[56px] text-neutral-950 font-normal tracking-tight leading-[1.1] mb-3">
+                National College Directory, <br />
+                <span className="font-editorial-italic font-normal">curated by track.</span>
+              </h1>
+              <p className="text-sm sm:text-base text-neutral-600 max-w-2xl font-normal leading-relaxed">
+                Explore university hackathons, technical symposiums, research fellowships, and robowars indexed across premier institutions.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2.5 self-start sm:self-auto">
+              <Link
+                href="/recommendations"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white border border-neutral-200/90 text-neutral-800 text-xs font-semibold shadow-2xs hover:bg-neutral-50 transition-all"
+              >
+                <Sparkles size={14} className="text-violet-600" />
+                <span>AI Match Telemetry</span>
+              </Link>
+              <Link
+                href="/events"
+                className="btn-ink-pill text-xs py-2.5 px-5 shadow-xs"
+              >
+                <span>Ledger View</span>
+              </Link>
+            </div>
           </div>
         </div>
 

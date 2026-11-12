@@ -13,6 +13,80 @@ const modes = ['All', 'Online', 'Offline', 'Hybrid'];
 const dates = ['All Dates', 'Today', 'This Week', 'This Month', 'Upcoming'];
 const sorts = ['Recommended', 'Soonest Deadline', 'Latest Added', 'Most Popular'];
 
+const categoryMeta: Record<string, {
+  badge: string;
+  countLabel: string;
+  title: string;
+  italicWord: string;
+  description: string;
+  image: string;
+}> = {
+  All: {
+    badge: 'Verified Campus Ledger',
+    countLabel: '50,000+ Builders',
+    title: 'Explore Opportunities',
+    italicWord: 'calmly cataloged.',
+    description: 'Discover verified national hackathons, technical symposiums, research fellowships, and hands-on workshops across premier colleges in India.',
+    image: '/images/hero-hackathon.jpg',
+  },
+  Hackathons: {
+    badge: 'Collegiate Hackathons Track',
+    countLabel: '32+ Active Sprints',
+    title: 'Hackathons & Sprints',
+    italicWord: 'built in 36 hours.',
+    description: 'High-octane 24 to 48-hour buildathons, AI hackathons, and sprint tournaments across top engineering institutions with cash pools up to ₹5,00,000.',
+    image: '/images/events/hackforge-2026.jpg',
+  },
+  Symposiums: {
+    badge: 'Technical Symposiums Track',
+    countLabel: '24+ Active Symposiums',
+    title: 'Technical Symposiums',
+    italicWord: 'defending ideas.',
+    description: 'Annual collegiate technical fests, IEEE paper presentations, innovation expos, and competitive academic symposia across IITs, NITs, and premier state universities.',
+    image: '/images/events/innofest-2026.jpg',
+  },
+  Workshops: {
+    badge: 'Hands-on Labs Track',
+    countLabel: '18+ Masterclasses',
+    title: 'Masterclasses & Workshops',
+    italicWord: 'hands-on engineering.',
+    description: 'Intensive weekend bootcamps, Agentic AI workshops, Cloud & Kubernetes labs, and verified faculty certifications.',
+    image: '/images/events/genai-bootcamp.jpg',
+  },
+  Competitions: {
+    badge: 'Robotics & Hardware Track',
+    countLabel: '10+ Active Robowars',
+    title: 'Robotics & Competitions',
+    italicWord: 'engineered combat.',
+    description: 'National combat robowars, drone racing leagues, autonomous bot obstacle runs, and collegiate robotics championships.',
+    image: '/images/events/robowars-2026.jpg',
+  },
+  Internships: {
+    badge: 'Research & Careers Track',
+    countLabel: '22+ Open Fellowships',
+    title: 'Collegiate Internships',
+    italicWord: 'applied research.',
+    description: 'Summer research fellowships, university innovation lab apprenticeships, and startup software engineer internships.',
+    image: '/images/events/internship.jpg',
+  },
+  Cultural: {
+    badge: 'Cultural Festivals Track',
+    countLabel: '15+ Active Festivals',
+    title: 'Inter-Collegiate Cultural Fests',
+    italicWord: 'pro-nites & stages.',
+    description: 'Battle of the bands, collegiate choreo-nights, collegiate drama, and pro-night passes for premier university festivals.',
+    image: '/images/events/rhythm-2026.jpg',
+  },
+  Conferences: {
+    badge: 'Academic Conferences Track',
+    countLabel: '8+ Collegiate Summits',
+    title: 'Academic Conferences',
+    italicWord: 'peer-reviewed research.',
+    description: 'Scopus indexed proceedings, national research summits, and academic keynote lectures.',
+    image: '/images/events/conference.jpg',
+  },
+};
+
 const fallbackEvents: EventCardProps[] = [
   {
     id: 'hackforge-2026',
@@ -387,28 +461,43 @@ function EventsCatalogContent() {
     router.push('/events');
   };
 
+  const currentMeta = categoryMeta[category] || categoryMeta.All;
+
   return (
-    <div className="min-h-screen bg-[#F8F9FA] relative py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#F8F9FA] bg-ledger-grid relative py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
       {/* Subtle radial ambient gradient */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[850px] h-[350px] bg-gradient-to-b from-violet-100/40 via-violet-50/20 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
 
       <div className="max-w-7xl mx-auto">
-        {/* Editorial Header */}
-        <div className="mb-8 sm:mb-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-neutral-200/90 shadow-2xs mb-4">
-            <span className="w-2 h-2 rounded-full bg-violet-600 animate-pulse" />
-            <span className="text-xs font-semibold text-neutral-700">Verified Campus Ledger</span>
-            <span className="text-neutral-300">·</span>
-            <span className="text-xs font-semibold text-violet-700">50,000+ Collegiate Builders</span>
+        {/* Themed Editorial Banner with Authentic Background Imagery */}
+        <div className="relative rounded-[28px] border border-neutral-200/90 bg-white/85 backdrop-blur-md overflow-hidden p-6 sm:p-10 lg:p-12 mb-8 sm:mb-10 shadow-xs">
+          {/* Atmospheric Category Background Image */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+            <img 
+              src={currentMeta.image} 
+              alt={currentMeta.title}
+              className="w-full h-full object-cover object-center opacity-10 filter grayscale contrast-125 transition-all duration-700 scale-105" 
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-white via-white/95 to-white/70" />
+            <div className="absolute inset-0 bg-ledger-grid opacity-60" />
           </div>
 
-          <h1 className="font-editorial text-4xl sm:text-5xl lg:text-[56px] text-neutral-950 font-normal tracking-tight leading-[1.1] mb-3">
-            Explore Opportunities, <br />
-            <span className="font-editorial-italic font-normal">calmly cataloged.</span>
-          </h1>
-          <p className="text-sm sm:text-base text-neutral-500 max-w-2xl font-normal leading-relaxed">
-            Discover verified national hackathons, technical symposiums, research fellowships, and hands-on workshops across premier colleges in India.
-          </p>
+          <div className="relative z-10 max-w-3xl">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-neutral-200/90 shadow-2xs mb-4">
+              <span className="w-2 h-2 rounded-full bg-violet-600 animate-pulse" />
+              <span className="text-xs font-semibold text-neutral-700">{currentMeta.badge}</span>
+              <span className="text-neutral-300">·</span>
+              <span className="text-xs font-semibold text-violet-700">{currentMeta.countLabel}</span>
+            </div>
+
+            <h1 className="font-editorial text-4xl sm:text-5xl lg:text-[56px] text-neutral-950 font-normal tracking-tight leading-[1.1] mb-3">
+              {currentMeta.title}, <br />
+              <span className="font-editorial-italic font-normal">{currentMeta.italicWord}</span>
+            </h1>
+            <p className="text-sm sm:text-base text-neutral-600 max-w-2xl font-normal leading-relaxed">
+              {currentMeta.description}
+            </p>
+          </div>
         </div>
 
         {/* Floating Pill Search Bar */}

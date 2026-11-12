@@ -4,7 +4,7 @@ import StudentSidebar from '@/components/layout/StudentSidebar';
 
 export default function StudentLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-bg-secondary">
+    <div className="min-h-screen bg-[#F8F9FA] bg-ledger-grid text-neutral-900">
       <AppTopBar variant="student" />
       <div className="flex">
         <StudentSidebar />

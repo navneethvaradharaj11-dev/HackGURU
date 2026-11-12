@@ -39,24 +39,28 @@ export default function AISearchPage() {
   };
 
   return (
-    <div className="p-4 lg:p-6 max-w-4xl mx-auto">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto">
       {/* Header */}
       <div className="text-center mb-8">
-        <div className="flex items-center justify-center gap-2 mb-3">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2" strokeLinecap="round">
-            <path d="M12 2a4 4 0 014 4v1a1 1 0 001 1h1a4 4 0 010 8h-1a1 1 0 00-1 1v1a4 4 0 01-8 0v-1a1 1 0 00-1-1H6a4 4 0 010-8h1a1 1 0 001-1V6a4 4 0 014-4z" />
-          </svg>
-          <h1 className="text-xl font-bold text-text-primary">AI Search</h1>
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-neutral-200/90 shadow-2xs mb-4">
+          <span className="w-2 h-2 rounded-full bg-violet-600 animate-pulse" />
+          <span className="text-xs font-semibold text-neutral-700">Semantic AI Search</span>
+          <span className="text-neutral-300">·</span>
+          <span className="text-xs font-semibold text-violet-700">AllCollegeEvent Engine</span>
         </div>
-        <p className="text-text-secondary text-sm max-w-md mx-auto">
-          What kind of opportunity are you looking for?
+        <h1 className="font-editorial text-3xl sm:text-4xl lg:text-5xl font-normal text-neutral-950 tracking-tight leading-[1.1] mb-2">
+          Collegiate AI Search, <br />
+          <span className="font-editorial-italic font-normal">matched to your stack.</span>
+        </h1>
+        <p className="text-neutral-600 text-xs sm:text-sm max-w-md mx-auto">
+          Query in natural language: describe your interests, tech stack, or career goals to discover opportunities.
         </p>
       </div>
 
       {/* Search input */}
       <div className="mb-6">
         <div className="relative">
-          <svg className="absolute left-4 top-1/2 -translate-y-1/2 text-text-tertiary" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          <svg className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
             <circle cx="11" cy="11" r="8" />
             <path d="M21 21l-4.35-4.35" />
           </svg>
@@ -65,13 +69,17 @@ export default function AISearchPage() {
             value={query}
             onChange={e => setQuery(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleSearch()}
-            placeholder="Describe what you're looking for..."
-            className="w-full pl-12 pr-24 py-4 text-base border border-border rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm"
+            placeholder="Describe what you're looking for (e.g. beginner friendly AI hackathons in Chennai)..."
+            className="w-full pl-12 pr-28 py-3.5 text-sm border border-neutral-200/90 rounded-full bg-white focus:outline-none focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 transition-all shadow-xs"
           />
           <div className="absolute right-2 top-1/2 -translate-y-1/2">
-            <Button size="sm" onClick={() => handleSearch()} loading={loading}>
-              Search
-            </Button>
+            <button
+              onClick={() => handleSearch()}
+              disabled={loading}
+              className="btn-ink-pill text-xs py-2 px-4 shadow-xs"
+            >
+              {loading ? 'Searching...' : 'Search'}
+            </button>
           </div>
         </div>
       </div>

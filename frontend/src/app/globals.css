@@ -378,5 +378,43 @@
 .cat-workshop   { --cat: #D97706; }
 .cat-internship { --cat: #16A34A; }
 .cat-competition{ --cat: #DC2626; }
+
+/* ===========================================
+   EDITORIAL BACKGROUND TEXTURES & ATMOSPHERE
+   =========================================== */
+
+/* Editorial ledger grid pattern */
+.bg-ledger-grid {
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.038) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.038) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Subtle dot matrix pattern */
+.bg-dots-pattern {
+  background-image: radial-gradient(circle, rgba(124, 58, 237, 0.08) 1.2px, transparent 1.2px);
+  background-size: 24px 24px;
+}
+
+/* Dark ledger grid for ink cards */
+.bg-dark-grid {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Atmospheric collegiate vignette mask */
+.mask-radial-vignette {
+  mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 80%);
+  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 80%);
+}
+
+.mask-hero-fade {
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.65) 60%, rgba(0,0,0,0) 100%);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.65) 60%, rgba(0,0,0,0) 100%);
+}
+
 .cat-conference { --cat: #2563EB; }
 .cat-project    { --cat: #8B5CF6; }
