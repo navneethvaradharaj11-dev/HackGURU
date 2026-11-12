@@ -20,6 +20,7 @@ export interface EventDetails extends EventCardProps {
   time?: string;
   eligibility?: string;
   fee?: string;
+  teamSize?: string;
   registrationDeadline?: string;
   organizerDescription?: string;
   status?: 'open' | 'closing-soon' | 'closed' | 'completed';
@@ -206,247 +207,314 @@ export default function EventDetailsPage() {
     };
   }, [id]);
 
-  if (loading) return <SkeletonLayout />;
-  if (error || !event) return <ErrorState />;
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#F8F9FA] py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto space-y-6 animate-pulse">
+          <div className="h-8 bg-neutral-200 rounded-full w-32" />
+          <div className="aspect-[21/9] bg-neutral-200 rounded-3xl" />
+          <div className="h-10 bg-neutral-200 rounded-xl w-2/3" />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 h-64 bg-neutral-200 rounded-2xl" />
+            <div className="h-64 bg-neutral-200 rounded-2xl" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !event) {
+    return (
+      <div className="min-h-screen bg-[#F8F9FA] flex items-center justify-center p-6">
+        <div className="card-diffusion rounded-3xl p-12 text-center max-w-md mx-auto bg-white">
+          <AlertCircle size={44} className="text-red-500 mx-auto mb-4" />
+          <h2 className="font-editorial text-2xl font-normal text-neutral-900 mb-2">Event Not Found</h2>
+          <p className="text-xs text-neutral-500 mb-6 leading-relaxed">
+            The event listing may have been moved or is no longer accessible on the campus ledger.
+          </p>
+          <Link href="/events" className="btn-ink-pill text-xs py-2.5 px-6">
+            Back to Opportunities
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   const heroImage = event.image || '/images/events/ai-hackathon.jpg';
 
   return (
-    <div style={{ background: 'var(--bg-page)', minHeight: '100vh' }}>
-      <div className="container" style={{ padding: '24px 24px 64px' }}>
-        
-        {/* Back Navigation */}
-        <Link href="/events" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--text-secondary)', fontSize: '14px', fontWeight: 500, marginBottom: '24px' }}>
-          <ArrowLeft size={16} /> Back to Events
-        </Link>
+    <div className="min-h-screen bg-[#F8F9FA] relative py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+      {/* Subtle radial ambient gradient */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[850px] h-[350px] bg-gradient-to-b from-violet-100/40 via-violet-50/20 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
 
-        {/* Event Hero */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '32px', marginBottom: '48px' }}>
-          {/* Hero Image */}
-          <div style={{ position: 'relative', width: '100%', aspectRatio: '21 / 9', borderRadius: 'var(--r-lg)', overflow: 'hidden', boxShadow: 'var(--shadow-md)' }}>
-            <img src={heroImage} alt={event.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            <div style={{ position: 'absolute', top: '16px', left: '16px' }}>
-              <Badge tone="violet">{event.category}</Badge>
+      <div className="max-w-6xl mx-auto">
+        
+        {/* Back Link */}
+        <div className="mb-6">
+          <Link
+            href="/events"
+            className="inline-flex items-center gap-2 text-xs font-semibold text-neutral-600 hover:text-neutral-950 px-4 py-2 rounded-full bg-white border border-neutral-200/90 shadow-2xs hover:bg-neutral-50 transition-all cursor-pointer"
+          >
+            <ArrowLeft size={14} /> Back to Ledger
+          </Link>
+        </div>
+
+        {/* Hero Card */}
+        <div className="card-diffusion rounded-3xl p-6 sm:p-8 bg-white mb-8 overflow-hidden">
+          {/* Hero Banner Image */}
+          <div className="relative aspect-[21/9] rounded-2xl overflow-hidden bg-neutral-900 mb-6">
+            <img
+              src={heroImage}
+              alt={event.title}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute top-4 left-4 flex flex-wrap gap-2">
+              <span className="px-3.5 py-1 rounded-full bg-white/95 backdrop-blur-md text-[#0B0B0E] text-xs font-bold shadow-xs">
+                {event.category}
+              </span>
+              {event.prize && (
+                <span className="px-3.5 py-1 rounded-full bg-violet-600 text-white text-xs font-bold shadow-xs">
+                  {event.prize}
+                </span>
+              )}
             </div>
           </div>
 
           {/* Event Header Info */}
           <div>
-            <h1 style={{ fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, letterSpacing: '-1px', margin: '0 0 8px' }}>
+            <div className="flex flex-wrap items-center gap-2 mb-3">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold border border-emerald-200/70">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                Verified Opportunity
+              </span>
+              {event.deadlineInDays !== undefined && event.deadlineInDays <= 7 && (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-800 text-xs font-semibold border border-amber-200/70">
+                  <Clock size={12} className="text-amber-600" />
+                  Registration closes in {event.deadlineInDays} days
+                </span>
+              )}
+            </div>
+
+            <h1 className="font-editorial text-3xl sm:text-4xl lg:text-[44px] font-normal text-neutral-950 tracking-tight leading-[1.12] mb-3">
               {event.title}
             </h1>
-            <p style={{ fontSize: '16px', color: 'var(--text-muted)', fontWeight: 500, margin: '0 0 20px' }}>
-              {event.organizer}
+
+            <p className="text-sm font-semibold text-neutral-500 mb-6 flex items-center gap-2">
+              <Building2 size={16} className="text-violet-600" />
+              <span>{event.organizer}</span>
             </p>
 
-            {/* Quick Info Grid */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '28px' }}>
-              {event.date && <InfoItem icon={<Calendar size={16} />} label="Date" value={event.date} />}
-              {event.location && <InfoItem icon={<MapPin size={16} />} label="Location" value={event.location} />}
-              {event.mode && <InfoItem icon={<Monitor size={16} />} label="Mode" value={event.mode} />}
-              {event.time && <InfoItem icon={<Clock size={16} />} label="Time" value={event.time} />}
+            {/* Quick Specs Pill Row */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-2xl bg-neutral-50 border border-neutral-100 mb-6 font-tabular">
+              {event.date && (
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-full bg-white border border-neutral-200 flex items-center justify-center text-violet-600 shrink-0">
+                    <Calendar size={14} />
+                  </div>
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-neutral-400 block">Date</span>
+                    <span className="text-xs font-bold text-neutral-800">{event.date}</span>
+                  </div>
+                </div>
+              )}
+
+              {event.location && (
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-full bg-white border border-neutral-200 flex items-center justify-center text-violet-600 shrink-0">
+                    <MapPin size={14} />
+                  </div>
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-neutral-400 block">Location</span>
+                    <span className="text-xs font-bold text-neutral-800 truncate block max-w-[130px]">{event.location}</span>
+                  </div>
+                </div>
+              )}
+
+              {event.mode && (
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-full bg-white border border-neutral-200 flex items-center justify-center text-violet-600 shrink-0">
+                    <Monitor size={14} />
+                  </div>
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-neutral-400 block">Format</span>
+                    <span className="text-xs font-bold text-neutral-800">{event.mode}</span>
+                  </div>
+                </div>
+              )}
+
+              {event.fee && (
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-full bg-white border border-neutral-200 flex items-center justify-center text-violet-600 shrink-0">
+                    <DollarSign size={14} />
+                  </div>
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-neutral-400 block">Entry Fee</span>
+                    <span className="text-xs font-bold text-neutral-800">{event.fee}</span>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* CTAs */}
-            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-              {event.status === 'closed' || event.status === 'completed' ? (
-                <Button variant="outline" size="lg" disabled>
-                  {event.status === 'completed' ? 'Event Completed' : 'Registration Closed'}
-                </Button>
-              ) : (
-                <Button variant="primary" size="lg">Register Now</Button>
-              )}
-              <Button 
-                variant="outline" 
-                size="lg" 
-                leftIcon={<Bookmark size={16} />} 
+            <div className="flex flex-wrap items-center gap-3">
+              <button className="btn-violet-pill text-xs py-3 px-7 shadow-md">
+                Register on Campus Ledger
+              </button>
+              <button
                 onClick={() => setSaved(!saved)}
+                className={`inline-flex items-center gap-2 px-5 py-3 rounded-full border text-xs font-semibold transition-all cursor-pointer ${
+                  saved
+                    ? 'bg-violet-50 border-violet-300 text-violet-700'
+                    : 'bg-white border-neutral-200 text-neutral-700 hover:bg-neutral-50'
+                }`}
               >
-                {saved ? 'Saved' : 'Save Event'}
-              </Button>
-              <Button variant="ghost" size="lg" leftIcon={<Share2 size={16} />}>Share</Button>
+                <Bookmark size={14} className={saved ? 'fill-violet-600' : ''} />
+                <span>{saved ? 'Saved in Ledger' : 'Save Event'}</span>
+              </button>
+              <button className="inline-flex items-center gap-2 px-5 py-3 rounded-full border border-neutral-200 text-neutral-700 text-xs font-semibold hover:bg-neutral-50 transition-all cursor-pointer">
+                <Share2 size={14} />
+                <span>Share</span>
+              </button>
             </div>
-
-            {/* Status Badge */}
-            {event.status === 'closing-soon' && (
-              <div style={{ marginTop: '16px' }}>
-                <Badge tone="warning">⏰ Registration closes in {event.deadlineInDays} days</Badge>
-              </div>
-            )}
           </div>
         </div>
 
-        {/* Main Content Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '32px', marginBottom: '64px' }}>
-          {/* Left Column */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-            {/* About Section */}
+        {/* Content Layout Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
+          
+          {/* Main Content Column */}
+          <div className="lg:col-span-8 space-y-6">
+            
+            {/* About */}
             {event.description && (
-              <Section title="About this Event">
-                <p style={{ fontSize: '15px', lineHeight: 1.7, color: 'var(--text-secondary)' }}>
+              <div className="card-diffusion rounded-2xl p-6 sm:p-8 bg-white">
+                <h3 className="text-base font-bold text-neutral-900 mb-3 pb-3 border-b border-neutral-100">
+                  About this Opportunity
+                </h3>
+                <p className="text-sm text-neutral-600 leading-relaxed font-normal whitespace-pre-line">
                   {event.description}
                 </p>
-              </Section>
-            )}
-
-            {/* Event Details */}
-            <Section title="Event Details">
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                {event.date && <DetailRow icon={<Calendar size={16} />} label="Date" value={event.date} />}
-                {event.time && <DetailRow icon={<Clock size={16} />} label="Time" value={event.time} />}
-                {event.location && <DetailRow icon={<MapPin size={16} />} label="Venue" value={event.location} />}
-                {event.mode && <DetailRow icon={<Monitor size={16} />} label="Mode" value={event.mode} />}
-                {event.eligibility && <DetailRow icon={<Users size={16} />} label="Eligibility" value={event.eligibility} />}
-                {event.fee && <DetailRow icon={<DollarSign size={16} />} label="Fee" value={event.fee} />}
               </div>
-            </Section>
-
-            {/* Skills */}
-            {event.skills && event.skills.length > 0 && (
-              <Section title="Skills / Tags">
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                  {event.skills.map(skill => <Badge key={skill} tone="gray">{skill}</Badge>)}
-                </div>
-              </Section>
             )}
 
-            {/* Organizer */}
-            <Section title="Organized by">
-              <div style={{ display: 'flex', alignItems: 'start', gap: '16px' }}>
-                <div style={{ width: '56px', height: '56px', borderRadius: '12px', background: 'var(--violet-50)', color: 'var(--violet-600)', display: 'grid', placeItems: 'center', flexShrink: 0 }}>
-                  <Building2 size={24} />
+            {/* Eligibility & Requirements */}
+            {event.eligibility && (
+              <div className="card-diffusion rounded-2xl p-6 sm:p-8 bg-white">
+                <h3 className="text-base font-bold text-neutral-900 mb-3 pb-3 border-b border-neutral-100">
+                  Eligibility & Team Rails
+                </h3>
+                <p className="text-sm text-neutral-600 leading-relaxed font-normal">
+                  {event.eligibility}
+                </p>
+              </div>
+            )}
+
+            {/* Skills & Domain Tags */}
+            {event.skills && event.skills.length > 0 && (
+              <div className="card-diffusion rounded-2xl p-6 sm:p-8 bg-white">
+                <h3 className="text-base font-bold text-neutral-900 mb-4 pb-3 border-b border-neutral-100">
+                  Required Competencies & Skills
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {event.skills.map(s => (
+                    <span
+                      key={s}
+                      className="px-3.5 py-1.5 rounded-full bg-neutral-100 text-neutral-700 text-xs font-medium"
+                    >
+                      {s}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Organizer Profile */}
+            <div className="card-diffusion rounded-2xl p-6 sm:p-8 bg-white">
+              <h3 className="text-base font-bold text-neutral-900 mb-4 pb-3 border-b border-neutral-100">
+                Host Institution
+              </h3>
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-[#0B0B0E] text-white flex items-center justify-center font-bold text-base shrink-0">
+                  {(event.organizer || 'College Host').charAt(0)}
                 </div>
                 <div>
-                  <h3 style={{ fontSize: '18px', fontWeight: 700, margin: '0 0 4px' }}>{event.organizer}</h3>
-                  {event.organizerDescription && (
-                    <p style={{ fontSize: '14px', color: 'var(--text-muted)', margin: '0 0 12px' }}>{event.organizerDescription}</p>
-                  )}
-                </div>
-              </div>
-            </Section>
-          </div>
-
-          {/* Right Sidebar */}
-          <div>
-            <Card style={{ padding: '24px', position: 'sticky', top: '88px' }}>
-              <h3 style={{ fontSize: '16px', fontWeight: 700, margin: '0 0 20px' }}>Registration</h3>
-              
-              {event.registrationDeadline && (
-                <div style={{ marginBottom: '20px', padding: '12px', background: event.status === 'closing-soon' ? '#FFFBEB' : 'var(--violet-50)', borderRadius: '10px' }}>
-                  <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: '0 0 4px', fontWeight: 600 }}>Registration Deadline</p>
-                  <p style={{ fontSize: '15px', fontWeight: 700, margin: 0, color: event.status === 'closing-soon' ? 'var(--warning)' : 'var(--violet-700)' }}>
-                    {event.registrationDeadline}
+                  <h4 className="text-base font-bold text-neutral-900 mb-1">
+                    {event.organizer}
+                  </h4>
+                  <p className="text-xs text-neutral-500 leading-relaxed">
+                    {event.organizerDescription || 'Recognized collegiate technical institution actively indexing opportunities on the AllCollegeEvent student ledger.'}
                   </p>
                 </div>
-              )}
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                {event.status === 'closed' || event.status === 'completed' ? (
-                  <Button variant="outline" fullWidth disabled>
-                    {event.status === 'completed' ? 'Event Completed' : 'Registration Closed'}
-                  </Button>
-                ) : (
-                  <Button variant="primary" size="lg" fullWidth>Register Now</Button>
-                )}
-                <Button variant="outline" fullWidth onClick={() => setSaved(!saved)} leftIcon={<Bookmark size={16} />}>
-                  {saved ? 'Saved' : 'Save Event'}
-                </Button>
               </div>
-            </Card>
+            </div>
+
           </div>
+
+          {/* Sticky Right Sidebar */}
+          <div className="lg:col-span-4">
+            <div className="card-diffusion rounded-2xl p-6 bg-white sticky top-24 space-y-5">
+              <h4 className="text-sm font-bold text-neutral-900 pb-3 border-b border-neutral-100">
+                Registration Summary
+              </h4>
+
+              <div className="space-y-3 font-tabular text-xs">
+                <div className="flex justify-between items-center text-neutral-600">
+                  <span>Registration Status:</span>
+                  <span className="font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
+                    {event.status === 'closing-soon' ? 'Closing Soon' : 'Open'}
+                  </span>
+                </div>
+
+                {event.registrationDeadline && (
+                  <div className="flex justify-between items-center text-neutral-600">
+                    <span>Deadline:</span>
+                    <span className="font-semibold text-neutral-900">{event.registrationDeadline}</span>
+                  </div>
+                )}
+
+                <div className="flex justify-between items-center text-neutral-600">
+                  <span>Entry Fee:</span>
+                  <span className="font-bold text-neutral-900">{event.fee || 'Free'}</span>
+                </div>
+
+                {event.teamSize && (
+                  <div className="flex justify-between items-center text-neutral-600">
+                    <span>Team Composition:</span>
+                    <span className="font-semibold text-neutral-900">{event.teamSize}</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="pt-2">
+                <button className="btn-violet-pill w-full text-xs py-3 font-bold shadow-md">
+                  Register for Event
+                </button>
+              </div>
+
+              <div className="pt-3 border-t border-neutral-100 text-[11px] text-neutral-400 text-center">
+                Secured by AllCollegeEvent Student Network
+              </div>
+            </div>
+          </div>
+
         </div>
 
-        {/* Related Events */}
+        {/* Related Events Section */}
         {relatedEvents.length > 0 && (
-          <Section title="Related Events">
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px' }}>
+          <div className="pt-8 border-t border-neutral-200/80">
+            <div className="mb-6">
+              <h3 className="font-editorial text-2xl sm:text-3xl font-normal text-neutral-950 mb-1">
+                More Opportunities <span className="font-editorial-italic font-normal">in this track</span>
+              </h3>
+              <p className="text-xs text-neutral-500 font-normal">Related collegiate events you might be interested in</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {relatedEvents.map(e => <EventCard key={e.id} {...e} />)}
             </div>
-          </Section>
+          </div>
         )}
-      </div>
 
-      {/* Responsive Override */}
-      <style>{`
-        @media (max-width: 768px) {
-          div[style*="grid-template-columns: 2fr 1fr"] {
-            grid-template-columns: 1fr !important;
-          }
-          div[style*="grid-template-columns: 1fr 1fr"] {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
+      </div>
     </div>
   );
 }
-
-// --- SUBCOMPONENTS & STYLES ---
-
-const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
-  <div>
-    <h2 style={{ fontSize: '22px', fontWeight: 700, margin: '0 0 16px', paddingBottom: '12px', borderBottom: '1px solid var(--border-soft)' }}>
-      {title}
-    </h2>
-    {children}
-  </div>
-);
-
-const InfoItem = ({ icon, label, value }: { icon: React.ReactNode; label: string; value?: string }) => {
-  if (!value) return null;
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-      <span style={{ color: 'var(--violet-600)' }}>{icon}</span>
-      <div>
-        <span style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'block' }}>{label}</span>
-        <span style={{ fontSize: '14px', fontWeight: 600 }}>{value}</span>
-      </div>
-    </div>
-  );
-};
-
-const DetailRow = ({ icon, label, value }: { icon: React.ReactNode; label: string; value?: string }) => {
-  if (!value) return null;
-  return (
-    <div style={{ display: 'flex', alignItems: 'start', gap: '12px' }}>
-      <span style={{ color: 'var(--violet-600)', marginTop: '2px' }}>{icon}</span>
-      <div>
-        <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: 0, fontWeight: 500 }}>{label}</p>
-        <p style={{ fontSize: '14px', color: 'var(--text-primary)', margin: 0, fontWeight: 600 }}>{value}</p>
-      </div>
-    </div>
-  );
-};
-
-const SkeletonLayout = () => (
-  <div style={{ background: 'var(--bg-page)', minHeight: '100vh' }}>
-    <div className="container" style={{ padding: '24px 24px 64px' }}>
-      <div style={{ height: '20px', width: '120px', background: '#F4F4F5', borderRadius: '4px', marginBottom: '24px', animation: 'pulse 1.5s infinite' }} />
-      <div style={{ aspectRatio: '21/9', background: '#F4F4F5', borderRadius: 'var(--r-lg)', marginBottom: '32px', animation: 'pulse 1.5s infinite' }} />
-      <div style={{ height: '32px', width: '60%', background: '#F4F4F5', borderRadius: '4px', marginBottom: '12px', animation: 'pulse 1.5s infinite' }} />
-      <div style={{ height: '16px', width: '40%', background: '#F4F4F5', borderRadius: '4px', marginBottom: '32px', animation: 'pulse 1.5s infinite' }} />
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '32px' }}>
-        <div>
-          <div style={{ height: '20px', width: '150px', background: '#F4F4F5', borderRadius: '4px', marginBottom: '16px', animation: 'pulse 1.5s infinite' }} />
-          <div style={{ height: '12px', background: '#F4F4F5', borderRadius: '4px', marginBottom: '8px', animation: 'pulse 1.5s infinite' }} />
-          <div style={{ height: '12px', background: '#F4F4F5', borderRadius: '4px', marginBottom: '8px', animation: 'pulse 1.5s infinite' }} />
-          <div style={{ height: '12px', width: '80%', background: '#F4F4F5', borderRadius: '4px', marginBottom: '8px', animation: 'pulse 1.5s infinite' }} />
-        </div>
-        <div style={{ background: '#F4F4F5', borderRadius: 'var(--r-lg)', height: '200px', animation: 'pulse 1.5s infinite' }} />
-      </div>
-    </div>
-  </div>
-);
-
-const ErrorState = () => (
-  <div style={{ background: 'var(--bg-page)', minHeight: '100vh', display: 'grid', placeItems: 'center' }}>
-    <div style={{ textAlign: 'center', padding: '40px' }}>
-      <AlertCircle size={48} color="var(--error)" style={{ marginBottom: '16px' }} />
-      <h1 style={{ fontSize: '24px', fontWeight: 700, margin: '0 0 8px' }}>Event not found</h1>
-      <p style={{ color: 'var(--text-muted)', marginBottom: '24px' }}>The event may have been removed or is no longer available.</p>
-      <Link href="/events">
-        <Button variant="primary">Back to Events</Button>
-      </Link>
-    </div>
-  </div>
-);

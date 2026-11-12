@@ -388,155 +388,179 @@ function EventsCatalogContent() {
   };
 
   return (
-    <div style={{ background: 'var(--bg-page, #FCFCFD)', minHeight: '100vh' }}>
-      <div style={{ maxWidth: 'var(--container, 1200px)', margin: '0 auto', padding: '40px 24px' }}>
-        
-        {/* Header */}
-        <div style={{ marginBottom: '32px' }}>
-          <h1 style={{ fontSize: 'var(--fs-h1, 36px)', fontWeight: 800, letterSpacing: '-0.5px', margin: 0 }}>
-            Explore Events
+    <div className="min-h-screen bg-[#F8F9FA] relative py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+      {/* Subtle radial ambient gradient */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[850px] h-[350px] bg-gradient-to-b from-violet-100/40 via-violet-50/20 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
+
+      <div className="max-w-7xl mx-auto">
+        {/* Editorial Header */}
+        <div className="mb-8 sm:mb-10">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-neutral-200/90 shadow-2xs mb-4">
+            <span className="w-2 h-2 rounded-full bg-violet-600 animate-pulse" />
+            <span className="text-xs font-semibold text-neutral-700">Verified Campus Ledger</span>
+            <span className="text-neutral-300">·</span>
+            <span className="text-xs font-semibold text-violet-700">50,000+ Collegiate Builders</span>
+          </div>
+
+          <h1 className="font-editorial text-4xl sm:text-5xl lg:text-[56px] text-neutral-950 font-normal tracking-tight leading-[1.1] mb-3">
+            Explore Opportunities, <br />
+            <span className="font-editorial-italic font-normal">calmly cataloged.</span>
           </h1>
-          <p style={{ color: 'var(--text-secondary, #52525B)', marginTop: '8px', fontSize: '17px' }}>
-            Discover hackathons, workshops, competitions, internships and other opportunities.
+          <p className="text-sm sm:text-base text-neutral-500 max-w-2xl font-normal leading-relaxed">
+            Discover verified national hackathons, technical symposiums, research fellowships, and hands-on workshops across premier colleges in India.
           </p>
         </div>
 
-        {/* Search Bar */}
-        <div style={{ position: 'relative', marginBottom: '24px' }}>
-          <Search size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+        {/* Floating Pill Search Bar */}
+        <div className="relative mb-6">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 w-4 h-4 pointer-events-none" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search events, colleges, skills..."
+            placeholder="Search by event title, host college, domain, or skills (e.g. AI, IIT Madras, ROS)..."
             aria-label="Search events"
-            style={{
-              width: '100%',
-              padding: '14px 48px 14px 48px',
-              border: '1px solid var(--border-soft)',
-              borderRadius: 'var(--r-md)',
-              fontSize: '15px',
-              background: 'var(--bg-card)',
-              color: 'var(--text-primary)',
-              outline: 'none',
-              boxShadow: 'var(--shadow-xs)',
-              transition: 'border-color 0.15s, box-shadow 0.15s',
-              fontFamily: 'inherit',
-            }}
+            className="w-full pl-11 pr-10 py-3.5 rounded-full bg-white border border-neutral-200/90 shadow-xs focus:outline-none focus:border-violet-500 focus:ring-4 focus:ring-violet-500/10 text-xs sm:text-sm text-neutral-900 placeholder:text-neutral-400 transition-all font-sans"
           />
           {search && (
             <button
               onClick={() => setSearch('')}
               aria-label="Clear search"
-              style={{ position: 'absolute', right: '16px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: '4px' }}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 p-1 cursor-pointer transition-colors"
             >
               <X size={16} />
             </button>
           )}
         </div>
 
-        {/* Filters Bar */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginBottom: '16px', alignItems: 'center' }}>
-          {/* Categories - Compact on mobile, inline on desktop */}
-          <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '4px', flex: 1, minWidth: 250 }}>
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => handleCategorySelect(cat)}
-                style={chipStyle(category === cat)}
-              >
-                {cat}
-              </button>
-            ))}
+        {/* Filters Bar: Category Pills + Controls */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
+          {/* Categories Pill Row */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-2 lg:pb-0 scrollbar-none">
+            {categories.map((cat) => {
+              const active = category === cat;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => handleCategorySelect(cat)}
+                  className={`px-4 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                    active
+                      ? 'bg-[#0B0B0E] text-white shadow-xs'
+                      : 'bg-white hover:bg-neutral-100 text-neutral-700 border border-neutral-200/80 shadow-2xs'
+                  }`}
+                >
+                  {cat}
+                </button>
+              );
+            })}
           </div>
 
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          {/* Mode, Date, Sort Controls */}
+          <div className="flex flex-wrap items-center gap-2 self-start lg:self-auto">
             {/* Mode Filter */}
-            <select 
-              value={mode} 
+            <select
+              value={mode}
               onChange={(e) => handleModeChange(e.target.value)}
-              style={selectStyle}
               aria-label="Filter by mode"
+              className="px-3.5 py-2 rounded-full text-xs font-semibold bg-white border border-neutral-200/80 text-neutral-700 shadow-2xs focus:outline-none focus:ring-2 focus:ring-violet-500 cursor-pointer"
             >
               {modes.map(m => <option key={m} value={m}>Mode: {m}</option>)}
             </select>
 
             {/* Date Filter */}
-            <select 
-              value={date} 
+            <select
+              value={date}
               onChange={(e) => handleDateChange(e.target.value)}
-              style={selectStyle}
               aria-label="Filter by date"
+              className="px-3.5 py-2 rounded-full text-xs font-semibold bg-white border border-neutral-200/80 text-neutral-700 shadow-2xs focus:outline-none focus:ring-2 focus:ring-violet-500 cursor-pointer"
             >
               {dates.map(d => <option key={d} value={d}>{d}</option>)}
             </select>
 
-            {/* Sort */}
-            <div style={{ position: 'relative' }}>
-              <select 
-                value={sort} 
+            {/* Sort Filter */}
+            <div className="relative">
+              <select
+                value={sort}
                 onChange={(e) => handleSortChange(e.target.value)}
-                style={{ ...selectStyle, paddingRight: '36px' }}
                 aria-label="Sort events"
+                className="pl-3.5 pr-8 py-2 rounded-full text-xs font-semibold bg-white border border-neutral-200/80 text-neutral-700 shadow-2xs focus:outline-none focus:ring-2 focus:ring-violet-500 cursor-pointer appearance-none"
               >
                 {sorts.map(s => <option key={s} value={s}>Sort: {s}</option>)}
               </select>
-              <ChevronDown size={14} style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: 'var(--text-muted)' }} />
+              <ChevronDown size={13} className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
             </div>
           </div>
         </div>
 
         {/* Active Filter Chips */}
         {activeFilters.length > 0 && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center', marginBottom: '24px' }}>
-            <span style={{ fontSize: '13px', color: 'var(--text-muted)', fontWeight: 500 }}>Filters:</span>
+          <div className="flex flex-wrap items-center gap-2 mb-6">
+            <span className="text-xs font-medium text-neutral-400">Active filters:</span>
             {activeFilters.map(f => (
               <button
                 key={f.key}
                 onClick={() => clearFilter(f.key)}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  padding: '4px 10px',
-                  borderRadius: 'var(--r-pill)',
-                  border: '1px solid var(--violet-200)',
-                  background: 'var(--violet-50)',
-                  color: 'var(--violet-700)',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                }}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-50 border border-violet-200 text-violet-700 text-xs font-semibold cursor-pointer hover:bg-violet-100 transition-colors"
               >
-                {f.label} <X size={12} />
+                <span>{f.label}</span>
+                <X size={12} />
               </button>
             ))}
-            <button onClick={clearAllFilters} style={clearAllBtnStyle}>
+            <button
+              onClick={clearAllFilters}
+              className="text-xs font-semibold text-neutral-500 hover:text-neutral-900 underline px-2 cursor-pointer transition-colors"
+            >
               Clear all
             </button>
           </div>
         )}
 
-        {/* Result Count */}
-        <div style={{ marginBottom: '16px', borderBottom: '1px solid var(--border-soft)', paddingBottom: '16px' }}>
-          {loading ? (
-            <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>Loading events...</span>
-          ) : (
-            <span style={{ color: 'var(--text-secondary)', fontSize: '14px', fontWeight: 600 }}>
-              {total} events found
-            </span>
-          )}
+        {/* Count Bar */}
+        <div className="flex items-center justify-between pb-4 mb-6 border-b border-neutral-200/80 text-xs font-semibold text-neutral-500">
+          <span className="font-tabular">
+            {loading ? 'Refreshing ledger...' : `${total} verified events found`}
+          </span>
+          <span className="text-[11px] text-neutral-400 font-normal">
+            Updated live from campus ledger
+          </span>
         </div>
 
         {/* Content States */}
         {error ? (
-          <ErrorState onRetry={() => { setError(false); setCategory(category); }} />
+          <div className="card-diffusion p-16 rounded-3xl text-center bg-white">
+            <AlertCircle size={40} className="text-red-500 mx-auto mb-3" />
+            <h3 className="font-editorial text-2xl font-normal text-neutral-900 mb-2">Could not load campus ledger</h3>
+            <p className="text-xs text-neutral-500 mb-6">An unexpected error occurred while communicating with the central registry.</p>
+            <button onClick={() => { setError(false); setCategory(category); }} className="btn-ink-pill text-xs">
+              Retry Connection
+            </button>
+          </div>
         ) : loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {[...Array(8)].map((_, i) => <SkeletonCard key={i} />)}
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="card-diffusion rounded-2xl overflow-hidden bg-white p-4 space-y-3 animate-pulse">
+                <div className="aspect-video bg-neutral-100 rounded-xl" />
+                <div className="h-4 bg-neutral-100 rounded w-3/4" />
+                <div className="h-3 bg-neutral-100 rounded w-1/2" />
+                <div className="h-8 bg-neutral-100 rounded-full mt-4" />
+              </div>
+            ))}
           </div>
         ) : events.length === 0 ? (
-          <EmptyState onClear={clearAllFilters} hasFilters={activeFilters.length > 0} />
+          <div className="card-diffusion p-16 rounded-3xl text-center bg-white">
+            <div className="w-12 h-12 rounded-full bg-violet-50 text-violet-600 flex items-center justify-center mx-auto mb-4">
+              <Inbox size={22} />
+            </div>
+            <h3 className="font-editorial text-2xl font-normal text-neutral-900 mb-2">No matching events in ledger</h3>
+            <p className="text-xs text-neutral-500 mb-6 max-w-sm mx-auto">
+              We couldn&apos;t find opportunities matching your selected category or keywords. Try resetting your filters.
+            </p>
+            {activeFilters.length > 0 && (
+              <button onClick={clearAllFilters} className="btn-ink-pill text-xs">
+                Clear Active Filters
+              </button>
+            )}
+          </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {events.map(e => <EventCard key={e.id} {...e} />)}
@@ -551,9 +575,15 @@ function EventsCatalogContent() {
 export default function EventsCatalog() {
   return (
     <Suspense fallback={
-      <div style={{ maxWidth: 'var(--container, 1200px)', margin: '0 auto', padding: '40px 24px' }}>
+      <div className="min-h-screen bg-[#F8F9FA] py-12 px-4 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {[...Array(8)].map((_, i) => <SkeletonCard key={i} />)}
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="card-diffusion rounded-2xl overflow-hidden bg-white p-4 space-y-3 animate-pulse">
+              <div className="aspect-video bg-neutral-100 rounded-xl" />
+              <div className="h-4 bg-neutral-100 rounded w-3/4" />
+              <div className="h-3 bg-neutral-100 rounded w-1/2" />
+            </div>
+          ))}
         </div>
       </div>
     }>
@@ -561,74 +591,3 @@ export default function EventsCatalog() {
     </Suspense>
   );
 }
-
-// --- STYLES & SUBCOMPONENTS ---
-
-const gridStyle: React.CSSProperties = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-  gap: '24px',
-};
-
-const selectStyle: React.CSSProperties = {
-  padding: '8px 14px',
-  borderRadius: 'var(--r-pill, 999px)',
-  border: '1px solid var(--border-soft, #E4E4E7)',
-  background: 'var(--bg-card, #FFFFFF)',
-  fontSize: '13px',
-  fontWeight: 500,
-  color: 'var(--text-secondary, #52525B)',
-  cursor: 'pointer',
-  outline: 'none',
-  appearance: 'none',
-  fontFamily: 'inherit',
-  boxShadow: 'var(--shadow-xs, 0 1px 2px rgba(16,16,24,0.04))',
-};
-
-const chipStyle = (active: boolean): React.CSSProperties => active
-  ? { padding: '8px 14px', borderRadius: 'var(--r-pill, 999px)', background: 'var(--violet-600, #6D28D9)', color: '#fff', border: 'none', fontWeight: 600, fontSize: '13px', cursor: 'pointer', whiteSpace: 'nowrap', fontFamily: 'inherit' }
-  : { padding: '8px 14px', borderRadius: 'var(--r-pill, 999px)', background: 'var(--bg-card, #FFFFFF)', color: 'var(--text-secondary, #52525B)', border: '1px solid var(--border-soft, #E4E4E7)', fontWeight: 500, fontSize: '13px', cursor: 'pointer', whiteSpace: 'nowrap', fontFamily: 'inherit' };
-
-const clearAllBtnStyle: React.CSSProperties = {
-  background: 'none',
-  border: 'none',
-  color: 'var(--violet-600, #6D28D9)',
-  fontSize: '12px',
-  fontWeight: 600,
-  cursor: 'pointer',
-  padding: '4px 8px',
-  textDecoration: 'underline',
-};
-
-const SkeletonCard = () => (
-  <div style={{ background: 'var(--bg-card, #FFFFFF)', border: '1px solid var(--border-soft, #E4E4E7)', borderRadius: 'var(--r-lg, 16px)', overflow: 'hidden', boxShadow: 'var(--shadow-xs)' }}>
-    <div style={{ width: '100%', aspectRatio: '16 / 9', background: '#F4F4F5', animation: 'pulse 1.5s infinite ease-in-out' }} />
-    <div style={{ padding: '16px' }}>
-      <div style={{ height: '16px', width: '80%', background: '#F4F4F5', borderRadius: '4px', marginBottom: '12px', animation: 'pulse 1.5s infinite ease-in-out' }} />
-      <div style={{ height: '12px', width: '50%', background: '#F4F4F5', borderRadius: '4px', marginBottom: '16px', animation: 'pulse 1.5s infinite ease-in-out' }} />
-      <div style={{ height: '12px', width: '60%', background: '#F4F4F5', borderRadius: '4px', marginBottom: '24px', animation: 'pulse 1.5s infinite ease-in-out' }} />
-      <div style={{ display: 'flex', gap: '8px' }}>
-        <div style={{ height: '32px', width: '60px', background: '#F4F4F5', borderRadius: '8px' }} />
-        <div style={{ height: '32px', flex: 1, background: '#F4F4F5', borderRadius: '8px' }} />
-      </div>
-    </div>
-  </div>
-);
-
-const EmptyState = ({ onClear, hasFilters }: { onClear: () => void; hasFilters: boolean }) => (
-  <div style={{ textAlign: 'center', padding: '80px 24px', background: 'var(--bg-card, #FFFFFF)', border: '1px solid var(--border-soft, #E4E4E7)', borderRadius: 'var(--r-lg, 16px)' }}>
-    <Inbox size={48} color="var(--violet-600, #6D28D9)" style={{ marginBottom: '16px' }} />
-    <h3 style={{ fontSize: '20px', fontWeight: 700, margin: '0 0 8px' }}>No events found</h3>
-    <p style={{ color: 'var(--text-muted, #71717A)', marginBottom: '24px' }}>Try changing your search or removing some filters.</p>
-    {hasFilters && <Button variant="primary" onClick={onClear}>Clear Filters</Button>}
-  </div>
-);
-
-const ErrorState = ({ onRetry }: { onRetry: () => void }) => (
-  <div style={{ textAlign: 'center', padding: '80px 24px', background: 'var(--bg-card, #FFFFFF)', border: '1px solid var(--border-soft, #E4E4E7)', borderRadius: 'var(--r-lg, 16px)' }}>
-    <AlertCircle size={48} color="var(--error, #DC2626)" style={{ marginBottom: '16px' }} />
-    <h3 style={{ fontSize: '20px', fontWeight: 700, margin: '0 0 8px' }}>We couldn&apos;t load the events.</h3>
-    <p style={{ color: 'var(--text-muted, #71717A)', marginBottom: '24px' }}>An unexpected error occurred. Please try again.</p>
-    <Button variant="primary" onClick={onRetry}>Try Again</Button>
-  </div>
-);
