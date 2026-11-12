@@ -53,7 +53,7 @@ export default function DashboardPage() {
         upcomingDeadlines: [
           { id: '1', title: 'IIT Bombay TechFest Hackathon', deadline: 'In 2 days', category: 'Hackathon', urgency: 'HIGH' },
           { id: '2', title: 'Backend & Distributed Systems Summit', deadline: 'In 6 days', category: 'Workshop', urgency: 'MEDIUM' },
-          { id: '3', title: 'HackGuru AI Research Fellowship', deadline: 'In 12 days', category: 'Internship', urgency: 'LOW' },
+          { id: '3', title: 'AllCollegeEvent AI Research Fellowship', deadline: 'In 12 days', category: 'Internship', urgency: 'LOW' },
           { id: '4', title: 'Apex Competitive Programming Contest', deadline: 'In 18 days', category: 'Competition', urgency: 'LOW' },
         ],
         recentRecommendations: [

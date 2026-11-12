@@ -358,7 +358,7 @@ export default function SystemStatusPage() {
                   Subsystem Verification Matrix
                 </h2>
                 <p className="text-xs text-gray-500 mt-0.5">
-                  Detailed inspection report matching official HackGURU / AllCollegeEvent architecture specification.
+                  Detailed inspection report matching official AllCollegeEvent architecture specification.
                 </p>
               </div>
               <span className="text-xs font-medium px-2.5 py-1 rounded-md bg-gray-100 text-gray-700 self-start sm:self-auto">

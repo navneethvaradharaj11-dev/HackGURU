@@ -86,15 +86,25 @@ const mockDbEvents: Record<string, EventDetails> = {
 };
 
 const fetchEventDetails = async (id: string): Promise<EventDetails | null> => {
-  await new Promise((res) => setTimeout(res, 400));
-  
-  // 1. Check direct mock DB
+  // 1. Try real API endpoint first
+  try {
+    const res = await fetch(`/api/events/${id}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data?.success && data?.data) {
+        return data.data;
+      }
+    }
+  } catch {}
+
+  // 2. Check direct mock DB
   if (mockDbEvents[id]) {
     return mockDbEvents[id];
   }
 
-  // 2. Check mockEvents array
-  const foundInMock = mockEvents.find(e => e.id === id);
+  // 3. Check mockEvents array
+  const cleanId = id.toLowerCase();
+  const foundInMock = mockEvents.find(e => e.id.toLowerCase() === cleanId || e.id.toLowerCase().includes(cleanId));
   if (foundInMock) {
     const categoryCapitalized = foundInMock.category.charAt(0).toUpperCase() + foundInMock.category.slice(1);
     const modeCapitalized = (foundInMock.mode.charAt(0).toUpperCase() + foundInMock.mode.slice(1)) as 'Online' | 'Offline' | 'Hybrid';
@@ -109,7 +119,7 @@ const fetchEventDetails = async (id: string): Promise<EventDetails | null> => {
       time: '09:30 AM IST',
       deadlineInDays: 5,
       skills: foundInMock.skills,
-      image: '/images/events/ai-hackathon.jpg',
+      image: foundInMock.imageUrl || '/images/events/ai-hackathon.jpg',
       description: foundInMock.description,
       eligibility: foundInMock.eligibility?.[0] || 'Open to all undergraduate and postgraduate students',
       fee: 'Free',

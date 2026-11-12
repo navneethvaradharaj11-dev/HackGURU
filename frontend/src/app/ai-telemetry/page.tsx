@@ -76,7 +76,7 @@ export default function AITelemetryPage() {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-50 text-violet-700 text-xs font-semibold border border-violet-200 mb-3">
-                <Cpu className="w-3.5 h-3.5 text-violet-600" /> HackGURU Central AI Gateway Router
+                <Cpu className="w-3.5 h-3.5 text-violet-600" /> AllCollegeEvent Central AI Gateway Router
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
                 AI Gateway & Provider Pool Telemetry

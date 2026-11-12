@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, Suspense } from 'react';
 import Link from 'next/link';
+import { useSearchParams, useRouter } from 'next/navigation';
 import EventCard from '@/components/events/EventCard';
 import Button from '@/components/ui/Button';
 import { mockEvents } from '@/data/mock/events';
@@ -23,11 +24,45 @@ const modes = [
   { id: 'hybrid', label: 'Hybrid' },
 ];
 
-export default function ExplorePage() {
-  const [search, setSearch] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedMode, setSelectedMode] = useState('all');
+function ExploreContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const [search, setSearch] = useState(searchParams.get('search') || '');
+  const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category')?.toLowerCase() || 'all');
+  const [selectedMode, setSelectedMode] = useState(searchParams.get('mode')?.toLowerCase() || 'all');
   const [sortBy, setSortBy] = useState<'deadline' | 'date' | 'relevance'>('relevance');
+
+  useEffect(() => {
+    const cat = searchParams.get('category')?.toLowerCase();
+    if (cat) {
+      const match = categories.find(c => c.id === cat || c.id === cat.replace(/s$/, ''));
+      setSelectedCategory(match ? match.id : 'all');
+    } else {
+      setSelectedCategory('all');
+    }
+
+    const q = searchParams.get('search');
+    if (q !== null && q !== undefined) {
+      setSearch(q);
+    }
+
+    const m = searchParams.get('mode')?.toLowerCase();
+    if (m) {
+      setSelectedMode(m);
+    }
+  }, [searchParams]);
+
+  const handleCategoryClick = (catId: string) => {
+    setSelectedCategory(catId);
+    const params = new URLSearchParams(searchParams.toString());
+    if (catId && catId !== 'all') {
+      params.set('category', catId);
+    } else {
+      params.delete('category');
+    }
+    router.push(params.toString() ? `/explore?${params.toString()}` : '/explore');
+  };
 
   const filtered = useMemo(() => {
     let events = [...mockEvents];
@@ -43,11 +78,11 @@ export default function ExplorePage() {
     }
 
     if (selectedCategory !== 'all') {
-      events = events.filter(e => e.category === selectedCategory);
+      events = events.filter(e => e.category.toLowerCase() === selectedCategory.toLowerCase());
     }
 
     if (selectedMode !== 'all') {
-      events = events.filter(e => e.mode === selectedMode);
+      events = events.filter(e => e.mode.toLowerCase() === selectedMode.toLowerCase());
     }
 
     if (sortBy === 'deadline') {
@@ -105,7 +140,7 @@ export default function ExplorePage() {
             {categories.map(cat => (
               <button
                 key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
+                onClick={() => handleCategoryClick(cat.id)}
                 className={`px-3 py-1.5 rounded-md font-medium transition-all ${
                   selectedCategory === cat.id
                     ? 'bg-violet-600 text-white font-semibold shadow-2xs'
@@ -164,8 +199,8 @@ export default function ExplorePage() {
           <h3 className="text-sm font-semibold text-gray-800">No matching events found</h3>
           <p className="text-xs text-gray-500 mt-1">Try modifying your search or clearing active filters.</p>
           <button
-            onClick={() => { setSearch(''); setSelectedCategory('all'); setSelectedMode('all'); }}
-            className="mt-4 px-4 py-1.5 rounded-md border border-gray-300 hover:bg-gray-50 text-xs font-semibold text-gray-700"
+            onClick={() => { setSearch(''); setSelectedCategory('all'); setSelectedMode('all'); router.push('/explore'); }}
+            className="mt-4 px-4 py-1.5 rounded-md border border-gray-300 hover:bg-gray-50 text-xs font-semibold text-gray-700 cursor-pointer"
           >
             Reset Filters
           </button>
@@ -173,5 +208,13 @@ export default function ExplorePage() {
       )}
 
     </div>
+  );
+}
+
+export default function ExplorePage() {
+  return (
+    <Suspense fallback={<div className="max-w-7xl mx-auto px-4 py-12 text-center text-sm text-gray-400">Loading directory...</div>}>
+      <ExploreContent />
+    </Suspense>
   );
 }

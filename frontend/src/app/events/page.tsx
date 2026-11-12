@@ -8,12 +8,77 @@ import { Badge } from '@/components/ui/Badge';
 import EventCard, { EventCardProps } from '@/components/events/EventCard';
 import { eventsApi } from '@/lib/api';
 
-const categories = ['All', 'Hackathons', 'Workshops', 'Competitions', 'Internships', 'Conferences', 'Webinars'];
+const categories = ['All', 'Hackathons', 'Symposiums', 'Workshops', 'Competitions', 'Internships', 'Cultural', 'Conferences'];
 const modes = ['All', 'Online', 'Offline', 'Hybrid'];
 const dates = ['All Dates', 'Today', 'This Week', 'This Month', 'Upcoming'];
 const sorts = ['Recommended', 'Soonest Deadline', 'Latest Added', 'Most Popular'];
 
 const fallbackEvents: EventCardProps[] = [
+  {
+    id: 'hackforge-2026',
+    title: 'HackForge 2026: 36-Hour National AI & Web3 Hackathon',
+    category: 'Hackathon',
+    organizer: 'Kongu Engineering & PSG Tech',
+    location: 'Coimbatore',
+    mode: 'Offline',
+    date: '14 Mar 2026',
+    deadlineInDays: 4,
+    skills: ['AI/ML', 'Next.js', 'Solidity', 'PyTorch'],
+    matchScore: 98,
+    image: '/images/events/hackforge-2026.jpg',
+  },
+  {
+    id: 'innofest-2026',
+    title: 'INNOFEST 2026: National Technical Symposium',
+    category: 'Symposium',
+    organizer: 'IIT Madras',
+    location: 'Chennai',
+    mode: 'Offline',
+    date: '14 Mar 2026',
+    deadlineInDays: 8,
+    skills: ['Research', 'Algorithms', 'Robotics', 'C++'],
+    matchScore: 96,
+    image: '/images/events/innofest-2026.jpg',
+  },
+  {
+    id: 'agentic-ai-summit-2026',
+    title: 'Agentic AI Summit 2026: LLMs & Multi-Agent Systems',
+    category: 'Workshop',
+    organizer: 'Anna University CEG',
+    location: 'Chennai',
+    mode: 'Hybrid',
+    date: '20 Apr 2026',
+    deadlineInDays: 20,
+    skills: ['LangChain', 'CrewAI', 'Python', 'FastAPI'],
+    matchScore: 95,
+    image: '/images/events/genai-bootcamp.jpg',
+  },
+  {
+    id: 'robowars-2026',
+    title: 'ROBOWARS 2026: Combat Robotics Championship',
+    category: 'Competition',
+    organizer: 'PSG College of Technology',
+    location: 'Coimbatore',
+    mode: 'Offline',
+    date: '04 Apr 2026',
+    deadlineInDays: 12,
+    skills: ['Robotics', 'Pneumatics', 'Embedded Systems', 'CAD'],
+    matchScore: 92,
+    image: '/images/events/robotics.jpg',
+  },
+  {
+    id: 'rhythm-2026',
+    title: 'RHYTHM 2026: All India Inter-Collegiate Cultural Extravaganza',
+    category: 'Cultural',
+    organizer: 'VIT Vellore',
+    location: 'Vellore',
+    mode: 'Offline',
+    date: '10 Apr 2026',
+    deadlineInDays: 16,
+    skills: ['Music', 'Choreography', 'Fashion', 'Stage Drama'],
+    matchScore: 89,
+    image: '/images/events/cultural.jpg',
+  },
   {
     id: '1',
     title: 'AI Innovation Challenge 2026',
@@ -24,6 +89,7 @@ const fallbackEvents: EventCardProps[] = [
     date: '26 Oct 2026',
     deadlineInDays: 3,
     skills: ['Python', 'AI'],
+    matchScore: 95,
     image: '/images/events/ai-hackathon.jpg',
   },
   {
@@ -35,7 +101,8 @@ const fallbackEvents: EventCardProps[] = [
     mode: 'Online',
     date: '12 Nov 2026',
     deadlineInDays: 9,
-    skills: ['LLMs'],
+    skills: ['LLMs', 'PyTorch'],
+    matchScore: 91,
     image: '/images/events/genai-bootcamp.jpg',
   },
   {
@@ -64,6 +131,45 @@ const fallbackEvents: EventCardProps[] = [
     matchScore: 88,
     image: '/images/events/robotics.jpg',
   },
+  {
+    id: '5',
+    title: 'Google Cloud & GenAI Fellowship 2026',
+    category: 'Internship',
+    organizer: 'Google Cloud Student Labs',
+    location: 'Bangalore',
+    mode: 'Hybrid',
+    date: '01 Jun 2026',
+    deadlineInDays: 30,
+    skills: ['GCP', 'Vertex AI', 'Python'],
+    matchScore: 97,
+    image: '/images/events/internship.jpg',
+  },
+  {
+    id: '6',
+    title: 'National IEEE Student Research Conference',
+    category: 'Conference',
+    organizer: 'IISc Bangalore',
+    location: 'Bangalore',
+    mode: 'Offline',
+    date: '22 Aug 2026',
+    deadlineInDays: 45,
+    skills: ['Research', 'IEEE', 'Paper Presentation'],
+    matchScore: 85,
+    image: '/images/events/conference.jpg',
+  },
+  {
+    id: '8',
+    title: 'Web3 & Solana Sovereign Hackathon',
+    category: 'Hackathon',
+    organizer: 'Superteam India',
+    location: 'Bangalore',
+    mode: 'Hybrid',
+    date: '15 Jul 2026',
+    deadlineInDays: 22,
+    skills: ['Rust', 'Solana', 'Web3'],
+    matchScore: 93,
+    image: '/images/events/startup.jpg',
+  },
 ];
 
 function EventsCatalogContent() {
@@ -77,35 +183,97 @@ function EventsCatalogContent() {
   const [mode, setMode] = useState<string>(searchParams.get('mode') || 'All');
   const [date, setDate] = useState<string>(searchParams.get('date') || 'All Dates');
   const [sort, setSort] = useState<string>(searchParams.get('sort') || 'Recommended');
+  const [location, setLocation] = useState<string>(searchParams.get('location') || 'All');
 
   const [events, setEvents] = useState<EventCardProps[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
 
+  // Synchronize state whenever URL query params change (e.g. user clicks Navbar links)
+  useEffect(() => {
+    const urlCat = searchParams.get('category');
+    if (urlCat) {
+      const matched = categories.find(c =>
+        c.toLowerCase() === urlCat.toLowerCase() ||
+        c.toLowerCase().replace(/s$/, '') === urlCat.toLowerCase().replace(/s$/, '') ||
+        (urlCat.toLowerCase() === 'robotics' && c === 'Competitions')
+      );
+      setCategory(matched || urlCat);
+    } else {
+      setCategory('All');
+    }
+
+    const urlSearch = searchParams.get('search');
+    if (urlSearch !== null && urlSearch !== undefined) {
+      setSearch(urlSearch);
+      setDebouncedSearch(urlSearch);
+    } else {
+      setSearch('');
+      setDebouncedSearch('');
+    }
+
+    const urlMode = searchParams.get('mode');
+    setMode(urlMode || 'All');
+
+    const urlDate = searchParams.get('date');
+    setDate(urlDate || 'All Dates');
+
+    const urlSort = searchParams.get('sort');
+    setSort(urlSort || 'Recommended');
+
+    const urlLoc = searchParams.get('location');
+    setLocation(urlLoc || 'All');
+  }, [searchParams]);
+
   // Debounce search input
   useEffect(() => {
-    const handler = setTimeout(() => setDebouncedSearch(search), 300);
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+      const currentUrlSearch = searchParams.get('search') || '';
+      if (search !== currentUrlSearch) {
+        const params = new URLSearchParams(searchParams.toString());
+        if (search) {
+          params.set('search', search);
+        } else {
+          params.delete('search');
+        }
+        router.replace(params.toString() ? `/events?${params.toString()}` : '/events', { scroll: false });
+      }
+    }, 300);
     return () => clearTimeout(handler);
-  }, [search]);
+  }, [search, router, searchParams]);
 
-  // Sync state to URL
-  const updateUrl = useCallback((newState: { debouncedSearch: string; category: string; mode: string; date: string; sort: string }) => {
-    const params = new URLSearchParams();
-    if (newState.debouncedSearch) params.set('search', newState.debouncedSearch);
-    if (newState.category && newState.category !== 'All') params.set('category', newState.category);
-    if (newState.mode && newState.mode !== 'All') params.set('mode', newState.mode);
-    if (newState.date && newState.date !== 'All Dates') params.set('date', newState.date);
-    if (newState.sort && newState.sort !== 'Recommended') params.set('sort', newState.sort);
+  // Update query params helper
+  const updateUrlParam = (key: string, val: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (val && val !== 'All' && val !== 'All Dates') {
+      params.set(key, val);
+    } else {
+      params.delete(key);
+    }
+    router.push(params.toString() ? `/events?${params.toString()}` : '/events');
+  };
 
-    const queryStr = params.toString();
-    const targetUrl = queryStr ? `/events?${queryStr}` : '/events';
-    router.replace(targetUrl, { scroll: false });
-  }, [router]);
+  const handleCategorySelect = (cat: string) => {
+    setCategory(cat);
+    updateUrlParam('category', cat);
+  };
 
-  useEffect(() => {
-    updateUrl({ debouncedSearch, category, mode, date, sort });
-  }, [debouncedSearch, category, mode, date, sort, updateUrl]);
+  const handleModeChange = (val: string) => {
+    setMode(val);
+    updateUrlParam('mode', val);
+  };
+
+  const handleDateChange = (val: string) => {
+    setDate(val);
+    updateUrlParam('date', val);
+  };
+
+  const handleSortChange = (val: string) => {
+    setSort(val);
+    updateUrlParam('sort', val);
+  };
 
   // Fetch events on filter/search change
   useEffect(() => {
@@ -113,10 +281,12 @@ function EventsCatalogContent() {
       setLoading(true);
       setError(false);
       try {
-        // Try real API first
+        const catQuery = category !== 'All' ? category : undefined;
         const apiRes = await eventsApi.getEvents({
-          category: category !== 'All' ? category : undefined,
+          category: catQuery,
           search: debouncedSearch || undefined,
+          mode: mode !== 'All' ? mode : undefined,
+          location: location !== 'All' ? location : undefined,
         });
 
         if (Array.isArray(apiRes.data) && apiRes.data.length > 0) {
@@ -124,12 +294,14 @@ function EventsCatalogContent() {
             id: item.id,
             title: item.title,
             category: item.category,
-            organizer: item.organizer,
+            organizer: item.organizer || item.organization,
             location: item.location,
             mode: item.mode || 'Online',
-            date: item.startDate || 'Upcoming',
-            deadlineInDays: item.registrationDeadline ? 7 : undefined,
-            skills: item.skillsRequired || item.domainTags || [],
+            date: item.startDate || item.date || 'Upcoming',
+            deadlineInDays: item.deadlineInDays ?? (item.registrationDeadline ? 7 : undefined),
+            skills: item.skillsRequired || item.domainTags || item.skills || [],
+            image: item.image || item.imageUrl || '/images/events/ai-hackathon.jpg',
+            matchScore: item.matchScore || (item.category === 'Hackathon' ? 95 : 88)
           }));
           setEvents(mapped);
           setTotal(mapped.length);
@@ -137,8 +309,9 @@ function EventsCatalogContent() {
           throw new Error('Fallback');
         }
       } catch {
-        // Fallback filtering
-        let filtered = [...fallbackEvents];
+        // Fallback filtering using full dataset
+        let filtered = fallbackEvents.map(e => ({ ...e }));
+        
         if (debouncedSearch) {
           const q = debouncedSearch.toLowerCase();
           filtered = filtered.filter(
@@ -147,24 +320,35 @@ function EventsCatalogContent() {
                  (e.skills || []).some(s => s.toLowerCase().includes(q))
           );
         }
+
         if (category !== 'All') {
+          const catNorm = category.toLowerCase().replace(/s$/, '');
           filtered = filtered.filter(e => {
-            const catNorm = (e.category || '').toLowerCase();
-            const filterNorm = category.toLowerCase();
-            return catNorm === filterNorm || catNorm.includes(filterNorm.replace(/s$/, ''));
+            const eCat = (e.category || '').toLowerCase().replace(/s$/, '');
+            const titleLower = (e.title || '').toLowerCase();
+            return eCat.includes(catNorm) || catNorm.includes(eCat) ||
+              (catNorm === 'symposium' && titleLower.includes('symposium')) ||
+              (catNorm === 'competition' && (eCat.includes('compet') || titleLower.includes('robowars') || titleLower.includes('cup')));
           });
         }
+
         if (mode !== 'All') {
           filtered = filtered.filter(e => (e.mode || '').toLowerCase() === mode.toLowerCase());
         }
+
+        if (location !== 'All') {
+          filtered = filtered.filter(e => (e.location || '').toLowerCase().includes(location.toLowerCase()));
+        }
+
         setEvents(filtered);
         setTotal(filtered.length);
       } finally {
         setLoading(false);
       }
     };
+
     loadEvents();
-  }, [debouncedSearch, category, mode, date, sort]);
+  }, [debouncedSearch, category, mode, date, sort, location]);
 
   // Filter Chip Management
   const activeFilters = [
@@ -175,17 +359,32 @@ function EventsCatalogContent() {
   ].filter(f => f.value && f.value !== 'All' && f.value !== 'All Dates' && f.value !== '');
 
   const clearFilter = (key: string) => {
-    if (key === 'search') setSearch('');
-    if (key === 'category') setCategory('All');
-    if (key === 'mode') setMode('All');
-    if (key === 'date') setDate('All Dates');
+    if (key === 'search') {
+      setSearch('');
+      setDebouncedSearch('');
+      updateUrlParam('search', '');
+    }
+    if (key === 'category') {
+      setCategory('All');
+      updateUrlParam('category', 'All');
+    }
+    if (key === 'mode') {
+      setMode('All');
+      updateUrlParam('mode', 'All');
+    }
+    if (key === 'date') {
+      setDate('All Dates');
+      updateUrlParam('date', 'All Dates');
+    }
   };
 
   const clearAllFilters = () => {
     setSearch('');
+    setDebouncedSearch('');
     setCategory('All');
     setMode('All');
     setDate('All Dates');
+    router.push('/events');
   };
 
   return (
@@ -243,7 +442,7 @@ function EventsCatalogContent() {
             {categories.map((cat) => (
               <button
                 key={cat}
-                onClick={() => setCategory(cat)}
+                onClick={() => handleCategorySelect(cat)}
                 style={chipStyle(category === cat)}
               >
                 {cat}
@@ -255,7 +454,7 @@ function EventsCatalogContent() {
             {/* Mode Filter */}
             <select 
               value={mode} 
-              onChange={(e) => setMode(e.target.value)}
+              onChange={(e) => handleModeChange(e.target.value)}
               style={selectStyle}
               aria-label="Filter by mode"
             >
@@ -265,7 +464,7 @@ function EventsCatalogContent() {
             {/* Date Filter */}
             <select 
               value={date} 
-              onChange={(e) => setDate(e.target.value)}
+              onChange={(e) => handleDateChange(e.target.value)}
               style={selectStyle}
               aria-label="Filter by date"
             >
@@ -276,7 +475,7 @@ function EventsCatalogContent() {
             <div style={{ position: 'relative' }}>
               <select 
                 value={sort} 
-                onChange={(e) => setSort(e.target.value)}
+                onChange={(e) => handleSortChange(e.target.value)}
                 style={{ ...selectStyle, paddingRight: '36px' }}
                 aria-label="Sort events"
               >

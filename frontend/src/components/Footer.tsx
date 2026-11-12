@@ -16,10 +16,10 @@ export const Footer = () => {
           <div className="lg:col-span-2 space-y-4">
             <Link href="/" className="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-[#0B0B0E] text-white shadow-sm hover:opacity-95 transition-opacity">
               <span className="w-5 h-5 rounded-full bg-violet-600 flex items-center justify-center text-[11px] font-black text-white">
-                G
+                A
               </span>
               <span className="font-bold text-sm tracking-tight text-white">
-                HackGURU<span className="text-violet-400">.ace</span>
+                AllCollegeEvent<span className="text-violet-400">.com</span>
               </span>
             </Link>
 
@@ -116,7 +116,7 @@ export const Footer = () => {
             <ul className="space-y-2.5 text-[13px]">
               <li>
                 <Link href="/profile" className="text-neutral-600 hover:text-neutral-900 transition-colors">
-                  About HackGURU
+                  About AllCollegeEvent
                 </Link>
               </li>
               <li>
@@ -146,7 +146,7 @@ export const Footer = () => {
 
         {/* Bottom Bar (Image 6 style) */}
         <div className="mt-12 pt-8 border-t border-neutral-200/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-neutral-500">
-          <p>© {currentYear} HackGURU · AllCollegeEvent.com Student Opportunity Network. Built for 50,000+ collegiate builders.</p>
+          <p>© {currentYear} AllCollegeEvent.com Student Opportunity Network. Built for 50,000+ collegiate builders.</p>
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1.5"><Globe size={13} /> India Network</span>
             <span>·</span>

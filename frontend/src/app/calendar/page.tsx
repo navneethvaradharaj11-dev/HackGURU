@@ -58,7 +58,7 @@ export default function CalendarPage() {
         {
           id: 'cal-3',
           eventId: 'ev-3',
-          eventTitle: 'HackGuru AI Research Fellowship & Internship',
+          eventTitle: 'AllCollegeEvent AI Research Fellowship & Internship',
           category: 'Internship',
           startDate: '2026-10-01',
           registrationDeadline: '2026-09-28',

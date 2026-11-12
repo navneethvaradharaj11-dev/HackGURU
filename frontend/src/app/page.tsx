@@ -299,7 +299,7 @@ export default function Home() {
 
     setEvents(prev => [created, ...prev]);
     setIsPostModalOpen(false);
-    setToastMessage('🎉 Event published to the HackGURU network ledger!');
+    setToastMessage('🎉 Event published to the AllCollegeEvent network ledger!');
     setTimeout(() => setToastMessage(null), 5000);
 
     setNewEvent({
@@ -390,7 +390,7 @@ export default function Home() {
           {/* Pill Announcement Chip */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-neutral-200/90 shadow-xs mb-8 hover:border-violet-300 transition-colors cursor-default">
             <span className="w-2 h-2 rounded-full bg-violet-600 animate-pulse" />
-            <span className="text-xs font-semibold text-neutral-700">HackGURU 2026 Student Network</span>
+            <span className="text-xs font-semibold text-neutral-700">AllCollegeEvent 2026 Student Network</span>
             <span className="text-neutral-300">·</span>
             <span className="text-xs font-semibold text-violet-700 inline-flex items-center gap-0.5">
               Live registrations open <ArrowUpRight size={12} />
@@ -452,10 +452,10 @@ export default function Home() {
                 <div className="flex items-center gap-3">
                   <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0B0B0E] text-white">
                     <span className="w-4 h-4 rounded-full bg-violet-600 flex items-center justify-center text-[9px] font-black">
-                      G
+                      A
                     </span>
                     <span className="font-semibold text-xs tracking-tight text-white">
-                      HackGURU Ledger
+                      AllCollegeEvent Ledger
                     </span>
                   </div>
                   <span className="text-neutral-300">·</span>
@@ -648,7 +648,7 @@ export default function Home() {
             <span className="font-editorial-italic font-normal">hackathons, symposiums, research.</span>
           </h2>
           <p className="text-neutral-600 text-base leading-relaxed">
-            Every HackGURU event shares one visual language and one settled-time registration ledger, so students, campus organizers, and mentors all move with precision.
+            Every AllCollegeEvent event shares one visual language and one settled-time registration ledger, so students, campus organizers, and mentors all move with precision.
           </p>
         </div>
 
@@ -720,7 +720,7 @@ export default function Home() {
               {/* Mini Sleek Dark Card Preview inside Card 2 */}
               <div className="bg-[#0B0B0E] text-white rounded-2xl p-5 mb-6 shadow-md relative overflow-hidden">
                 <div className="flex justify-between items-start mb-6">
-                  <span className="font-editorial-italic text-sm text-neutral-300">HackGURU</span>
+                  <span className="font-editorial-italic text-sm text-neutral-300">AllCollegeEvent</span>
                   <span className="w-6 h-4 rounded bg-amber-400/80 inline-block" />
                 </div>
                 <p className="font-tabular tracking-widest text-sm text-neutral-300 mb-4 font-mono">
@@ -805,9 +805,9 @@ export default function Home() {
                 {/* Brand Pill */}
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#0B0B0E] text-white mb-8">
                   <span className="w-4 h-4 rounded-full bg-violet-600 flex items-center justify-center text-[9px] font-black">
-                    G
+                    A
                   </span>
-                  <span className="font-bold text-xs text-white">HackGURU</span>
+                  <span className="font-bold text-xs text-white">AllCollegeEvent</span>
                 </div>
 
                 <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest block mb-3">
@@ -1512,7 +1512,7 @@ export default function Home() {
                 <span className="font-editorial-italic font-normal">student ledger today.</span>
               </h2>
               <p className="text-sm sm:text-base text-neutral-400 max-w-lg leading-relaxed mb-8">
-                It takes four minutes to create your HackGURU profile, and one afternoon to migrate your existing college club. No credit card required, zero platform tax on your first ₹50,000 cash pool.
+                It takes four minutes to create your AllCollegeEvent profile, and one afternoon to migrate your existing college club. No credit card required, zero platform tax on your first ₹50,000 cash pool.
               </p>
 
               <div className="flex flex-wrap items-center gap-4">

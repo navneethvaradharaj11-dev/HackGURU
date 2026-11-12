@@ -103,11 +103,11 @@ export default function RecommendationsPage() {
           estimatedDifficulty: 'INTERMEDIATE',
           event: {
             id: 'rec-3',
-            title: 'HackGuru AI Research Fellowship & Internship',
+            title: 'AllCollegeEvent AI Research Fellowship & Internship',
             description: '3-month paid student fellowship researching multi-provider LLM routing, model fine-tuning, and automated code review workflows.',
             category: 'Internship',
             location: 'Bengaluru / Remote',
-            organizer: 'HackGuru AI Labs',
+            organizer: 'AllCollegeEvent AI Labs',
             startDate: '2026-10-01',
             endDate: '2026-12-31',
             registrationDeadline: '2026-09-28',
@@ -476,7 +476,7 @@ export default function RecommendationsPage() {
               </div>
               <div>
                 <span className="text-[10px] font-semibold text-gray-600 bg-gray-100 px-1.5 py-0.5 rounded">12 Days Left</span>
-                <p className="font-semibold text-gray-800 mt-1 leading-snug">HackGuru AI Research Fellowship</p>
+                <p className="font-semibold text-gray-800 mt-1 leading-snug">AllCollegeEvent AI Research Fellowship</p>
                 <p className="text-[11px] text-gray-500 mt-0.5">Closes 28 Sep · Paid Internship</p>
               </div>
             </div>

@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Trophy, Search, Bell, Menu, X, LogOut, LayoutDashboard, CheckCheck, PlusCircle, MapPin, Sparkles, ArrowUpRight } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/contexts/AuthContext';
@@ -24,7 +24,7 @@ const navLinks = [
 
 const cities = ['All India', 'Coimbatore', 'Chennai', 'Bangalore', 'Mumbai', 'Delhi NCR', 'Online'];
 
-export function Navbar({ onOpenPostModal }: { onOpenPostModal?: () => void }) {
+function NavbarContent({ onOpenPostModal }: { onOpenPostModal?: () => void }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [cityOpen, setCityOpen] = useState(false);
@@ -32,6 +32,8 @@ export function Navbar({ onOpenPostModal }: { onOpenPostModal?: () => void }) {
   const notifRef = useRef<HTMLDivElement>(null);
   const cityRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { user, logout } = useAuth();
 
   const [notifications, setNotifications] = useState(mockNotifications);
@@ -39,7 +41,19 @@ export function Navbar({ onOpenPostModal }: { onOpenPostModal?: () => void }) {
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/';
-    return pathname?.startsWith(href.split('?')[0]);
+    const [path, query] = href.split('?');
+    if (query) {
+      const qParams = new URLSearchParams(query);
+      const catParam = qParams.get('category');
+      if (catParam) {
+        return pathname === path && searchParams?.get('category')?.toLowerCase() === catParam.toLowerCase();
+      }
+      return pathname === path && searchParams?.toString() === query;
+    }
+    if (href === '/events') {
+      return pathname === '/events' && !searchParams?.get('category') && !searchParams?.get('search');
+    }
+    return pathname?.startsWith(path);
   };
 
   useEffect(() => {
@@ -65,14 +79,14 @@ export function Navbar({ onOpenPostModal }: { onOpenPostModal?: () => void }) {
       <div className="max-w-7xl mx-auto">
         <nav className="h-16 px-4 sm:px-6 rounded-full bg-white/90 backdrop-blur-md border border-neutral-200/90 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex items-center justify-between gap-4 transition-all">
           
-          {/* Brand Pill (Image 2 style) */}
+          {/* Brand Pill (AllCollegeEvent.com) */}
           <div className="flex items-center gap-3">
             <Link href="/" className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-[#0B0B0E] text-white shadow-xs hover:opacity-90 transition-opacity">
               <span className="w-5 h-5 rounded-full bg-violet-600 flex items-center justify-center text-[10px] font-black text-white">
-                G
+                A
               </span>
               <span className="font-bold text-[13.5px] tracking-tight text-white leading-none">
-                HackGURU<span className="text-violet-400">.ace</span>
+                AllCollegeEvent<span className="text-violet-400">.com</span>
               </span>
             </Link>
 
@@ -90,7 +104,15 @@ export function Navbar({ onOpenPostModal }: { onOpenPostModal?: () => void }) {
                   {cities.map(city => (
                     <button
                       key={city}
-                      onClick={() => { setSelectedCity(city); setCityOpen(false); }}
+                      onClick={() => {
+                        setSelectedCity(city);
+                        setCityOpen(false);
+                        if (city === 'All India') {
+                          router.push('/events');
+                        } else {
+                          router.push(`/events?location=${encodeURIComponent(city)}`);
+                        }
+                      }}
                       className={`w-full text-left px-4 py-2 text-xs font-medium cursor-pointer transition-colors ${selectedCity === city ? 'bg-violet-50 text-violet-700 font-bold' : 'text-neutral-700 hover:bg-neutral-50'}`}
                     >
                       {city}
@@ -121,7 +143,7 @@ export function Navbar({ onOpenPostModal }: { onOpenPostModal?: () => void }) {
             })}
           </div>
 
-          {/* Right Actions (Image 2 style) */}
+          {/* Right Actions */}
           <div className="flex items-center gap-2">
             
             {/* Quick Search */}
@@ -229,7 +251,15 @@ export function Navbar({ onOpenPostModal }: { onOpenPostModal?: () => void }) {
                 {cities.slice(0, 5).map(c => (
                   <button
                     key={c}
-                    onClick={() => { setSelectedCity(c); setMobileOpen(false); }}
+                    onClick={() => {
+                      setSelectedCity(c);
+                      setMobileOpen(false);
+                      if (c === 'All India') {
+                        router.push('/events');
+                      } else {
+                        router.push(`/events?location=${encodeURIComponent(c)}`);
+                      }
+                    }}
                     className={`px-3 py-1 rounded-full text-xs font-semibold ${selectedCity === c ? 'bg-violet-600 text-white' : 'bg-neutral-100 text-neutral-700'}`}
                   >
                     {c}
@@ -273,6 +303,20 @@ export function Navbar({ onOpenPostModal }: { onOpenPostModal?: () => void }) {
         )}
       </div>
     </header>
+  );
+}
+
+export function Navbar(props: { onOpenPostModal?: () => void }) {
+  return (
+    <Suspense fallback={
+      <header className="sticky top-0 z-50 py-3 px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto">
+          <nav className="h-16 px-4 sm:px-6 rounded-full bg-white/90 backdrop-blur-md border border-neutral-200/90 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex items-center justify-between gap-4" />
+        </div>
+      </header>
+    }>
+      <NavbarContent {...props} />
+    </Suspense>
   );
 }
 
